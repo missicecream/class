@@ -345,6 +345,39 @@
     color: var(--muted-soft);
   }
 
+  /* Back link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 28px;
+    padding: 8px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.22s ease;
+  }
+
+  .back-link:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+    transform: translateX(-2px);
+  }
+
+  .back-link .arrow {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    transition: transform 0.22s ease;
+  }
+
+  .back-link:hover .arrow { transform: translateX(-3px); }
+
   @media (max-width: 768px) {
     .table-wrap { width: 100%; }
   }
@@ -357,6 +390,8 @@
 </head>
 <body>
   <div class="container">
+
+    <a class="back-link" href="index.html"><span class="arrow">←</span> กลับหน้าหลัก</a>
 
     <header>
       <div class="eyebrow">Miss Icecream · Lab Tools</div>
