@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PST Timer · Miss Icecream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4ECE0;
+    --card: #FBF6EC;
+    --ink: #2B1F15;
+    --muted: #8C7A66;
+    --muted-soft: #BFB09B;
+    --line: #E5D9C4;
+    --line-soft: #EFE5D2;
+    --accent: #6B8E4E;
+    --accent-deep: #4F6B3A;
+    --rose-deep: #A85B47;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    padding: 44px 20px 48px;
+    background-image:
+      radial-gradient(circle at 15% 5%, rgba(220, 229, 200, 0.50) 0%, transparent 40%),
+      radial-gradient(circle at 88% 95%, rgba(201, 120, 98, 0.10) 0%, transparent 40%);
+  }
+
+  .container { max-width: 1040px; margin: 0 auto; }
+
+  /* Back link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 28px;
+    padding: 8px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.22s ease;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--accent); transform: translateX(-2px); }
+  .back-link .arrow { font-family: 'Fraunces', serif; font-size: 16px; transition: transform 0.22s ease; }
+  .back-link:hover .arrow { transform: translateX(-3px); }
+
+  /* Header */
+  header { text-align: center; margin-bottom: 36px; }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  h1 em { font-style: italic; color: var(--accent-deep); font-weight: 400; }
+  .subtitle {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  /* Timers row */
+  .timers {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .timer {
+    flex: 1 1 0;
+    min-width: 220px;
+    max-width: 300px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 28px 24px 26px;
+    text-align: center;
+    box-shadow: 0 4px 24px -16px rgba(43, 31, 21, 0.15);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .timer.running { border-color: var(--accent); }
+  .timer.done {
+    border-color: var(--accent-deep);
+    box-shadow: 0 8px 30px -18px rgba(79, 107, 58, 0.5);
+  }
+
+  .timer .round {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .timer .round .en {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--muted-soft);
+    margin-left: 5px;
+  }
+
+  .timer .time {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 14px 0 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer.done .time { color: var(--accent-deep); }
+
+  .timer .status {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    min-height: 18px;
+    margin-bottom: 16px;
+  }
+  .timer.done .status { color: var(--accent-deep); }
+
+  /* progress bar */
+  .progress {
+    height: 4px;
+    width: 100%;
+    background: var(--line-soft);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress .bar {
+    height: 100%;
+    width: 100%;
+    background: var(--accent);
+    border-radius: 100px;
+    transition: width 1s linear;
+  }
+  .timer.done .progress .bar { background: var(--accent-deep); }
+
+  /* start button per timer */
+  .btn-start {
+    width: 100%;
+    padding: 11px 0;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-start:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
+  .btn-start.paused { background: var(--card); color: var(--ink); border-color: var(--line); }
+  .btn-start.paused:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn-start:disabled { opacity: 0.45; cursor: default; }
+  .btn-start:disabled:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* Reset all */
+  .actions { display: flex; justify-content: center; margin-top: 32px; }
+  .btn-reset {
+    padding: 11px 28px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-reset:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); transform: translateY(-1px); }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 36px;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.8;
+  }
+  footer .note { font-family: 'Fraunces', serif; font-style: italic; }
+  footer .brand {
+    margin-top: 6px;
+    font-size: 10.5px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+  }
+
+  @media (max-width: 720px) {
+    .timers { flex-direction: column; align-items: center; }
+    .timer { max-width: 360px; width: 100%; }
+  }
+  @media (max-width: 480px) {
+    body { padding: 28px 14px 40px; }
+    .timer .time { font-size: 56px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <a class="back-link" href="index.html"><span class="arrow">←</span> กลับหน้าหลัก</a>
+
+    <header>
+      <div class="eyebrow">Miss Icecream · Lab Tools</div>
+      <h1>PST <em>Timer</em></h1>
+      <p class="subtitle">Paula's Spin Technique · จับเวลาพัก 3 รอบ รอบละ 60 วินาที กดเริ่มแยกแต่ละรอบได้ตามจังหวะที่ต้องการนะคะ</p>
+    </header>
+
+    <div class="timers" id="timers"></div>
+
+    <div class="actions">
+      <button class="btn-reset" onclick="resetAll()">รีเซ็ตทั้งหมด</button>
+    </div>
+
+    <footer>
+      <p class="note">หมายเหตุ: แต่ละรอบนับถอยหลังจาก 60 วินาที เมื่อครบจะมีเสียงเตือนสั้นๆ</p>
+      <p class="brand">Miss Icecream · พรหล้า</p>
+    </footer>
+
+  </div>
+
+<script>
+  const DURATION = 60; // วินาทีต่อรอบ
+  const ROUNDS = 3;
+  const wrap = document.getElementById('timers');
+  const timers = [];
+
+  function fmt(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function beep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = 660;
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.62);
+    } catch (e) { /* บางเบราว์เซอร์อาจไม่รองรับ */ }
+  }
+
+  function createTimer(i) {
+    const el = document.createElement('div');
+    el.className = 'timer';
+    el.innerHTML = `
+      <div class="round">รอบที่ ${i + 1} <span class="en">Round ${i + 1}</span></div>
+      <div class="time">${fmt(DURATION)}</div>
+      <div class="status">&nbsp;</div>
+      <div class="progress"><div class="bar"></div></div>
+      <button class="btn-start">เริ่ม</button>
+    `;
+    wrap.appendChild(el);
+
+    const timeEl   = el.querySelector('.time');
+    const statusEl = el.querySelector('.status');
+    const barEl    = el.querySelector('.bar');
+    const btn      = el.querySelector('.btn-start');
+
+    const state = {
+      remaining: DURATION,
+      interval: null,
+      running: false,
+      done: false,
+    };
+
+    function render() {
+      timeEl.textContent = fmt(state.remaining);
+      barEl.style.width = (state.remaining / DURATION * 100) + '%';
+    }
+
+    function tick() {
+      state.remaining--;
+      render();
+      if (state.remaining <= 0) {
+        clearInterval(state.interval);
+        state.interval = null;
+        state.running = false;
+        state.done = true;
+        el.classList.remove('running');
+        el.classList.add('done');
+        statusEl.textContent = 'เสร็จแล้ว';
+        btn.textContent = 'เริ่มใหม่';
+        btn.classList.add('paused');
+        beep();
+      }
+    }
+
+    function start() {
+      if (state.running) return;
+      if (state.done || state.remaining <= 0) {
+        state.remaining = DURATION;
+        state.done = false;
+        el.classList.remove('done');
+        render();
+      }
+      state.running = true;
+      el.classList.add('running');
+      statusEl.textContent = 'กำลังนับถอยหลัง…';
+      btn.textContent = 'หยุด';
+      btn.classList.remove('paused');
+      state.interval = setInterval(tick, 1000);
+    }
+
+    function pause() {
+      clearInterval(state.interval);
+      state.interval = null;
+      state.running = false;
+      el.classList.remove('running');
+      statusEl.textContent = 'พักไว้';
+      btn.textContent = 'เริ่มต่อ';
+      btn.classList.add('paused');
+    }
+
+    btn.addEventListener('click', () => {
+      if (state.running) pause(); else start();
+    });
+
+    function reset() {
+      clearInterval(state.interval);
+      state.interval = null;
+      state.running = false;
+      state.done = false;
+      state.remaining = DURATION;
+      el.classList.remove('running', 'done');
+      statusEl.innerHTML = '&nbsp;';
+      btn.textContent = 'เริ่ม';
+      btn.classList.remove('paused');
+      render();
+    }
+
+    timers.push({ reset });
+    render();
+  }
+
+  for (let i = 0; i < ROUNDS; i++) createTimer(i);
+
+  function resetAll() {
+    timers.forEach(t => t.reset());
+  }
+</script>
+</body>
+</html>
