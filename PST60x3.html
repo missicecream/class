@@ -378,32 +378,45 @@
     const btn      = el.querySelector('.btn-start');
 
     const state = {
-      remaining: DURATION,
+      remaining: DURATION,  // วินาทีที่เหลือ (ใช้แสดงผล / ตอนพัก)
+      endTime: null,        // เวลาที่จะครบ อิงนาฬิกาจริง (ms)
       interval: null,
       running: false,
       done: false,
     };
 
     function render() {
-      timeEl.textContent = fmt(state.remaining);
-      barEl.style.width = (state.remaining / DURATION * 100) + '%';
+      const shown = Math.max(0, state.remaining);
+      timeEl.textContent = fmt(shown);
+      barEl.style.width = (shown / DURATION * 100) + '%';
     }
 
-    function tick() {
-      state.remaining--;
+    function finish() {
+      clearInterval(state.interval);
+      state.interval = null;
+      state.running = false;
+      state.done = true;
+      state.endTime = null;
+      state.remaining = 0;
+      el.classList.remove('running');
+      el.classList.add('done');
+      statusEl.textContent = 'เสร็จแล้ว';
+      btn.textContent = 'เริ่มใหม่';
+      btn.classList.add('paused');
       render();
-      if (state.remaining <= 0) {
-        clearInterval(state.interval);
-        state.interval = null;
-        state.running = false;
-        state.done = true;
-        el.classList.remove('running');
-        el.classList.add('done');
-        statusEl.textContent = 'เสร็จแล้ว';
-        btn.textContent = 'เริ่มใหม่';
-        btn.classList.add('paused');
-        beep();
-        buzz();
+      beep();
+      buzz();
+    }
+
+    // คำนวณเวลาที่เหลือจากนาฬิกาจริง — แม่นยำแม้สลับแอปไปแล้วกลับมา
+    function sync() {
+      if (!state.running || state.endTime == null) return;
+      const rem = Math.round((state.endTime - Date.now()) / 1000);
+      if (rem <= 0) {
+        finish();
+      } else {
+        state.remaining = rem;
+        render();
       }
     }
 
@@ -414,24 +427,31 @@
         state.remaining = DURATION;
         state.done = false;
         el.classList.remove('done');
-        render();
       }
       state.running = true;
+      state.endTime = Date.now() + state.remaining * 1000;
       el.classList.add('running');
       statusEl.textContent = 'กำลังนับถอยหลัง…';
       btn.textContent = 'หยุด';
       btn.classList.remove('paused');
-      state.interval = setInterval(tick, 1000);
+      render();
+      state.interval = setInterval(sync, 250);
     }
 
     function pause() {
+      // เก็บเวลาที่เหลือจริงก่อนหยุด
+      if (state.endTime != null) {
+        state.remaining = Math.max(0, Math.round((state.endTime - Date.now()) / 1000));
+      }
       clearInterval(state.interval);
       state.interval = null;
       state.running = false;
+      state.endTime = null;
       el.classList.remove('running');
       statusEl.textContent = 'พักไว้';
       btn.textContent = 'เริ่มต่อ';
       btn.classList.add('paused');
+      render();
     }
 
     btn.addEventListener('click', () => {
@@ -443,6 +463,7 @@
       state.interval = null;
       state.running = false;
       state.done = false;
+      state.endTime = null;
       state.remaining = DURATION;
       el.classList.remove('running', 'done');
       statusEl.innerHTML = '&nbsp;';
@@ -451,11 +472,18 @@
       render();
     }
 
-    timers.push({ reset });
+    timers.push({ reset, sync });
     render();
   }
 
   for (let i = 0; i < ROUNDS; i++) createTimer(i);
+
+  // เมื่อกลับมาที่หน้าเว็บ (จากสลับแอป/ปลุกจอ) ให้คำนวณเวลาใหม่ทันที
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) timers.forEach(t => t.sync());
+  });
+  window.addEventListener('focus', () => timers.forEach(t => t.sync()));
+  window.addEventListener('pageshow', () => timers.forEach(t => t.sync()));
 
   function resetAll() {
     timers.forEach(t => t.reset());
