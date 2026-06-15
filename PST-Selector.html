@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PST Selector · Miss Icecream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4ECE0;
+    --card: #FBF6EC;
+    --ink: #2B1F15;
+    --muted: #8C7A66;
+    --muted-soft: #BFB09B;
+    --line: #E5D9C4;
+    --line-soft: #EFE5D2;
+    --accent: #6B8E4E;
+    --accent-deep: #4F6B3A;
+    --rose-deep: #A85B47;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    padding: 44px 20px 56px;
+    background-image:
+      radial-gradient(circle at 15% 5%, rgba(220, 229, 200, 0.50) 0%, transparent 40%),
+      radial-gradient(circle at 88% 95%, rgba(201, 120, 98, 0.10) 0%, transparent 40%);
+  }
+
+  .container { max-width: 760px; margin: 0 auto; }
+
+  /* Back link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 28px;
+    padding: 8px 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all 0.22s ease;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--accent); transform: translateX(-2px); }
+  .back-link .arrow { font-family: 'Fraunces', serif; font-size: 16px; transition: transform 0.22s ease; }
+  .back-link:hover .arrow { transform: translateX(-3px); }
+
+  /* Header */
+  header { text-align: center; margin-bottom: 36px; }
+  .eyebrow {
+    font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px; font-weight: 500;
+  }
+  h1 {
+    font-family: 'Fraunces', serif; font-weight: 400;
+    font-size: clamp(32px, 5vw, 48px); line-height: 1.05;
+    letter-spacing: -0.02em; margin-bottom: 10px;
+  }
+  h1 em { font-style: italic; color: var(--accent-deep); font-weight: 400; }
+  .subtitle { color: var(--muted); font-size: 14px; max-width: 520px; margin: 0 auto; line-height: 1.65; }
+
+  /* Step blocks */
+  .step { margin-bottom: 26px; }
+  .step.hidden { display: none; }
+
+  .step-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px;
+  }
+  .step-num {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 22px;
+    color: var(--muted-soft); line-height: 1; flex-shrink: 0;
+  }
+  .step-q {
+    font-family: 'Sarabun', sans-serif; font-size: 16px; font-weight: 600;
+    color: var(--ink); line-height: 1.4;
+  }
+
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .opts.one-col { grid-template-columns: 1fr; }
+
+  .opt {
+    text-align: left;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Sarabun', sans-serif;
+    color: var(--ink);
+    box-shadow: 0 4px 22px -18px rgba(43, 31, 21, 0.2);
+  }
+  .opt:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .opt.selected {
+    border-color: var(--accent-deep);
+    background: #F3F6EC;
+    box-shadow: 0 6px 22px -16px rgba(79, 107, 58, 0.45);
+  }
+  .opt .opt-title {
+    font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500;
+    margin-bottom: 5px; line-height: 1.2;
+  }
+  .opt.selected .opt-title { color: var(--accent-deep); }
+  .opt .opt-sub { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .opt .opt-eg { font-size: 12px; color: var(--muted-soft); line-height: 1.5; margin-top: 6px; }
+
+  /* Result */
+  .result { margin-top: 8px; }
+  .result.hidden { display: none; }
+
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--accent);
+    border-radius: 22px;
+    padding: 30px 28px 26px;
+    text-align: center;
+    box-shadow: 0 8px 34px -20px rgba(79, 107, 58, 0.45);
+  }
+
+  .result-badges {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;
+  }
+  .badge {
+    font-size: 11.5px; font-weight: 500; letter-spacing: 0.02em;
+    padding: 5px 13px; border-radius: 100px;
+    background: var(--line-soft); color: var(--muted);
+  }
+  .badge.grp { background: var(--accent-deep); color: #fff; }
+
+  .result-main {
+    display: flex; justify-content: center; align-items: stretch;
+    gap: 0; flex-wrap: wrap; margin-bottom: 8px;
+  }
+  .metric { padding: 6px 22px; }
+  .metric + .metric { border-left: 1px solid var(--line); }
+  .metric .big {
+    font-family: 'Fraunces', serif; font-weight: 400; font-size: 46px;
+    line-height: 1; color: var(--accent-deep); letter-spacing: -0.01em;
+  }
+  .metric .lbl { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  .range-note {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 13px; color: var(--muted); margin-top: 12px;
+  }
+
+  /* Notes */
+  .notes {
+    text-align: left; margin-top: 22px; padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .notes h3 {
+    font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.04em; color: var(--muted); margin-bottom: 12px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+  }
+  .notes ul { list-style: none; }
+  .notes li {
+    position: relative; padding-left: 20px; margin-bottom: 10px;
+    font-size: 13.5px; line-height: 1.6; color: var(--ink);
+  }
+  .notes li::before {
+    content: '•'; position: absolute; left: 4px; top: -1px;
+    color: var(--accent); font-size: 15px;
+  }
+  .notes li.warn { color: var(--rose-deep); }
+  .notes li.warn::before { color: var(--rose-deep); }
+
+  .actions { display: flex; justify-content: center; margin-top: 26px; }
+  .btn-reset {
+    padding: 11px 28px; border: 1px solid var(--line); background: var(--card);
+    color: var(--ink); font-family: 'Sarabun', sans-serif; font-size: 13.5px;
+    font-weight: 500; border-radius: 100px; cursor: pointer;
+    transition: all 0.22s ease; letter-spacing: 0.02em;
+  }
+  .btn-reset:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); transform: translateY(-1px); }
+
+  .prompt {
+    text-align: center; color: var(--muted); font-family: 'Fraunces', serif;
+    font-style: italic; font-size: 14px; padding: 14px 0; margin-top: 4px;
+  }
+
+  footer {
+    text-align: center; margin-top: 36px; color: var(--muted);
+    font-size: 12.5px; line-height: 1.8;
+  }
+  footer .brand {
+    margin-top: 6px; font-size: 10.5px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--muted-soft);
+  }
+
+  @media (max-width: 560px) {
+    .opts { grid-template-columns: 1fr; }
+    body { padding: 28px 14px 44px; }
+    .metric { padding: 6px 16px; }
+    .metric .big { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <a class="back-link" href="index.html"><span class="arrow">←</span> กลับหน้าหลัก</a>
+
+    <header>
+      <div class="eyebrow">Miss Icecream · Lab Tools</div>
+      <h1>PST <em>Selector</em></h1>
+      <p class="subtitle">Paula’s Spin Technique · ตอบ 2 คำถาม แล้วดูว่าต้องปั่นกี่รอบ รอบละกี่วินาที และพักเท่าไหร่ค่ะ</p>
+    </header>
+
+    <!-- Step 1: recipe group -->
+    <div class="step" id="step1">
+      <div class="step-head">
+        <span class="step-num">1</span>
+        <span class="step-q">ไขมันในสูตรผ่านความร้อนระหว่างการผลิตไหม?</span>
+      </div>
+      <div class="opts">
+        <button class="opt" data-group="1" type="button">
+          <div class="opt-title">ไม่ผ่านความร้อน / ไม่มีไขมัน</div>
+          <div class="opt-sub">เม็ดไขมันยังเล็กอยู่แล้ว PST แค่รักษาสภาพไว้ (กลุ่ม 1)</div>
+          <div class="opt-eg">เช่น เบสทำทานที่เติมครีมแช่เย็นทีหลัง, ซอร์เบต์, เชอร์เบท</div>
+        </button>
+        <button class="opt" data-group="2" type="button">
+          <div class="opt-title">ผ่านความร้อน</div>
+          <div class="opt-sub">เม็ดไขมันรวมตัวใหญ่ขึ้น PST ต้องลดขนาดใหม่ (กลุ่ม 2)</div>
+          <div class="opt-eg">เช่น เบสทำขายทุกชนิด, ช็อกโกแลต/โกโก้, เพสต์ถั่ว, กะทิ, นมพืชเติมน้ำมัน</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: machine -->
+    <div class="step" id="step2">
+      <div class="step-head">
+        <span class="step-num">2</span>
+        <span class="step-q">ใช้เครื่องปั่นชนิดไหน?</span>
+      </div>
+      <div class="opts">
+        <button class="opt" data-machine="commJar" type="button">
+          <div class="opt-title">เครื่องปั่นโถระดับการค้า</div>
+          <div class="opt-sub">แบบที่ใช้ในร้านน้ำปั่น</div>
+        </button>
+        <button class="opt" data-machine="homeJar" type="button">
+          <div class="opt-title">เครื่องปั่นโถครัวเรือน</div>
+          <div class="opt-sub">กำลังต่ำ</div>
+        </button>
+        <button class="opt" data-machine="immMed" type="button">
+          <div class="opt-title">เครื่องปั่นมือถือ (กลาง)</div>
+          <div class="opt-sub">ระดับการค้า · มิกซ์ 5–24 กก.</div>
+        </button>
+        <button class="opt" data-machine="immLarge" type="button">
+          <div class="opt-title">เครื่องปั่นมือถือ (ใหญ่)</div>
+          <div class="opt-sub">ระดับการค้า · มิกซ์ 25–50 กก.</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: batch profile (immersion only) -->
+    <div class="step hidden" id="step3">
+      <div class="step-head">
+        <span class="step-num">3</span>
+        <span class="step-q">ชุดการผลิตเป็นแบบไหน?</span>
+      </div>
+      <div class="opts">
+        <button class="opt" data-profile="low" type="button">
+          <div class="opt-title">ชุดเล็ก / เนื้อใส</div>
+          <div class="opt-sub">ใช้ตัวเลขฝั่งต่ำของช่วง</div>
+        </button>
+        <button class="opt" data-profile="high" type="button">
+          <div class="opt-title">ชุดใหญ่ / เนื้อข้น</div>
+          <div class="opt-sub">ใช้ตัวเลขฝั่งสูงของช่วง</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="prompt" id="prompt">ตอบคำถามด้านบนเพื่อดูคำแนะนำค่ะ</div>
+
+    <!-- Result -->
+    <div class="result hidden" id="result">
+      <div class="result-card">
+        <div class="result-badges" id="badges"></div>
+        <div class="result-main">
+          <div class="metric"><div class="big" id="mRounds">–</div><div class="lbl">รอบ</div></div>
+          <div class="metric"><div class="big" id="mSec">–</div><div class="lbl">วินาที / รอบ</div></div>
+          <div class="metric"><div class="big" id="mRest">–</div><div class="lbl">วินาทีพัก</div></div>
+        </div>
+        <div class="range-note" id="rangeNote"></div>
+
+        <div class="notes">
+          <h3>ข้อควรรู้</h3>
+          <ul id="noteList"></ul>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-reset" onclick="resetAll()">เริ่มใหม่</button>
+      </div>
+    </div>
+
+    <footer>
+      <p class="brand">Miss Icecream · พรหล้า</p>
+    </footer>
+
+  </div>
+
+<script>
+  const DATA = {
+    commJar: {
+      label: 'เครื่องปั่นโถระดับการค้า', type: 'jar',
+      g1: { rounds: '2', sec: '30' },
+      g2: { rounds: '3', sec: '30' },
+      rest: '60'
+    },
+    homeJar: {
+      label: 'เครื่องปั่นโถครัวเรือน (กำลังต่ำ)', type: 'jar',
+      g1: { rounds: '3', sec: '30' },
+      g2: { rounds: '4', sec: '25', note: 'กลุ่ม 2 ลดเวลาต่อรอบเหลือ 25 วินาที เพราะต้องปั่นหลายรอบ ช่วยไม่ให้มอเตอร์กำลังต่ำร้อนสะสมเกินไป' },
+      rest: '60'
+    },
+    immMed: {
+      label: 'เครื่องปั่นมือถือ ระดับการค้า ขนาดกลาง (5–24 กก.)', type: 'imm',
+      g1: { rLow: 3, rHigh: 4, sLow: 45, sHigh: 45 },
+      g2: { rLow: 4, rHigh: 5, sLow: 45, sHigh: 55 },
+      rest: '60'
+    },
+    immLarge: {
+      label: 'เครื่องปั่นมือถือ ระดับการค้า ขนาดใหญ่ (25–50 กก.)', type: 'imm', large: true,
+      g1: { rLow: 4, rHigh: 5, sLow: 70, sHigh: 70 },
+      g2: { rLow: 5, rHigh: 6, sLow: 70, sHigh: 90 },
+      rest: '60'
+    }
+  };
+
+  const state = { group: null, machine: null, profile: null };
+
+  const step3 = document.getElementById('step3');
+  const resultEl = document.getElementById('result');
+  const promptEl = document.getElementById('prompt');
+
+  // ผูกปุ่มตัวเลือก
+  function bindOpts(attr, key) {
+    document.querySelectorAll('[data-' + attr + ']').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-' + attr);
+        state[key] = (attr === 'group') ? Number(val) : val;
+        // ไฮไลต์เฉพาะกลุ่มเดียวกัน
+        btn.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+        btn.classList.add('selected');
+        if (key === 'machine') {
+          // ถ้าเปลี่ยนเครื่อง รีเซ็ต profile
+          state.profile = null;
+          document.querySelectorAll('[data-profile]').forEach(o => o.classList.remove('selected'));
+        }
+        update();
+      });
+    });
+  }
+  bindOpts('group', 'group');
+  bindOpts('machine', 'machine');
+  bindOpts('profile', 'profile');
+
+  function update() {
+    const m = state.machine ? DATA[state.machine] : null;
+    const needProfile = m && m.type === 'imm';
+
+    // แสดง step 3 เฉพาะเครื่องมือถือ
+    step3.classList.toggle('hidden', !needProfile);
+
+    const ready = state.group && m && (!needProfile || state.profile);
+    if (!ready) {
+      resultEl.classList.add('hidden');
+      promptEl.style.display = 'block';
+      return;
+    }
+    promptEl.style.display = 'none';
+    renderResult(m);
+    resultEl.classList.remove('hidden');
+  }
+
+  function renderResult(m) {
+    const g = state.group === 1 ? m.g1 : m.g2;
+    let rounds, sec, rangeText = '';
+
+    if (m.type === 'jar') {
+      rounds = g.rounds; sec = g.sec;
+    } else {
+      const hi = state.profile === 'high';
+      rounds = hi ? g.rHigh : g.rLow;
+      sec = hi ? g.sHigh : g.sLow;
+      const rangeR = (g.rLow !== g.rHigh) ? (g.rLow + '–' + g.rHigh + ' รอบ') : null;
+      const rangeS = (g.sLow !== g.sHigh) ? (g.sLow + '–' + g.sHigh + ' วินาที') : null;
+      const parts = [rangeR, rangeS].filter(Boolean);
+      if (parts.length) rangeText = 'ช่วงทั้งหมดของเครื่องนี้: ' + parts.join(' · ');
+    }
+
+    document.getElementById('mRounds').textContent = rounds;
+    document.getElementById('mSec').textContent = sec;
+    document.getElementById('mRest').textContent = m.rest;
+    document.getElementById('rangeNote').textContent = rangeText;
+
+    // badges
+    const badges = document.getElementById('badges');
+    badges.innerHTML =
+      '<span class="badge grp">กลุ่ม ' + state.group + '</span>' +
+      '<span class="badge">' + m.label + '</span>';
+
+    // notes
+    const notes = [];
+    notes.push('ปั่นที่อุณหภูมิ 60–65°C — วัดทุกครั้งก่อนเทลงโถ ถ้าเย็นกว่าให้อุ่นก่อน ถ้าสูงกว่าเล็กน้อยเริ่มได้เลย');
+    notes.push('ปั่นแบบสลับพัก (pulsed shear): ปั่นแรงสั้นๆ สลับพัก ไม่ปั่นต่อเนื่องรวดเดียว');
+    if (m.type === 'imm') {
+      notes.push('ไล่หัวปั่นให้ทั่วหม้อ ไม่ปั่นจุดเดียว');
+      notes.push('ใช้ตัวเลขฝั่งสูงเมื่อชุดใหญ่/เนื้อข้น และฝั่งต่ำเมื่อชุดเล็ก/เนื้อใส');
+    }
+    if (m.large) {
+      notes.push('ถ้ามิกซ์ตั้งแต่ 35 กก. ขึ้นไป พักระหว่างรอบได้ถึง 75 วินาที');
+    }
+    if (state.group === 2 && g.note) {
+      notes.push(g.note);
+    }
+    notes.push({ warn: true, text: 'อย่าให้มิกซ์เย็นต่ำกว่า 50°C ระหว่างทำซ้ำ ถ้าใกล้ถึงให้อุ่นกลับก่อนปั่นรอบต่อไป' });
+    notes.push({ warn: true, text: 'ล้างและฆ่าเชื้ออุปกรณ์ทุกชิ้นก่อนใช้ เพราะ PST เป็นจุดแรกที่อุปกรณ์สัมผัสมิกซ์หลังพาสเจอร์ไรส์' });
+
+    const ul = document.getElementById('noteList');
+    ul.innerHTML = '';
+    notes.forEach(n => {
+      const li = document.createElement('li');
+      if (typeof n === 'string') { li.textContent = n; }
+      else { li.textContent = n.text; if (n.warn) li.classList.add('warn'); }
+      ul.appendChild(li);
+    });
+  }
+
+  function resetAll() {
+    state.group = null; state.machine = null; state.profile = null;
+    document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+    step3.classList.add('hidden');
+    resultEl.classList.add('hidden');
+    promptEl.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
