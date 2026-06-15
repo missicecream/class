@@ -60,6 +60,35 @@
   .back-link .arrow { font-family: 'Fraunces', serif; font-size: 16px; transition: transform 0.22s ease; }
   .back-link:hover .arrow { transform: translateX(-3px); }
 
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .topbar .back-link { margin-bottom: 0; }
+
+  .sound-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--muted);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.22s ease;
+  }
+  .sound-toggle:hover { color: var(--ink); border-color: var(--accent); }
+  .sound-toggle.off { color: var(--muted-soft); }
+
   /* Header */
   header { text-align: center; margin-bottom: 36px; }
   .eyebrow {
@@ -238,7 +267,10 @@
 <body>
   <div class="container">
 
-    <a class="back-link" href="index.html"><span class="arrow">←</span> กลับหน้าหลัก</a>
+    <div class="topbar">
+      <a class="back-link" href="index.html"><span class="arrow">←</span> กลับหน้าหลัก</a>
+      <button class="sound-toggle" id="soundToggle" type="button">🔔 เสียง: เปิด</button>
+    </div>
 
     <header>
       <div class="eyebrow">Miss Icecream · Lab Tools</div>
@@ -271,21 +303,62 @@
     return m + ':' + String(s).padStart(2, '0');
   }
 
-  function beep() {
+  // ===== เสียงเตือน =====
+  let soundOn = true;
+  let audioCtx = null;
+
+  // ปลดล็อกเสียง — ต้องเรียกตอนผู้ใช้แตะหน้าจอ (สำคัญมากบนมือถือ)
+  function unlockAudio() {
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.value = 660;
-      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.62);
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch (e) { /* ไม่รองรับ */ }
+  }
+
+  // เสียงตี๊ด 3 ครั้ง ดังพอได้ยิน
+  function beep() {
+    if (!soundOn) return;
+    try {
+      unlockAudio();
+      if (!audioCtx) return;
+      const t0 = audioCtx.currentTime;
+      for (let i = 0; i < 3; i++) {
+        const start = t0 + i * 0.32;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.type = 'square';
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.6, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.26);
+        osc.start(start);
+        osc.stop(start + 0.28);
+      }
     } catch (e) { /* บางเบราว์เซอร์อาจไม่รองรับ */ }
   }
+
+  // การสั่น — ทำงานบนมือถือแม้เปิด silent
+  function buzz() {
+    if (!soundOn) return;
+    try { if (navigator.vibrate) navigator.vibrate([250, 120, 250, 120, 250]); } catch (e) {}
+  }
+
+  // ปุ่มเปิด/ปิดเสียง
+  const soundToggle = document.getElementById('soundToggle');
+  soundToggle.addEventListener('click', () => {
+    soundOn = !soundOn;
+    if (soundOn) {
+      unlockAudio();
+      soundToggle.textContent = '🔔 เสียง: เปิด';
+      soundToggle.classList.remove('off');
+    } else {
+      soundToggle.textContent = '🔕 เสียง: ปิด';
+      soundToggle.classList.add('off');
+    }
+  });
 
   function createTimer(i) {
     const el = document.createElement('div');
@@ -330,10 +403,12 @@
         btn.textContent = 'เริ่มใหม่';
         btn.classList.add('paused');
         beep();
+        buzz();
       }
     }
 
     function start() {
+      unlockAudio();
       if (state.running) return;
       if (state.done || state.remaining <= 0) {
         state.remaining = DURATION;
