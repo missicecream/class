@@ -78,6 +78,12 @@
   .sub p,.sub ul{margin:4px 0}
   .sub li{font-size:13px}
 
+  .ftable{width:100%;border-collapse:collapse;margin:8px 0 2px;font-size:13px}
+  .ftable th,.ftable td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line-soft)}
+  .ftable th{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.04em}
+  .ftable tr:last-child td{border-bottom:none}
+  .ftable td.t{font-family:'Fraunces',serif;color:var(--accent-deep);white-space:nowrap}
+
   .branch-tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--accent-deep);background:#EBF0E2;border-radius:6px;padding:2px 8px;margin-bottom:8px}
 
   .chip{display:inline-block;font-family:'Fraunces',serif;font-weight:500;font-size:13px;background:#EDF1E5;color:var(--accent-deep);border-radius:7px;padding:1px 8px;margin:0 1px;white-space:nowrap}
@@ -411,11 +417,21 @@ function render(){
   // 9
   H+=step('9','การแช่แข็ง','Hardening',
     '<ul>'
-    +'<li>แช่ให้ถึงเป้าหมาย<b>เร็วที่สุด</b> ยิ่งเร็วผลึกยิ่งเล็ก เนื้อยิ่งเนียน • Blast Freezer ดีที่สุด</li>'
-    +'<li>เป้า <span class="chip">−18°C</span> (เก็บสต็อก) หรือ <span class="chip">−14°C</span> (พร้อมเสิร์ฟ/ตู้โชว์)</li>'
-    +'<li>Blast (−35°C): ถาด 2 ล. ~1.5–3 ชม. • ตู้ −25°C: ถาด 2 ล. ~5–9 ชม.</li>'
-    +'<li class="warn">ตู้ −18°C ทั่วไปแช่แกนถึงได้จริงราว −14°C (เหมาะเสิร์ฟ ไม่เหมาะเก็บยาว) • เลี่ยงเนื้อหนาเกิน/เปิดตู้บ่อย/ใส่พร้อมกันมากเกิน</li>'
-    +'</ul>');
+    +'<li>แช่ให้ถึงเป้าหมาย<b>เร็วที่สุด</b> ยิ่งเร็วผลึกยิ่งเล็ก เนื้อยิ่งเนียน • Blast Freezer ดีที่สุด ส่วนตู้แช่แข็ง −25°C ก็ใช้ได้ดี (เป็นตู้ที่ใช้กันมากที่สุด)</li>'
+    +'<li>เป้าหมาย <span class="chip">−18°C</span> (เก็บสต็อก) หรือ <span class="chip">−14°C</span> (พร้อมเสิร์ฟ/ตู้โชว์)</li>'
+    +'</ul>'
+    +'<div class="sub"><div class="sub-t">เวลาแช่แข็งโดยประมาณ — จนแกนกลางถึง −18°C</div>'
+    +'<table class="ftable"><thead><tr><th>อุปกรณ์</th><th>ถาด 2 ลิตร</th><th>ถาด 5 ลิตร</th></tr></thead><tbody>'
+    +'<tr><td>Blast Freezer (−35°C)</td><td class="t">1.5–3 ชม.</td><td class="t">2.5–4.5 ชม.</td></tr>'
+    +'<tr><td><b>ตู้แช่แข็ง −25°C</b></td><td class="t">5–9 ชม.</td><td class="t">10–16 ชม.</td></tr>'
+    +'</tbody></table>'
+    +'<p style="font-size:12.5px;color:var(--muted);margin-top:6px">เวลาจริงขึ้นกับรูปทรง/ความหนาของเนื้อ ประสิทธิภาพตู้ และปริมาณที่ใส่พร้อมกัน</p></div>'
+    +'<div class="sub"><div class="sub-t">ถ้าใช้ตู้แช่แข็ง −18°C ทั่วไป</div>'
+    +'<p>แช่แกนกลางได้จริงราว <span class="chip">−14°C</span> (เหมาะเสิร์ฟ ไม่เหมาะเก็บยาวที่ต้องเย็นถึง −18°C ทั้งก้อน)</p>'
+    +'<table class="ftable"><thead><tr><th>อุปกรณ์ (ถึงแกน −14°C)</th><th>ถาด 2 ลิตร</th><th>ถาด 5 ลิตร</th></tr></thead><tbody>'
+    +'<tr><td>ตู้แช่แข็ง −18°C</td><td class="t">5–9 ชม.</td><td class="t">10–18 ชม.</td></tr>'
+    +'</tbody></table></div>'
+    +'<ul><li class="warn">เลี่ยงเนื้อหนาเกิน / เปิดตู้บ่อย / ใส่พร้อมกันมากเกินกำลังตู้ • ตู้เป่าลมอย่าวางถาดชิดจนลมไม่ทั่ว • ถ้าช้ากว่าปกติให้เช็ก defrost น้ำแข็งเกาะคอยล์</li></ul>');
 
   // 10
   H+=step('10','การเก็บรักษา','Storage',
