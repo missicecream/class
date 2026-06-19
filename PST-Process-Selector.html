@@ -212,10 +212,10 @@
         </div>
       </div>
       <div class="q">
-        <div class="q-label">7. สูตรมีครีมไหม? <span class="en">Cream</span></div>
+        <div class="q-label">7. มีครีมแช่เย็นที่ต้องเติมเมื่อมิกซ์เย็นแล้วไหม? <span class="en">Cold cream</span></div>
         <div class="opts">
-          <button class="opt" data-k="cream" data-v="yes" type="button"><b>มีครีม</b><span class="s">เติมครีมแช่เย็นหลังลดอุณหภูมิ</span></button>
-          <button class="opt" data-k="cream" data-v="no" type="button"><b>ไม่มีครีม</b><span class="s">เข้าขั้นปั่นได้เลย</span></button>
+          <button class="opt" data-k="cream" data-v="yes" type="button"><b>มี</b><span class="s">เติมครีมแช่เย็นหลังลดอุณหภูมิถึง ≤10°C</span></button>
+          <button class="opt" data-k="cream" data-v="no" type="button"><b>ไม่มี / ไม่ใช้ครีม</b><span class="s">เข้าขั้นปั่นได้เลย</span></button>
         </div>
       </div>
     </div>
@@ -405,7 +405,7 @@ function render(){
     s5+='<div class="sub"><div class="sub-t">ช่วงที่ 1 — Active cooling <span class="chip">50–55 → 40°C</span> ~1–2 นาที</div>'
       +'<p>วางชามในอ่างน้ำแข็ง หมุนชาม+ปาดขอบต่อเนื่อง ให้เย็นเท่ากันทั่วชาม</p>'
       +'<ul><li><b>ถ้าสารคงตัวมีคาร์ราจีแนน</b> (เช่น SER, SEP — ดูฉลาก carrageenan/E407): <b>หยุดคนที่ ~40°C</b> (38–42°C ยอมรับได้) ห้ามคนต่อ เพราะคาร์ราจีแนนเริ่มล็อกเครือข่ายเจล</li>'
-      +'<li><b>ถ้าไม่มีคาร์ราจีแนน</b> (เช่น xanthan+CMC): คนต่อเนื่องได้จนถึงเป้า ≤25°C</li></ul></div>';
+      +'<li><b>ถ้าไม่มีคาร์ราจีแนน</b> (เช่น xanthan+CMC): ไม่มีเครือข่ายเจลให้ต้องระวัง เลือกได้ 2 ทาง — (1) คนต่อเนื่องจนถึง ≤25°C ได้เลย (เร็วกว่า แต่เมื่อยกว่า) หรือ (2) แช่นิ่ง (passive setting) จนถึง ≤25°C เหมือนกรณีมีคาร์ราจีแนน (สบายแรงกว่า)</li></ul></div>';
     s5+='<div class="sub"><div class="sub-t">ช่วงที่ 2 — Passive setting <span class="chip">40 → ≤25°C</span> 30 นาที</div>'
       +'<p>วางชามนิ่งในอ่างน้ำแข็ง <b>ไม่คน ไม่ยก ไม่เขย่า</b> ปล่อยให้เครือข่ายเจลตั้งตัว (เติมน้ำแข็งรอบนอกได้)</p></div>';
     s5+='<div class="sub"><div class="sub-t">ตรวจที่ 30 นาที (ยิงผิวบน ไม่คน)</div><ul>'
