@@ -504,7 +504,10 @@ function render(){
     +'<li>สคูปสะอาดและหมาด (น้ำไหล/dipper well) ไม่ใช้น้ำนิ่งจุ่ม • แช่ถ้วยสเตนเลส/เซรามิก/แก้วให้เย็นก่อนเสิร์ฟ</li>'
     +'</ul>');
 
-  H+='<div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์คู่มือ</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
+  const chartFile = home ? 'Flowchart-Home.html' : 'Flowchart-Sell.html';
+  H+='<div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์คู่มือ</button>'
+    +'<a class="btn" href="'+chartFile+'" style="text-decoration:none;display:inline-flex;align-items:center">📄 ผังสรุป A4</a>'
+    +'<button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
   return H;
 }
 
