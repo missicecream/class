@@ -107,6 +107,19 @@
   footer .ref{font-family:'Fraunces',serif;font-style:italic;margin-bottom:5px}
 
   @media(max-width:520px){.opts,.opts.c3{grid-template-columns:1fr}}
+
+  @media print {
+    body{padding:0;background:#fff;background-image:none;color:#000}
+    .container{max-width:100%}
+    .back-link,.setup,.prompt,.actions{display:none!important}
+    header{margin-bottom:14px}
+    .pathbar{margin:0 0 16px}
+    .step{break-inside:avoid;page-break-inside:avoid;box-shadow:none;border-color:#ccc;background:#fff;margin-bottom:10px}
+    .sub{background:#fff;border-color:#ddd}
+    .pst-metrics{background:#fff;border-color:#ccc}
+    .ftable td.t{color:#2b1f15}
+    footer{margin-top:16px}
+  }
 </style>
 </head>
 <body>
@@ -451,7 +464,7 @@ function render(){
     +'<li>สคูปสะอาดและหมาด (น้ำไหล/dipper well) ไม่ใช้น้ำนิ่งจุ่ม • แช่ถ้วยสเตนเลส/เซรามิก/แก้วให้เย็นก่อนเสิร์ฟ</li>'
     +'</ul>');
 
-  H+='<div class="actions"><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
+  H+='<div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์คู่มือ</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
   return H;
 }
 
