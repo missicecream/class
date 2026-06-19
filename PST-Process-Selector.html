@@ -155,8 +155,8 @@
       <div class="opts">
         <button class="opt" data-k="machine" data-v="commJar" type="button"><b>เครื่องปั่นโถระดับการค้า</b><span class="s">แบบร้านน้ำปั่น</span></button>
         <button class="opt" data-k="machine" data-v="homeJar" type="button"><b>เครื่องปั่นโถครัวเรือน</b><span class="s">กำลังต่ำ</span></button>
-        <button class="opt" data-k="machine" data-v="immMed" type="button"><b>เครื่องปั่นมือถือ (กลาง)</b><span class="s">มิกซ์ 5–24 กก.</span></button>
-        <button class="opt" data-k="machine" data-v="immLarge" type="button"><b>เครื่องปั่นมือถือ (ใหญ่)</b><span class="s">มิกซ์ 25–50 กก.</span></button>
+        <button class="opt" data-k="machine" data-v="immMed" type="button"><b>เครื่องปั่นมือถือระดับการค้า (กลาง)</b><span class="s">มิกซ์ 5–24 กก.</span></button>
+        <button class="opt" data-k="machine" data-v="immLarge" type="button"><b>เครื่องปั่นมือถือระดับการค้า (ใหญ่)</b><span class="s">มิกซ์ 25–50 กก.</span></button>
       </div>
     </div>
 
@@ -209,8 +209,8 @@
 const PST={
   commJar:{label:'เครื่องปั่นโถระดับการค้า',type:'jar',g1:{r:'2',s:'30'},g2:{r:'3',s:'30'}},
   homeJar:{label:'เครื่องปั่นโถครัวเรือน',type:'jar',g1:{r:'3',s:'30'},g2:{r:'4',s:'25',note:'กลุ่ม 2 ลดเวลาต่อรอบเหลือ 25 วินาที กันมอเตอร์กำลังต่ำร้อนสะสม'}},
-  immMed:{label:'เครื่องปั่นมือถือ ขนาดกลาง (5–24 กก.)',type:'imm',g1:{rL:3,rH:4,sL:45,sH:45},g2:{rL:4,rH:5,sL:45,sH:55}},
-  immLarge:{label:'เครื่องปั่นมือถือ ขนาดใหญ่ (25–50 กก.)',type:'imm',large:true,g1:{rL:4,rH:5,sL:70,sH:70},g2:{rL:5,rH:6,sL:70,sH:90}}
+  immMed:{label:'เครื่องปั่นมือถือระดับการค้า ขนาดกลาง (5–24 กก.)',type:'imm',g1:{rL:3,rH:4,sL:45,sH:45},g2:{rL:4,rH:5,sL:45,sH:55}},
+  immLarge:{label:'เครื่องปั่นมือถือระดับการค้า ขนาดใหญ่ (25–50 กก.)',type:'imm',large:true,g1:{rL:4,rH:5,sL:70,sH:70},g2:{rL:5,rH:6,sL:70,sH:90}}
 };
 const RISKY={
   eggYolk:{t:'ไข่แดงดิบ',h:'ผสม <b>ไข่แดง : น้ำตาล : ของเหลว = 1 : 1 : 5</b> ก่อน แล้วให้ความร้อน <span class="chip">70°C</span> ค้าง <span class="chip">≥3 นาที</span> คนตลอด (หรือ 68.5°C/30 นาที ระดับมาตรฐานขาย) → ลด <span class="chip warm">&lt;4°C</span> ทันที — น้ำตาล/ของเหลวที่แบ่งมาหักออกจากสูตร • สะดวกสุด: ใช้ไข่แดงพาสเจอไรส์สำเร็จรูป'},
