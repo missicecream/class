@@ -108,11 +108,24 @@
 
   @media(max-width:520px){.opts,.opts.c3{grid-template-columns:1fr}}
 
+  .printset{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px}
+  .pset-row{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+  .pset-row:last-child{margin-bottom:0}
+  .pset-row label{font-size:12.5px;font-weight:600;color:var(--ink)}
+  .pset-row label i{font-style:normal;font-weight:400;color:var(--muted);font-size:11.5px}
+  .pset-row input{font-family:'Sarabun',sans-serif;font-size:14px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);outline:none}
+  .pset-row input:focus{border-color:var(--accent);background:#fff}
+  .print-head{display:none}
+  .print-head .ph-eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#555}
+  .print-head .ph-title{font-family:'Fraunces',serif;font-size:26px;margin:6px 0 4px;color:#000;line-height:1.1}
+  .print-head .ph-meta{font-size:12px;color:#555}
+
   @media print {
     body{padding:0;background:#fff;background-image:none;color:#000}
     .container{max-width:100%}
-    .back-link,.setup,.prompt,.actions{display:none!important}
-    header{margin-bottom:14px}
+    .back-link,.setup,.prompt,.actions,.printset{display:none!important}
+    header{display:none}
+    .print-head{display:block;text-align:center}
     .pathbar{margin:0 0 16px}
     .step{break-inside:avoid;page-break-inside:avoid;box-shadow:none;border-color:#ccc;background:#fff;margin-bottom:10px}
     .sub{background:#fff;border-color:#ddd}
@@ -234,7 +247,22 @@ const RISKY={
   freshCoconut:{t:'กะทิสดคั้นเอง',h:'<span class="chip">70°C/30 นาที</span> คนตลอด (กันก้นไหม้+ไขมันแยกชั้น) → ลด <span class="chip warm">&lt;4°C</span> ให้เร็วที่สุด เป้า 5 นาที เพื่อรักษากลิ่น'}
 };
 
-const state={purpose:null,risky:new Set(),group:null,machine:null,profile:null,fruitHigh:null,cream:null,stab:new Set()};
+const state={purpose:null,risky:new Set(),group:null,machine:null,profile:null,fruitHigh:null,cream:null,stab:new Set(),title:'',lot:''};
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function setTitle(v){state.title=v;refreshPrintHead();}
+function setLot(v){state.lot=v;refreshPrintHead();}
+function refreshPrintHead(){
+  const t=document.querySelector('.ph-title'), m=document.querySelector('.ph-meta');
+  if(t) t.textContent=(state.title||'').trim()||'คู่มือกระบวนการทำไอศกรีม';
+  if(m){
+    const d=new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'});
+    const parts=[];
+    if((state.lot||'').trim()) parts.push('รอบ/ล็อต: '+state.lot.trim());
+    parts.push('วันที่ '+d);
+    m.textContent=parts.join('   ·   ');
+  }
+}
 
 document.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{
   const k=b.dataset.k,v=b.dataset.v;
@@ -262,6 +290,7 @@ function update(){
   if(!ready){res.innerHTML='';prompt.style.display='block';return;}
   prompt.style.display='none';
   res.innerHTML=render();
+  refreshPrintHead();
 }
 
 function pstResult(m){
@@ -280,6 +309,17 @@ function render(){
   const pr=pstResult(m);
   const groupTxt=state.group==='1'?'กลุ่ม 1':'กลุ่ม 2';
   let H='';
+
+  // print-only header (recipe title / lot / date)
+  H+='<div class="print-head"><div class="ph-eyebrow">Miss Icecream · Lab Tools</div><div class="ph-title"></div><div class="ph-meta"></div></div>';
+
+  // ช่องกรอกสำหรับใบพิมพ์ (ไม่บังคับ)
+  H+='<div class="printset">'
+    +'<div class="pset-row"><label>ชื่อสูตร / หัวเรื่อง <i>(ไม่บังคับ — จะขึ้นบนใบพิมพ์)</i></label>'
+    +'<input type="text" placeholder="เช่น ไอศกรีมมะม่วงกะทิ" value="'+esc(state.title)+'" oninput="setTitle(this.value)"></div>'
+    +'<div class="pset-row"><label>รอบการผลิต / ล็อต <i>(ไม่บังคับ)</i></label>'
+    +'<input type="text" placeholder="เช่น Lot 12 มิ.ย. รอบเช้า" value="'+esc(state.lot)+'" oninput="setLot(this.value)"></div>'
+    +'</div>';
 
   // path bar
   H+='<div class="pathbar"><span class="badge main">'+(home?'ทำทานเอง':'ทำขาย / เพื่อจำหน่าย')+'</span>'
@@ -469,7 +509,7 @@ function render(){
 }
 
 function resetAll(){
-  state.purpose=null;state.risky=new Set();state.group=null;state.machine=null;state.profile=null;state.fruitHigh=null;state.cream=null;state.stab=new Set();
+  state.purpose=null;state.risky=new Set();state.group=null;state.machine=null;state.profile=null;state.fruitHigh=null;state.cream=null;state.stab=new Set();state.title='';state.lot='';
   document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
   document.getElementById('qRisky').style.display='none';
   document.getElementById('homeExtra').style.display='none';
