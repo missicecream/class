@@ -95,7 +95,14 @@
   /* report-only header for print */
   .rep-head{display:none}
 
-  body.cap .back-link,body.cap .actions,body.cap .note,body.cap .logging-only{display:none!important}
+  .batchbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:16px}
+  .batchbar label{font-size:12px;font-weight:600;color:var(--muted)}
+  .batchbar select{flex:1;min-width:140px;font-family:'Sarabun',sans-serif;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  .bbtn{font-family:'Sarabun',sans-serif;font-weight:600;font-size:13px;border-radius:100px;cursor:pointer;border:1px solid var(--line);padding:8px 14px;background:#fff;color:var(--ink)}
+  .bbtn.new{background:var(--accent-deep);color:#fff;border:none}
+  .bbtn.del{color:var(--rose)}
+
+  body.cap .back-link,body.cap .actions,body.cap .note,body.cap .logging-only,body.cap .batchbar{display:none!important}
   body.cap .rep-head{display:block!important}
   body.cap{background:#fff!important;background-image:none!important}
   body.cap .block{background:#fff!important;border:1px solid #ccc!important;box-shadow:none!important}
@@ -113,7 +120,7 @@
     @page{size:A4 portrait;margin:9mm}
     body{padding:0;background:#fff;background-image:none;font-size:11px}
     .sheet{max-width:100%}
-    .back-link,.actions,.note,.logging-only{display:none!important}
+    .back-link,.actions,.note,.logging-only,.batchbar{display:none!important}
     header{display:none}
     .rep-head{display:block;text-align:center;margin-bottom:8px}
     .rep-head .rt{font-family:'Fraunces',serif;font-size:18px}
@@ -157,6 +164,14 @@
   <div class="rep-head">
     <div class="rt">รายงานการพาสเจอไรซ์ (LTLT)</div>
     <div class="rs">Miss Icecream</div>
+  </div>
+
+  <!-- ตัวจัดการ Batch -->
+  <div class="batchbar">
+    <label>Batch:</label>
+    <select id="batchSel" onchange="switchBatch(this.value)"></select>
+    <button class="bbtn new" onclick="newBatch()">➕ Batch ใหม่</button>
+    <button class="bbtn del" onclick="deleteBatch()">🗑 ลบ Batch นี้</button>
   </div>
 
   <!-- 1. ข้อมูลรายงาน -->
@@ -260,15 +275,50 @@ const PROGRAMS=[
   {k:'rawCream',label:'ครีมดิบ',temp:70,time:30},
   {k:'custom',label:'ระบุเวลาและอุณหภูมิเอง',temp:null,time:null}
 ];
-const KEY='ltlt_log_v1';
-let state=load()||fresh();
+const KEY='ltlt_log_v1';            // คีย์เดิม (รุ่นบันทึกเดี่ยว) ใช้ย้ายข้อมูลเข้าระบบหลาย Batch
+const STORE_KEY='ltlt_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
 function fresh(){
   return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',ctemp:'',ctime:'',interval:5,
     startHeat:null,reachTemp:null,endHold:null,startCool:null,coolStartTemp:'',reachCool:null,readings:[]};
 }
-function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+let store=loadStore();
+let state=store.batches[store.current];
+
+function loadStore(){
+  try{const s=localStorage.getItem(STORE_KEY);if(s){const o=JSON.parse(s);if(o&&o.batches&&o.order&&o.order.length&&o.batches[o.current])return o;}}catch(e){}
+  let first=null;
+  try{const old=localStorage.getItem(KEY);if(old)first=JSON.parse(old);}catch(e){}
+  const id=newId();const o={batches:{},order:[id],current:id};
+  o.batches[id]=first||fresh();
+  return o;
+}
+function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify(store))}catch(e){}}
+function save(){persist()}
+
+function batchLabel(id){const b=store.batches[id];if(!b)return 'Batch';const nm=(b.product||'').trim();return nm||('Batch · '+(b.date||''))}
+function refreshBatchSel(){
+  const sel=document.getElementById('batchSel');if(!sel)return;
+  sel.innerHTML=store.order.map((id,i)=>'<option value="'+id+'"'+(id===store.current?' selected':'')+'>'+(i+1)+'. '+escapeHtml(batchLabel(id))+'</option>').join('');
+}
+function switchBatch(id){if(!store.batches[id])return;store.current=id;state=store.batches[id];persist();syncInputs();updateUI();refreshBatchSel()}
+function newBatch(){
+  const id=newId();store.batches[id]=fresh();store.order.push(id);store.current=id;state=store.batches[id];
+  persist();syncInputs();updateUI();refreshBatchSel();
+  const r=document.getElementById('f_product');if(r)r.focus();
+}
+function deleteBatch(){
+  if(store.order.length<=1){
+    if(!confirm('นี่เป็น Batch เดียวที่มี — ล้างข้อมูลแล้วเริ่ม Batch ใหม่?'))return;
+    const id=store.current;store.batches[id]=fresh();state=store.batches[id];persist();syncInputs();updateUI();refreshBatchSel();return;
+  }
+  if(!confirm('ลบ Batch นี้? ข้อมูลของ Batch นี้จะหายถาวร'))return;
+  const cur=store.current;delete store.batches[cur];store.order=store.order.filter(x=>x!==cur);
+  store.current=store.order[0];state=store.batches[store.current];persist();syncInputs();updateUI();refreshBatchSel();
+}
 
 function thaiDate(ts){return new Date(ts).toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})}
 function hms(ts){if(!ts)return '—';const d=new Date(ts);return [d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':')}
@@ -281,7 +331,7 @@ function crit(){
   return p?{temp:p.temp,time:p.time}:{temp:NaN,time:NaN};
 }
 
-function setF(k,v){state[k]=v;save()}
+function setF(k,v){state[k]=v;save();if(k==='product')refreshBatchSel()}
 function setCustom(){state.ctemp=document.getElementById('f_ctemp').value;state.ctime=document.getElementById('f_ctime').value;save();updateUI()}
 
 function selectProgram(k){
@@ -307,9 +357,9 @@ function addReading(temp){state.readings.push({t:Date.now(),temp:Math.round(temp
 function delReading(i){state.readings.splice(i,1);save();updateUI()}
 
 function resetAll(){
-  if(!confirm('ล้างข้อมูลทั้งหมดและเริ่มบันทึกใหม่? (ลบ autosave ในเครื่องด้วย)'))return;
-  try{localStorage.removeItem(KEY)}catch(e){}
-  state=fresh();syncInputs();updateUI();
+  if(!confirm('ล้างข้อมูลใน Batch นี้และเริ่มบันทึกใหม่?'))return;
+  const id=store.current;store.batches[id]=fresh();state=store.batches[id];
+  persist();syncInputs();updateUI();refreshBatchSel();
 }
 
 function syncInputs(){
@@ -460,7 +510,7 @@ function buildChart(c){
   const sel=document.getElementById('f_program');
   PROGRAMS.forEach(p=>{const o=document.createElement('option');o.value=p.k;o.textContent=p.label+(p.temp?(' — ≥'+p.temp+' °C / ≥'+p.time+' นาที'):'');sel.appendChild(o);});
   if(!state.date)state.date=thaiDate(Date.now());
-  syncInputs();updateUI();
+  refreshBatchSel();syncInputs();updateUI();
 })();
 </script>
 <script>
