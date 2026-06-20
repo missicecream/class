@@ -516,7 +516,7 @@ function render(){
     +'<li>สคูปสะอาดและหมาด (น้ำไหล/dipper well) ไม่ใช้น้ำนิ่งจุ่ม • แช่ถ้วยสเตนเลส/เซรามิก/แก้วให้เย็นก่อนเสิร์ฟ</li>'
     +'</ul>');
 
-  H+='<div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์คู่มือ</button><button class="btn" onclick="sharePDF(this)">📤 แชร์ PDF</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
+  H+='<div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์คู่มือ</button><button class="btn" onclick="sharePDF(this)">📤 แชร์ PDF</button><button class="btn" onclick="sharePNG(this)">📷 แชร์รูป</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
   return H;
 }
 
@@ -554,6 +554,20 @@ async function sharePDF(btn){const ot=btn?btn.textContent:'';if(btn){btn.disable
     if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:SHARE_CFG.title,text:txt});}
     else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=SHARE_CFG.file;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
   }catch(e){document.body.classList.remove('cap');if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์ PDF ไม่สำเร็จ: '+((e&&e.message)||e));}
+  finally{if(btn){btn.disabled=false;btn.textContent=ot;}}}
+async function sharePNG(btn){const ot=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='กำลังสร้างรูป…';}
+  try{
+    if(typeof refreshPrintHead==='function')refreshPrintHead();
+    await _ld('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    document.body.classList.add('cap');
+    const canvas=await html2canvas(document.querySelector(SHARE_CFG.target),{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    document.body.classList.remove('cap');
+    const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+    const file=new File([blob],SHARE_CFG.file.replace(/\.pdf$/,'.png'),{type:'image/png'});
+    const txt=(typeof SHARE_CFG.text==='function'?SHARE_CFG.text():SHARE_CFG.text)||SHARE_CFG.title;
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:SHARE_CFG.title,text:txt});}
+    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
+  }catch(e){document.body.classList.remove('cap');if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์รูปไม่สำเร็จ: '+((e&&e.message)||e));}
   finally{if(btn){btn.disabled=false;btn.textContent=ot;}}}
 </script>
 </body>
