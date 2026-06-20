@@ -276,9 +276,13 @@ const RISKY={
 
 const state={purpose:null,risky:new Set(),group:null,machine:null,profile:null,fruitHigh:null,cream:null,stab:new Set(),title:'',lot:''};
 
+const SAVE_KEY='pst_process_selector_v1';
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({...state,risky:[...state.risky],stab:[...state.stab]}));}catch(e){}}
+function load(){try{const s=localStorage.getItem(SAVE_KEY);if(!s)return;const o=JSON.parse(s);Object.assign(state,o);state.risky=new Set(o.risky||[]);state.stab=new Set(o.stab||[]);}catch(e){}}
+
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function setTitle(v){state.title=v;refreshPrintHead();}
-function setLot(v){state.lot=v;refreshPrintHead();}
+function setTitle(v){state.title=v;refreshPrintHead();save();}
+function setLot(v){state.lot=v;refreshPrintHead();save();}
 function refreshPrintHead(){
   const t=document.querySelector('.ph-title'), m=document.querySelector('.ph-meta');
   if(t) t.textContent=(state.title||'').trim()||'คู่มือกระบวนการทำไอศกรีม';
@@ -297,12 +301,12 @@ document.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>
   b.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
   b.classList.add('sel');
   if(k==='machine'){state.profile=null;document.querySelectorAll('[data-k="profile"]').forEach(o=>o.classList.remove('sel'));}
-  update();
+  update();save();
 }));
 document.querySelectorAll('[data-multi]').forEach(b=>b.addEventListener('click',()=>{
   const set=state[b.dataset.multi],v=b.dataset.v;
   if(set.has(v)){set.delete(v);b.classList.remove('sel');}else{set.add(v);b.classList.add('sel');}
-  update();
+  update();save();
 }));
 
 function update(){
@@ -543,8 +547,17 @@ function resetAll(){
   document.getElementById('qProfile').style.display='none';
   document.getElementById('result').innerHTML='';
   document.getElementById('prompt').style.display='block';
+  try{localStorage.removeItem(SAVE_KEY);}catch(e){}
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// คืนค่าที่บันทึกไว้ (autosave)
+(function restore(){
+  load();
+  document.querySelectorAll('[data-k]').forEach(b=>{if(state[b.dataset.k]===b.dataset.v)b.classList.add('sel');});
+  document.querySelectorAll('[data-multi]').forEach(b=>{const set=state[b.dataset.multi];if(set&&set.has(b.dataset.v))b.classList.add('sel');});
+  update();
+})();
 </script>
 <script>
 const SHARE_CFG={target:'.container',file:'Process-Selector.pdf',title:'คู่มือกระบวนการทำไอศกรีม',
