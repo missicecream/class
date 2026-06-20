@@ -128,10 +128,10 @@
   body.cap .print-head{display:block!important;text-align:center}
 
   /* ตัวจับเวลา PST */
-  .pst-cta{margin:22px 0 8px;background:#EFF3E7;border:1px solid #cfe0bf;border-radius:16px;padding:18px 20px;text-align:center}
-  .pst-cta-head{font-family:'Fraunces',serif;font-size:18px;color:var(--accent-deep);margin-bottom:6px}
-  .pst-cta-sub{font-size:13px;color:var(--muted);line-height:1.55;margin:0 auto 14px;max-width:460px}
-  .timer-btn{background:var(--accent-deep)!important;color:#fff!important;border:none!important}
+  .pst-cta{margin:16px 0 4px;text-align:center}
+  .timer-open-btn{font-family:'Sarabun',sans-serif;font-weight:700;font-size:14px;color:#fff;background:var(--accent-deep);border:none;border-radius:100px;padding:11px 22px;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px -8px rgba(79,107,58,.8)}
+  .timer-open-btn:hover{background:var(--accent);transform:translateY(-1px)}
+  .pst-cta-sub{font-size:12px;color:var(--muted);line-height:1.5;margin:8px auto 0;max-width:430px}
   .pst-timer{margin:18px 0 8px;background:var(--card);border:2px solid var(--accent);border-radius:20px;padding:24px 22px;text-align:center}
   .pst-timer.rest{border-color:#3E73A6}
   .pst-timer.done{border-color:var(--accent-deep);background:#EFF3E7}
@@ -447,6 +447,24 @@ function render(){
   if(pr.note)s4+='<li>'+pr.note+'</li>';
   s4+='</ul>';
   s4+='<p><b>รู้ว่าเสร็จ:</b> มิกซ์เนียนเป็นเนื้อเดียว ไม่มีคราบไขมันลอยที่ผิว เทแล้วไหลเรียบ ตอนนี้อยู่ที่ <span class="chip">~50–55 °C</span></p>';
+  // ปุ่มสร้างตัวจับเวลา PST (อยู่ในบล็อกข้อ 4 · ไม่แสดงตอนพิมพ์/แชร์)
+  s4+='<div class="pst-cta" id="ptCta">'
+    +'<button class="timer-open-btn" onclick="openPstTimer()">⏱ สร้างตัวจับเวลา PST (ปั่น + พัก) จากค่านี้</button>'
+    +'<p class="pst-cta-sub">ไล่จับเวลาทีละช่วง: ปั่น '+pr.s+' วินาที → พัก 60 วินาที ครบ '+pr.r+' รอบ · มีเสียงเตือนเมื่อจบแต่ละช่วง และบอกเวลานาฬิกาที่แต่ละช่วงจะครบ</p>'
+    +'</div>';
+  s4+='<div class="pst-timer" id="ptPanel" style="display:none">'
+    +'<div class="pt-label">&nbsp;</div>'
+    +'<div class="pt-time">0:00</div>'
+    +'<div class="pt-endat">&nbsp;</div>'
+    +'<div class="pt-progress"><div class="pt-bar"></div></div>'
+    +'<div class="pt-controls">'
+    +'<button class="btn pt-start" onclick="ptToggle()">เริ่ม</button>'
+    +'<button class="btn" onclick="ptSkip()">ช่วงนี้เสร็จแล้ว ▸</button>'
+    +'<button class="btn" onclick="ptReset()">เริ่มรอบ 1 ใหม่</button>'
+    +'<button class="btn" onclick="ptClose()">ปิด</button>'
+    +'</div>'
+    +'<p class="pt-hint">ถ้าเครื่องปั่นตั้งเวลาช่วงปั่นเองได้ พอเครื่องปั่นเสร็จให้กด “ช่วงนี้เสร็จแล้ว” เพื่อข้ามไปจับเวลาช่วงพักต่อทันทีค่ะ</p>'
+    +'</div>';
   H+=step('4','Paula’s Spin Technique','PST',s4);
 
   // 5
@@ -558,26 +576,6 @@ function render(){
     +'<li><b>ตักด้วยการลาก ไม่กด</b> ให้ม้วนเป็นริบบิ้น • เริ่มจากขอบเข้าหากลาง (รักษาจำนวนลูก/ถาด)</li>'
     +'<li>สคูปสะอาดและหมาด (น้ำไหล/dipper well) ไม่ใช้น้ำนิ่งจุ่ม • แช่ถ้วยสเตนเลส/เซรามิก/แก้วให้เย็นก่อนเสิร์ฟ</li>'
     +'</ul>');
-
-  // ตัวจับเวลา PST (ปั่น + พัก) ตามผลที่ได้
-  H+='<div class="pst-cta" id="ptCta">'
-    +'<div class="pst-cta-head">อยากให้สร้างตัวจับเวลาตามผลนี้ไหม?</div>'
-    +'<p class="pst-cta-sub">ระบบจะไล่จับเวลาให้อัตโนมัติทีละช่วง: <b>ปั่น '+pr.s+' วินาที → พัก 60 วินาที</b> ครบ <b>'+pr.r+' รอบ</b> มีเสียงเตือนเมื่อจบแต่ละช่วง และบอกเวลานาฬิกาที่แต่ละช่วงจะครบ</p>'
-    +'<button class="btn timer-btn" onclick="openPstTimer()">⏱ สร้างตัวจับเวลา PST จากผลนี้</button>'
-    +'</div>';
-  H+='<div class="pst-timer" id="ptPanel" style="display:none">'
-    +'<div class="pt-label">&nbsp;</div>'
-    +'<div class="pt-time">0:00</div>'
-    +'<div class="pt-endat">&nbsp;</div>'
-    +'<div class="pt-progress"><div class="pt-bar"></div></div>'
-    +'<div class="pt-controls">'
-    +'<button class="btn pt-start" onclick="ptToggle()">เริ่ม</button>'
-    +'<button class="btn" onclick="ptSkip()">ช่วงนี้เสร็จแล้ว ▸</button>'
-    +'<button class="btn" onclick="ptReset()">เริ่มรอบ 1 ใหม่</button>'
-    +'<button class="btn" onclick="ptClose()">ปิด</button>'
-    +'</div>'
-    +'<p class="pt-hint">ถ้าเครื่องปั่นตั้งเวลาช่วงปั่นเองได้ พอเครื่องปั่นเสร็จให้กด “ช่วงนี้เสร็จแล้ว” เพื่อข้ามไปจับเวลาช่วงพักต่อทันทีค่ะ</p>'
-    +'</div>';
 
   H+='<div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์คู่มือ</button><button class="btn" onclick="sharePDF(this)">📤 แชร์ PDF</button><button class="btn" onclick="sharePNG(this)">📷 แชร์รูป</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
   return H;
