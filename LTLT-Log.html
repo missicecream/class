@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LTLT Pasteurization Log · Miss Icecream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F4ECE0;--card:#FBF6EC;--ink:#2B1F15;--muted:#8C7A66;--muted-soft:#BFB09B;--line:#E5D9C4;--line-soft:#EFE5D2;--accent:#6B8E4E;--accent-deep:#4F6B3A;--blue:#3E73A6;--rose:#A85B47;--gold:#C9A227}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Sarabun',sans-serif;padding:34px 18px 50px;
+    background-image:radial-gradient(circle at 12% 3%,rgba(220,229,200,.45)0%,transparent 38%),radial-gradient(circle at 90% 97%,rgba(201,120,98,.08)0%,transparent 40%);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{max-width:760px;margin:0 auto}
+  .back-link{display:inline-flex;gap:7px;margin-bottom:18px;padding:8px 18px;background:var(--card);border:1px solid var(--line);border-radius:100px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+  .back-link:hover{color:var(--ink);border-color:var(--accent)}
+
+  header{text-align:center;margin-bottom:20px}
+  .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:500}
+  h1{font-family:'Fraunces',serif;font-weight:400;font-size:32px;line-height:1.1}
+  h1 em{font-style:italic;color:var(--accent-deep)}
+  .sub{color:var(--muted);font-size:13px;margin-top:6px}
+
+  .block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 18px;margin-bottom:16px;box-shadow:0 4px 22px -18px rgba(43,31,21,.25)}
+  .block-t{font-family:'Sarabun',sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--accent-deep);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .block-t .n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent-deep);color:#fff;font-family:'Fraunces',serif;font-size:13px}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+  .fld{display:flex;flex-direction:column;gap:4px}
+  .fld label{font-size:12px;color:var(--muted);font-weight:500}
+  .fld input,.fld select{font-family:'Sarabun',sans-serif;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);outline:none;width:100%}
+  .fld input:focus,.fld select:focus{border-color:var(--accent);background:#fff}
+
+  .crit{margin-top:10px;font-size:13.5px;background:#EFF3E7;border:1px solid #cfe0bf;border-radius:10px;padding:9px 13px;color:var(--accent-deep)}
+  .crit b{font-weight:700}
+  .crit.none{background:var(--line-soft);border-color:var(--line);color:var(--muted)}
+
+  .btn{font-family:'Sarabun',sans-serif;font-weight:600;font-size:14px;border-radius:100px;cursor:pointer;border:1px solid var(--line);padding:11px 18px;transition:all .18s;background:var(--card);color:var(--ink)}
+  .btn:hover{filter:brightness(.97)}
+  .btn:disabled{opacity:.45;cursor:default}
+  .btn.big{display:block;width:100%;color:#fff;border:none;padding:13px}
+  .btn.start{background:var(--accent)}
+  .btn.reach{background:var(--blue)}
+  .btn.stop{background:var(--rose)}
+  .btn.cool{background:var(--blue)}
+  .btn.done{background:var(--accent-deep)}
+  .btn.ghost{background:var(--card);color:var(--ink)}
+  .btnrow{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+  .logged{font-family:'Fraunces',serif;font-size:14px;color:var(--accent-deep);margin-top:7px}
+  .logged.empty{color:var(--muted-soft);font-style:italic}
+
+  .sched{margin-top:11px;background:#E8F0F7;border:1px solid #c5d8e8;border-radius:10px;padding:10px 13px;font-size:13px;color:#2c4a66;line-height:1.6}
+  .sched b{color:var(--blue)}
+
+  .quick{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .quick .qb{padding:11px 14px;border-radius:10px;border:1px solid var(--accent);background:#EFF3E7;color:var(--accent-deep);font-weight:700;font-size:14px;cursor:pointer;font-family:'Fraunces',serif}
+  .quick .qb:hover{background:var(--accent);color:#fff}
+  .quick input{width:84px;font-size:14px;padding:9px;border:1px solid var(--line);border-radius:9px;font-family:'Fraunces',serif;text-align:center}
+  .quick .sub-b{padding:9px 14px;border-radius:9px;border:none;background:var(--ink);color:var(--bg);font-weight:600;cursor:pointer;font-size:13px}
+
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  th,td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--line-soft)}
+  th{font-size:11px;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;font-weight:600}
+  td.t{font-family:'Fraunces',serif}
+  tr:last-child td{border-bottom:none}
+  .del{color:var(--rose);cursor:pointer;font-size:12px;border:none;background:none;font-family:'Sarabun',sans-serif}
+
+  .events{display:grid;grid-template-columns:1fr 1fr;gap:7px 14px;font-size:13px;margin-top:4px}
+  .ev{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line-soft);padding:4px 0}
+  .ev .lbl{color:var(--muted)}
+  .ev .val{font-family:'Fraunces',serif;color:var(--ink)}
+  .ev .val.no{color:var(--muted-soft);font-style:italic}
+
+  .summary{border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.65}
+  .summary.pass{background:#EAF3E4;border:1px solid #bcd7a8}
+  .summary.fail{background:#FBEDE7;border:1px solid #e7c3b4}
+  .summary.wait{background:var(--line-soft);border:1px solid var(--line)}
+  .summary .verdict{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:5px}
+  .summary.pass .verdict{color:var(--accent-deep)}
+  .summary.fail .verdict{color:var(--rose)}
+  .summary.wait .verdict{color:var(--muted)}
+  .summary ul{margin:6px 0 0;padding-left:18px}
+  .summary li{margin-bottom:3px}
+
+  .chartwrap{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
+  .chartwrap svg{width:100%;height:auto;display:block}
+  .chart-empty{text-align:center;color:var(--muted-soft);font-style:italic;font-family:'Fraunces',serif;padding:30px 0}
+
+  .actions{display:flex;justify-content:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+  .note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:14px;text-align:center}
+  footer{text-align:center;margin-top:18px;color:var(--muted-soft);font-size:10.5px;letter-spacing:.3em;text-transform:uppercase}
+
+  /* report-only header for print */
+  .rep-head{display:none}
+
+  @media print{
+    @page{size:A4 portrait;margin:9mm}
+    body{padding:0;background:#fff;background-image:none;font-size:11px}
+    .sheet{max-width:100%}
+    .back-link,.actions,.note,.logging-only{display:none!important}
+    header{display:none}
+    .rep-head{display:block;text-align:center;margin-bottom:8px}
+    .rep-head .rt{font-family:'Fraunces',serif;font-size:18px}
+    .rep-head .rs{font-size:10px;color:#555}
+    .block{box-shadow:none;border:1px solid #ccc;border-radius:8px;padding:8px 10px;margin-bottom:7px;break-inside:avoid}
+    .block-t{font-size:10px;margin-bottom:6px}
+    .block-t .n{width:16px;height:16px;font-size:10px}
+    .fld input,.fld select{border:none;border-bottom:1px solid #ccc;border-radius:0;padding:2px 0;background:none;font-size:11px}
+    .fld label{font-size:9.5px}
+    .grid{gap:4px 12px}
+    .crit{padding:5px 9px;font-size:11px;margin-top:6px}
+    table{font-size:10px}
+    th,td{padding:3px 7px}
+    .events{font-size:10.5px}
+    .chartwrap{padding:3px}
+    .summary{padding:9px 11px;font-size:11px}
+    .summary .verdict{font-size:14px}
+    footer{margin-top:6px}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <a class="back-link" href="index.html">← กลับหน้าหลัก</a>
+
+  <header>
+    <div class="eyebrow">Miss Icecream · Lab Tools</div>
+    <h1>LTLT Pasteurization <em>Log</em></h1>
+    <p class="sub">บันทึกการพาสเจอไรซ์แบบ LTLT · จับเวลา-อุณหภูมิ · ออกรายงาน PDF A4</p>
+  </header>
+
+  <div class="rep-head">
+    <div class="rt">รายงานการพาสเจอไรซ์ (LTLT)</div>
+    <div class="rs">Miss Icecream</div>
+  </div>
+
+  <!-- 1. ข้อมูลรายงาน -->
+  <div class="block">
+    <div class="block-t"><span class="n">1</span> ข้อมูลรายงาน</div>
+    <div class="grid">
+      <div class="fld"><label>ผลิตภัณฑ์</label><input id="f_product" type="text" placeholder="เช่น ไอศกรีมวานิลลา" oninput="setF('product',this.value)"></div>
+      <div class="fld"><label>หมายเลข Lot</label><input id="f_lot" type="text" placeholder="เช่น L240612-01" oninput="setF('lot',this.value)"></div>
+      <div class="fld"><label>ผู้บันทึก</label><input id="f_recorder" type="text" placeholder="ชื่อผู้บันทึก" oninput="setF('recorder',this.value)"></div>
+      <div class="fld"><label>วันที่</label><input id="f_date" type="text" oninput="setF('date',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- 2. โปรแกรม -->
+  <div class="block">
+    <div class="block-t"><span class="n">2</span> โปรแกรมพาสเจอไรซ์</div>
+    <div class="grid">
+      <div class="fld"><label>เลือกโปรแกรม</label>
+        <select id="f_program" onchange="selectProgram(this.value)">
+          <option value="">— เลือก —</option>
+        </select>
+      </div>
+      <div class="fld" id="customWrap" style="display:none">
+        <label>ระบุเอง: อุณหภูมิ (°C) / เวลา (นาที)</label>
+        <div style="display:flex;gap:8px">
+          <input id="f_ctemp" type="number" step="0.1" placeholder="°C" oninput="setCustom()" style="width:50%">
+          <input id="f_ctime" type="number" step="1" placeholder="นาที" oninput="setCustom()" style="width:50%">
+        </div>
+      </div>
+    </div>
+    <div class="crit none" id="critBox">ยังไม่ได้เลือกโปรแกรม</div>
+    <div class="fld logging-only" style="margin-top:10px"><label>บันทึกอุณหภูมิระหว่างต้มทุกๆ</label>
+      <select id="f_interval" onchange="setF('interval',+this.value)" style="max-width:160px">
+        <option value="5">5 นาที</option>
+        <option value="10">10 นาที</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 3. บันทึกการต้ม -->
+  <div class="block logging-only">
+    <div class="block-t"><span class="n">3</span> บันทึกระหว่างต้ม</div>
+    <button class="btn big start" onclick="logEvent('startHeat')">▶ เริ่มต้ม — บันทึกเวลา</button>
+    <div class="logged empty" id="lg_startHeat">ยังไม่บันทึก</div>
+
+    <button class="btn big reach" style="margin-top:12px" onclick="logEvent('reachTemp')">🎯 อุณหภูมิถึงเกณฑ์ — เริ่มจับเวลา LTLT</button>
+    <div class="logged empty" id="lg_reachTemp">ยังไม่บันทึก</div>
+    <div class="sched" id="schedBox" style="display:none"></div>
+
+    <div style="margin-top:14px;font-size:13px;font-weight:600;color:var(--muted)">🌡 บันทึกอุณหภูมิเป็นระยะ (กดปุ่ม = ลงเวลาอัตโนมัติ)</div>
+    <div class="quick" id="quickRow">
+      <button class="qb" id="qb0" onclick="quickTemp(0)" disabled>–</button>
+      <button class="qb" id="qb1" onclick="quickTemp(1)" disabled>–</button>
+      <button class="qb" id="qb2" onclick="quickTemp(2)" disabled>–</button>
+      <input id="f_mtemp" type="number" step="0.1" placeholder="°C เอง">
+      <button class="sub-b" onclick="quickTempManual()">＋ บันทึก</button>
+    </div>
+    <table id="readTbl" style="display:none"><thead><tr><th>#</th><th>เวลา</th><th>อุณหภูมิ</th><th></th></tr></thead><tbody id="readBody"></tbody></table>
+
+    <button class="btn big stop" style="margin-top:14px" onclick="logEvent('endHold')">⏹ จบการให้ความร้อน — หยุดจับเวลา LTLT</button>
+    <div class="logged empty" id="lg_endHold">ยังไม่บันทึก</div>
+  </div>
+
+  <!-- 4. ลดความร้อน -->
+  <div class="block logging-only">
+    <div class="block-t"><span class="n">4</span> บันทึกการลดความร้อน</div>
+    <button class="btn big cool" onclick="logEvent('startCool')">▶ เริ่มลดความร้อน — บันทึกเวลา</button>
+    <div class="logged empty" id="lg_startCool">ยังไม่บันทึก</div>
+    <button class="btn big done" style="margin-top:12px" onclick="logEvent('reachCool')">⏹ ถึง ≤4 °C — บันทึกเวลา</button>
+    <div class="logged empty" id="lg_reachCool">ยังไม่บันทึก</div>
+  </div>
+
+  <!-- 5. สรุป + กราฟ -->
+  <div class="block">
+    <div class="block-t"><span class="n">5</span> สรุปผล + กราฟ</div>
+    <div class="events" id="eventsBox"></div>
+    <table id="repReadTbl" style="display:none"><thead><tr><th>#</th><th>เวลา</th><th>อุณหภูมิ (°C)</th></tr></thead><tbody id="repReadBody"></tbody></table>
+    <div class="chartwrap" id="chartWrap"><div class="chart-empty">กราฟจะแสดงเมื่อมีข้อมูลอุณหภูมิ</div></div>
+    <div class="summary wait" id="summaryBox" style="margin-top:12px"><div class="verdict">รอข้อมูล</div>เริ่มเลือกโปรแกรมและกดปุ่มบันทึกระหว่างต้มค่ะ</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn done" style="color:#fff" onclick="window.print()">🖨 พิมพ์ / บันทึก PDF</button>
+    <button class="btn ghost" onclick="resetAll()">เริ่มใหม่ (ล้างข้อมูล)</button>
+  </div>
+  <p class="note logging-only">หมายเหตุ: เครื่องมือนี้ช่วยบันทึกและดูภาพรวม ค่าผ่าน/ไม่ผ่านอิงตามตัวเลขที่กรอกและนาฬิกาของเครื่อง ไม่แทนเครื่องบันทึกอุณหภูมิที่สอบเทียบหรือการตรวจรับรองอย่างเป็นทางการ · ข้อมูลถูกบันทึกอัตโนมัติในเบราว์เซอร์ของเครื่องนี้ (ไม่ส่งออกที่ไหน) กด "เริ่มใหม่" เพื่อล้าง</p>
+  <footer>Miss Icecream</footer>
+</div>
+
+<script>
+const PROGRAMS=[
+  {k:'iceCreamMix',label:'ไอศกรีมมิกซ์',temp:68.5,time:30},
+  {k:'eggYolk',label:'ไข่แดงดิบ',temp:68.5,time:30},
+  {k:'freshFruit',label:'ผลไม้สด',temp:70,time:2},
+  {k:'freshCoconut',label:'กะทิสด',temp:70,time:30},
+  {k:'plantMilk',label:'นมพืช (คั้นเอง)',temp:70,time:30},
+  {k:'rawMilk',label:'นมดิบ',temp:63,time:30},
+  {k:'rawCream',label:'ครีมดิบ',temp:70,time:30},
+  {k:'custom',label:'ระบุเวลาและอุณหภูมิเอง',temp:null,time:null}
+];
+const KEY='ltlt_log_v1';
+let state=load()||fresh();
+
+function fresh(){
+  return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',ctemp:'',ctime:'',interval:5,
+    startHeat:null,reachTemp:null,endHold:null,startCool:null,reachCool:null,readings:[]};
+}
+function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+
+function thaiDate(ts){return new Date(ts).toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})}
+function hms(ts){if(!ts)return '—';const d=new Date(ts);return [d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':')}
+function hm(ts){if(!ts)return '—';const d=new Date(ts);return [d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':')}
+function fmtDur(ms){if(ms==null)return '—';let s=Math.round(ms/1000);const m=Math.floor(s/60);s=s%60;return m+' นาที '+String(s).padStart(2,'0')+' วิ'}
+
+function crit(){
+  if(state.program==='custom') return {temp:parseFloat(state.ctemp),time:parseFloat(state.ctime)};
+  const p=PROGRAMS.find(x=>x.k===state.program);
+  return p?{temp:p.temp,time:p.time}:{temp:NaN,time:NaN};
+}
+
+function setF(k,v){state[k]=v;save()}
+function setCustom(){state.ctemp=document.getElementById('f_ctemp').value;state.ctime=document.getElementById('f_ctime').value;save();updateUI()}
+
+function selectProgram(k){
+  state.program=k;
+  document.getElementById('customWrap').style.display = k==='custom'?'flex':'none';
+  save();updateUI();
+}
+
+function logEvent(name){
+  if(state[name] && !confirm('บันทึกไว้แล้ว ('+hms(state[name])+') ต้องการบันทึกทับด้วยเวลาปัจจุบันไหม?')) return;
+  state[name]=Date.now();save();updateUI();
+}
+function quickTemp(i){
+  const c=crit();if(isNaN(c.temp)){alert('เลือกโปรแกรมก่อนค่ะ');return}
+  addReading(c.temp+i);
+}
+function quickTempManual(){
+  const el=document.getElementById('f_mtemp');const v=parseFloat(el.value);
+  if(isNaN(v)){alert('กรอกอุณหภูมิก่อนค่ะ');return}
+  addReading(v);el.value='';
+}
+function addReading(temp){state.readings.push({t:Date.now(),temp:Math.round(temp*10)/10});save();updateUI()}
+function delReading(i){state.readings.splice(i,1);save();updateUI()}
+
+function resetAll(){
+  if(!confirm('ล้างข้อมูลทั้งหมดและเริ่มบันทึกใหม่? (ลบ autosave ในเครื่องด้วย)'))return;
+  try{localStorage.removeItem(KEY)}catch(e){}
+  state=fresh();syncInputs();updateUI();
+}
+
+function syncInputs(){
+  document.getElementById('f_product').value=state.product||'';
+  document.getElementById('f_lot').value=state.lot||'';
+  document.getElementById('f_recorder').value=state.recorder||'';
+  document.getElementById('f_date').value=state.date||'';
+  document.getElementById('f_program').value=state.program||'';
+  document.getElementById('f_ctemp').value=state.ctemp||'';
+  document.getElementById('f_ctime').value=state.ctime||'';
+  document.getElementById('f_interval').value=state.interval||5;
+  document.getElementById('customWrap').style.display = state.program==='custom'?'flex':'none';
+}
+
+function updateUI(){
+  const c=crit();
+  // criteria box
+  const cb=document.getElementById('critBox');
+  if(!state.program){cb.className='crit none';cb.textContent='ยังไม่ได้เลือกโปรแกรม';}
+  else if(isNaN(c.temp)||isNaN(c.time)){cb.className='crit none';cb.textContent='กรอกอุณหภูมิและเวลาที่ต้องการค่ะ';}
+  else{cb.className='crit';cb.innerHTML='เกณฑ์ LTLT: คงอุณหภูมิ <b>≥ '+c.temp+' °C</b> ต่อเนื่อง <b>≥ '+c.time+' นาที</b>';}
+
+  // quick buttons
+  const ok=!isNaN(c.temp);
+  [0,1,2].forEach(i=>{const b=document.getElementById('qb'+i);b.disabled=!ok;b.textContent=ok?((c.temp+i)+' °C'):'–';});
+
+  // logged labels
+  setLog('startHeat','เริ่มต้ม');setLog('reachTemp','ถึงเกณฑ์ (เริ่มจับเวลา)');setLog('endHold','จบให้ความร้อน');
+  setLog('startCool','เริ่มลดความร้อน');setLog('reachCool','ถึง ≤4 °C');
+
+  // schedule
+  const sc=document.getElementById('schedBox');
+  if(state.reachTemp && !isNaN(c.time)){
+    const end=state.reachTemp+c.time*60000;const iv=state.interval||5;let pts=[];
+    for(let m=iv;m<c.time;m+=iv)pts.push(hm(state.reachTemp+m*60000));
+    sc.style.display='block';
+    sc.innerHTML='เริ่มจับเวลา <b>'+hm(state.reachTemp)+'</b> · ต้องคงอุณหภูมิถึง <b>'+hm(end)+'</b> (≥ '+c.time+' นาที)'
+      +(pts.length?'<br>จุดที่ควรบันทึกอุณหภูมิ (ทุก '+iv+' นาที): '+pts.join(' · '):'');
+  } else sc.style.display='none';
+
+  // readings table (logging)
+  const rb=document.getElementById('readBody');rb.innerHTML='';
+  document.getElementById('readTbl').style.display=state.readings.length?'table':'none';
+  state.readings.forEach((r,i)=>{rb.innerHTML+='<tr><td>'+(i+1)+'</td><td class="t">'+hms(r.t)+'</td><td class="t">'+r.temp+' °C</td><td><button class="del" onclick="delReading('+i+')">ลบ</button></td></tr>';});
+
+  // report readings table
+  const rrb=document.getElementById('repReadBody');rrb.innerHTML='';
+  document.getElementById('repReadTbl').style.display=state.readings.length?'table':'none';
+  state.readings.forEach((r,i)=>{rrb.innerHTML+='<tr><td>'+(i+1)+'</td><td class="t">'+hms(r.t)+'</td><td class="t">'+r.temp+'</td></tr>';});
+
+  // events summary
+  const holdDur=(state.reachTemp&&state.endHold)?state.endHold-state.reachTemp:null;
+  const coolDur=(state.startCool&&state.reachCool)?state.reachCool-state.startCool:null;
+  document.getElementById('eventsBox').innerHTML=
+    ev('เริ่มต้ม',hms(state.startHeat),state.startHeat)+
+    ev('ถึงเกณฑ์ (เริ่มจับเวลา)',hms(state.reachTemp),state.reachTemp)+
+    ev('จบให้ความร้อน',hms(state.endHold),state.endHold)+
+    ev('ระยะเวลาคงอุณหภูมิ',holdDur!=null?fmtDur(holdDur):'—',holdDur)+
+    ev('เริ่มลดความร้อน',hms(state.startCool),state.startCool)+
+    ev('ถึง ≤4 °C',hms(state.reachCool),state.reachCool)+
+    ev('เวลาที่ใช้ลดความร้อน',coolDur!=null?fmtDur(coolDur):'—',coolDur);
+
+  buildChart(c);
+  evaluate(c,holdDur,coolDur);
+  save();
+}
+function ev(l,v,has){return '<div class="ev"><span class="lbl">'+l+'</span><span class="val'+(has?'':' no')+'">'+v+'</span></div>'}
+function setLog(name,label){
+  const el=document.getElementById('lg_'+name);if(!el)return;
+  if(state[name]){el.className='logged';el.textContent='✓ '+label+': '+hms(state[name]);}
+  else{el.className='logged empty';el.textContent='ยังไม่บันทึก';}
+}
+
+function evaluate(c,holdDur,coolDur){
+  const box=document.getElementById('summaryBox');
+  if(!state.program||isNaN(c.temp)||!state.reachTemp||!state.endHold){
+    box.className='summary wait';box.innerHTML='<div class="verdict">รอข้อมูล</div>ต้องเลือกโปรแกรม + กด "ถึงเกณฑ์" และ "จบให้ความร้อน" ก่อนค่ะ';return;
+  }
+  const minutes=holdDur/60000;
+  const timeOk=minutes>=c.time;
+  // readings within hold window below threshold?
+  const low=state.readings.filter(r=>r.t>=state.reachTemp&&r.t<=state.endHold&&r.temp<c.temp);
+  const tempOk=low.length===0;
+  const pass=timeOk&&tempOk;
+  let li='';
+  li+='<li>เกณฑ์: ≥ '+c.temp+' °C · ≥ '+c.time+' นาที</li>';
+  li+='<li>คงอุณหภูมิจริง: <b>'+minutes.toFixed(1)+' นาที</b> '+(timeOk?'✓ ครบเวลา':'✗ ยังไม่ครบเวลา')+'</li>';
+  li+='<li>อุณหภูมิระหว่างจับเวลา: '+(tempOk?'✓ ไม่หลุดต่ำกว่าเกณฑ์':'✗ มี '+low.length+' จุดต่ำกว่า '+c.temp+' °C → ตามหลัก LTLT ต้องเริ่มจับเวลาใหม่')+'</li>';
+  if(coolDur!=null)li+='<li>ลดความร้อนถึง ≤4 °C ใช้ <b>'+fmtDur(coolDur)+'</b></li>';
+  box.className='summary '+(pass?'pass':'fail');
+  box.innerHTML='<div class="verdict">'+(pass?'✓ ผ่านเกณฑ์ LTLT':'✗ ไม่ผ่านเกณฑ์')+'</div><ul>'+li+'</ul>';
+}
+
+function buildChart(c){
+  const wrap=document.getElementById('chartWrap');
+  const pts=[];
+  if(state.reachTemp&&!isNaN(c.temp))pts.push({t:state.reachTemp,v:c.temp});
+  state.readings.forEach(r=>pts.push({t:r.t,v:r.temp}));
+  const lastTemp=state.readings.length?state.readings[state.readings.length-1].temp:(isNaN(c.temp)?null:c.temp);
+  if(state.startCool&&lastTemp!=null)pts.push({t:state.startCool,v:lastTemp});
+  if(state.reachCool)pts.push({t:state.reachCool,v:4});
+  pts.sort((a,b)=>a.t-b.t);
+  if(pts.length<2){wrap.innerHTML='<div class="chart-empty">กราฟจะแสดงเมื่อมีข้อมูลอุณหภูมิ ≥ 2 จุด</div>';return}
+
+  const W=620,H=240,mL=42,mR=14,mT=14,mB=30,pw=W-mL-mR,ph=H-mT-mB;
+  const t0=pts[0].t,t1=pts[pts.length-1].t;const tr=(t1-t0)||1;
+  const vals=pts.map(p=>p.v).concat(isNaN(c.temp)?[]:[c.temp]);
+  let vMin=Math.min(...vals),vMax=Math.max(...vals);
+  vMin=Math.floor((vMin-4)/5)*5;vMax=Math.ceil((vMax+4)/5)*5;if(vMin===vMax)vMax+=10;
+  const X=t=>mL+(t-t0)/tr*pw, Y=v=>mT+ph-(v-vMin)/(vMax-vMin)*ph;
+
+  let g='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun,sans-serif">';
+  // hold window shade
+  if(state.reachTemp&&state.endHold){
+    const x1=X(state.reachTemp),x2=X(Math.min(state.endHold,t1));
+    g+='<rect x="'+x1.toFixed(1)+'" y="'+mT+'" width="'+(x2-x1).toFixed(1)+'" height="'+ph+'" fill="#6B8E4E" opacity="0.10"/>';
+  }
+  // y grid + labels
+  for(let v=vMin;v<=vMax;v+=Math.max(5,Math.round((vMax-vMin)/6/5)*5)){
+    const y=Y(v);
+    g+='<line x1="'+mL+'" y1="'+y.toFixed(1)+'" x2="'+(W-mR)+'" y2="'+y.toFixed(1)+'" stroke="#EFE5D2"/>';
+    g+='<text x="'+(mL-6)+'" y="'+(y+3).toFixed(1)+'" font-size="10" fill="#8C7A66" text-anchor="end">'+v+'</text>';
+  }
+  // threshold line
+  if(!isNaN(c.temp)){
+    const y=Y(c.temp);
+    g+='<line x1="'+mL+'" y1="'+y.toFixed(1)+'" x2="'+(W-mR)+'" y2="'+y.toFixed(1)+'" stroke="#A85B47" stroke-width="1.3" stroke-dasharray="5 4"/>';
+    g+='<text x="'+(W-mR)+'" y="'+(y-4).toFixed(1)+'" font-size="9.5" fill="#A85B47" text-anchor="end">เกณฑ์ '+c.temp+' °C</text>';
+  }
+  // data line
+  const dpath=pts.map((p,i)=>(i?'L':'M')+X(p.t).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+  g+='<path d="'+dpath+'" fill="none" stroke="#3E73A6" stroke-width="2"/>';
+  pts.forEach(p=>{g+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="3" fill="#3E73A6"/>';});
+  // x labels: start, reach, end, cool
+  function xl(ts,txt){if(!ts)return;const x=X(ts);g+='<text x="'+x.toFixed(1)+'" y="'+(H-9)+'" font-size="9" fill="#8C7A66" text-anchor="middle">'+txt+'</text>';g+='<line x1="'+x.toFixed(1)+'" y1="'+(mT+ph)+'" x2="'+x.toFixed(1)+'" y2="'+(mT+ph+4)+'" stroke="#BFB09B"/>';}
+  xl(t0,hm(t0));xl(t1,hm(t1));
+  g+='<text x="'+(mL)+'" y="11" font-size="9.5" fill="#8C7A66">°C</text>';
+  g+='</svg>';
+  wrap.innerHTML=g;
+}
+
+// init
+(function(){
+  const sel=document.getElementById('f_program');
+  PROGRAMS.forEach(p=>{const o=document.createElement('option');o.value=p.k;o.textContent=p.label+(p.temp?(' — ≥'+p.temp+' °C / ≥'+p.time+' นาที'):'');sel.appendChild(o);});
+  if(!state.date)state.date=thaiDate(Date.now());
+  syncInputs();updateUI();
+})();
+</script>
+</body>
+</html>
