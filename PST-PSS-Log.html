@@ -136,6 +136,32 @@
     <div id="pssEvents"></div>
   </div>
 
+  <!-- บันทึกการสังเกต -->
+  <div class="block" id="obsBlock">
+    <div class="block-t" style="color:#8A6BB0"><span class="tag" style="background:#8A6BB0">👁</span> บันทึกการสังเกตเนื้อไอศกรีม</div>
+    <div class="grid">
+      <div class="fld" style="grid-column:1/-1"><label>ความแห้งของเนื้อไอศกรีมเมื่อปั่นเสร็จ</label>
+        <select id="f_dryness" onchange="setF('dryness',this.value)">
+          <option value="">— เลือก —</option>
+          <option>เนื้อแห้งตามปกติ</option>
+          <option>เนื้อแห้งน้อยกว่าปกติ มีน้ำซึมที่ผิว</option>
+          <option>เนื้อไอศกรีมค่อนข้างนิ่ม มีน้ำซึมมาก</option>
+          <option>เนื้อเหลวมาก ไม่จับตัวเป็นไอศกรีม</option>
+        </select>
+      </div>
+      <div class="fld" style="grid-column:1/-1"><label>เครื่องปั่นไม่ได้หยุดปั่นตามปกติ (ถ้ามี)</label>
+        <select id="f_stopAbn" onchange="setF('stopAbn',this.value)">
+          <option value="">— ปกติ / ไม่มี —</option>
+          <option>หยุดก่อนไอศกรีมจะปั่นเสร็จ</option>
+          <option>ปั่นนานผิดปกติ</option>
+        </select>
+      </div>
+      <div class="fld" style="grid-column:1/-1"><label>ลักษณะผิดปกติที่สังเกตเห็น</label>
+        <input id="f_defects" type="text" placeholder="เช่น buttery texture, เนื้อฟูเป็นโฟม, เนื้อแตกร่วน, ละลายเร็วผิดปกติ" oninput="setF('defects',this.value)">
+      </div>
+    </div>
+  </div>
+
   <!-- สรุปผล -->
   <div class="block" id="summaryBlock">
     <div class="block-t"><span class="tag" style="background:var(--accent-deep)">∑</span> สรุปผล</div>
@@ -171,13 +197,13 @@ const PSS_EVENTS=[
   {k:'pss_weightBefore',label:'น้ำหนักมิกซ์ 1 ถ้วย ก่อนปั่น',type:'weight',unit:'g'},
   {k:'pss_startChurn',label:'เริ่มปั่นจริง'},
   {k:'pss_endChurn',label:'ปั่นเสร็จ'},
-  {k:'pss_weightAfter',label:'น้ำหนักมิกซ์ 1 ถ้วย หลังปั่น',type:'weight',unit:'g'}
+  {k:'pss_weightAfter',label:'น้ำหนักไอศกรีม 1 ถ้วย หลังปั่น',type:'weight',unit:'g'}
 ];
 const ALL=[...PST_EVENTS,...PSS_EVENTS];
 const KEY='pst_pss_log_v1';
 let state=load()||fresh();
 
-function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{}}}
+function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:''}}
 function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 function thaiDate(ts){return new Date(ts).toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})}
@@ -210,7 +236,7 @@ function resetAll(){
   state=fresh();syncInputs();updateUI();
 }
 function syncInputs(){
-  ['recipe','lot','recorder','date','thermoOther'].forEach(k=>{const e=document.getElementById('f_'+(k));if(e)e.value=state[k]||''});
+  ['recipe','lot','recorder','date','thermoOther','dryness','stopAbn','defects'].forEach(k=>{const e=document.getElementById('f_'+(k));if(e)e.value=state[k]||''});
   document.getElementById('f_thermo').value=state.thermo||'';
   document.getElementById('thermoOtherWrap').style.display=state.thermo==='อื่นๆ'?'flex':'none';
 }
@@ -234,6 +260,7 @@ function updateUI(){
   const pssHas=PSS_EVENTS.some(e=>state.events[e.k]);
   document.getElementById('pstBlock').classList.toggle('empty-print',!pstHas);
   document.getElementById('pssBlock').classList.toggle('empty-print',!pssHas);
+  document.getElementById('obsBlock').classList.toggle('empty-print',!(state.dryness||state.stopAbn||state.defects));
   renderSummary();
   buildChart();
   save();
