@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PST & PSS Log · Miss Icecream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F4ECE0;--card:#FBF6EC;--ink:#2B1F15;--muted:#8C7A66;--muted-soft:#BFB09B;--line:#E5D9C4;--line-soft:#EFE5D2;--accent:#6B8E4E;--accent-deep:#4F6B3A;--blue:#3E73A6;--rose:#A85B47}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Sarabun',sans-serif;padding:34px 18px 50px;
+    background-image:radial-gradient(circle at 12% 3%,rgba(220,229,200,.45)0%,transparent 38%),radial-gradient(circle at 90% 97%,rgba(201,120,98,.08)0%,transparent 40%);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{max-width:780px;margin:0 auto}
+  .back-link{display:inline-flex;gap:7px;margin-bottom:18px;padding:8px 18px;background:var(--card);border:1px solid var(--line);border-radius:100px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+  .back-link:hover{color:var(--ink);border-color:var(--accent)}
+  header{text-align:center;margin-bottom:20px}
+  .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:500}
+  h1{font-family:'Fraunces',serif;font-weight:400;font-size:32px;line-height:1.1}
+  h1 em{font-style:italic;color:var(--accent-deep)}
+  .sub{color:var(--muted);font-size:13px;margin-top:6px}
+  .rep-head{display:none}
+
+  .block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 4px 22px -18px rgba(43,31,21,.25)}
+  .block-t{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--accent-deep);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .block-t.pst{color:#C77F3A}
+  .block-t.pss{color:var(--blue)}
+  .block-t .tag{display:inline-flex;align-items:center;justify-content:center;padding:3px 11px;border-radius:100px;color:#fff;font-family:'Fraunces',serif;font-size:13px}
+  .block-t.pst .tag{background:#C77F3A}
+  .block-t.pss .tag{background:var(--blue)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+  .fld{display:flex;flex-direction:column;gap:4px}
+  .fld label{font-size:12px;color:var(--muted);font-weight:500}
+  .fld input,.fld select{font-family:'Sarabun',sans-serif;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);outline:none;width:100%}
+  .fld input:focus,.fld select:focus{border-color:var(--accent);background:#fff}
+
+  .evrow{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+  .evrow:last-child{border-bottom:none}
+  .evlbl{font-size:13.5px;font-weight:600;margin-bottom:7px}
+  .evlbl .opt{font-weight:400;color:var(--muted-soft);font-size:12px}
+  .evin{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .evin input{width:96px;font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-family:'Fraunces',serif;text-align:center}
+  .evin input:focus{border-color:var(--accent);background:#fff;outline:none}
+  .qb{padding:9px 14px;border-radius:9px;border:1px solid var(--accent);background:#EFF3E7;color:var(--accent-deep);font-weight:700;font-size:14px;cursor:pointer;font-family:'Fraunces',serif}
+  .qb:hover{background:var(--accent);color:#fff}
+  .sub-b{padding:9px 16px;border-radius:9px;border:none;background:var(--ink);color:var(--bg);font-weight:600;cursor:pointer;font-size:13px;font-family:'Sarabun',sans-serif}
+  .clr{border:none;background:none;color:var(--rose);cursor:pointer;font-size:12px;font-family:'Sarabun',sans-serif}
+  .evres{margin-top:7px;font-size:13px}
+  .evres.empty{color:var(--muted-soft);font-style:italic;font-family:'Fraunces',serif}
+  .evres .ok{font-family:'Fraunces',serif;color:var(--accent-deep)}
+  .evres .sch{color:var(--blue)}
+  .evres .warn{display:block;margin-top:3px;color:var(--rose);font-size:12.5px}
+
+  .chartwrap{margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
+  .chartwrap svg{width:100%;height:auto;display:block}
+  .chart-empty{text-align:center;color:var(--muted-soft);font-style:italic;font-family:'Fraunces',serif;padding:26px 0}
+
+  .actions{display:flex;justify-content:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+  .btn{font-family:'Sarabun',sans-serif;font-weight:600;font-size:14px;border-radius:100px;cursor:pointer;border:1px solid var(--line);padding:11px 22px;background:var(--card);color:var(--ink)}
+  .btn.print{background:var(--accent-deep);color:#fff;border:none}
+  .note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:14px;text-align:center}
+  footer{text-align:center;margin-top:18px;color:var(--muted-soft);font-size:10.5px;letter-spacing:.3em;text-transform:uppercase}
+
+  @media print{
+    @page{size:A4 portrait;margin:9mm}
+    body{padding:0;background:#fff;background-image:none;font-size:11px;print-color-adjust:economy;-webkit-print-color-adjust:economy}
+    .sheet{max-width:100%}
+    .back-link,.actions,.note{display:none!important}
+    header{display:none}
+    .rep-head{display:block;text-align:center;margin-bottom:8px}
+    .rep-head .rt{font-family:'Fraunces',serif;font-size:18px}
+    .rep-head .rs{font-size:10px;color:#555}
+    .block{box-shadow:none;border:1px solid #ccc;border-radius:8px;padding:8px 10px;margin-bottom:7px}
+    .block.empty-print{display:none}
+    .block-t,.block-t.pst,.block-t.pss{color:#000;font-size:11px;margin-bottom:6px}
+    .block-t .tag{background:none!important;color:#000;border:1px solid #888;font-size:10px}
+    .fld input,.fld select{border:none;border-bottom:1px solid #ccc;border-radius:0;padding:2px 0;background:none;font-size:11px}
+    .fld label{font-size:9.5px}
+    .evin{display:none}
+    .evrow{padding:3px 0;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+    .evrow.empty-print{display:none}
+    .evlbl{margin-bottom:0;font-size:10.5px;font-weight:600}
+    .evres{margin-top:0;font-size:10.5px;text-align:right;white-space:nowrap}
+    .evres .warn{display:inline;color:#000;font-size:9.5px}
+    .chartwrap{border:1px solid #ccc;padding:3px}
+    footer{margin-top:6px}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <a class="back-link" href="index.html">← กลับหน้าหลัก</a>
+  <header>
+    <div class="eyebrow">Miss Icecream · Lab Tools</div>
+    <h1>PST &amp; PSS <em>Log</em></h1>
+    <p class="sub">พรหล้าทำเครื่องมือนี้ไว้ให้ทีมงานบันทึกผลการทดลองอย่างละเอียดเพื่อพัฒนาสูตรค่ะ การทำไอศกรีมทั่วไปไม่จำเป็นต้องบันทึกถึงขนาดนี้ แต่แชร์ไว้เผื่อใครอยากเก็บข้อมูล จะได้สะดวกกว่าจดลงกระดาษเอง</p>
+  </header>
+  <div class="rep-head"><div class="rt">รายงานบันทึก PST &amp; PSS</div><div class="rs">Miss Icecream</div></div>
+
+  <!-- ข้อมูลรายงาน -->
+  <div class="block">
+    <div class="block-t"><span class="tag">i</span> ข้อมูลรายงาน</div>
+    <div class="grid">
+      <div class="fld"><label>สูตร</label><input id="f_recipe" type="text" placeholder="ชื่อสูตร" oninput="setF('recipe',this.value)"></div>
+      <div class="fld"><label>Lot ที่ผลิต</label><input id="f_lot" type="text" placeholder="เช่น L240612-01" oninput="setF('lot',this.value)"></div>
+      <div class="fld"><label>ชนิดเทอร์โมมิเตอร์</label>
+        <select id="f_thermo" onchange="setThermo(this.value)">
+          <option value="">— เลือก —</option>
+          <option value="อินฟราเรด">แบบอินฟราเรด</option>
+          <option value="จุ่ม">แบบจุ่ม</option>
+          <option value="อื่นๆ">อื่นๆ (ระบุ)</option>
+        </select>
+      </div>
+      <div class="fld" id="thermoOtherWrap" style="display:none"><label>ระบุชนิดเทอร์โมมิเตอร์</label><input id="f_thermoOther" type="text" placeholder="ระบุ" oninput="setF('thermoOther',this.value)"></div>
+      <div class="fld"><label>ผู้บันทึก</label><input id="f_recorder" type="text" placeholder="ชื่อผู้บันทึก" oninput="setF('recorder',this.value)"></div>
+      <div class="fld"><label>วันที่</label><input id="f_date" type="text" oninput="setF('date',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- PST -->
+  <div class="block" id="pstBlock">
+    <div class="block-t pst"><span class="tag">PST</span> Paula’s Spin Technique</div>
+    <div id="pstEvents"></div>
+  </div>
+
+  <!-- PSS -->
+  <div class="block" id="pssBlock">
+    <div class="block-t pss"><span class="tag">PSS</span> Paula’s Smart Setting</div>
+    <div id="pssEvents"></div>
+  </div>
+
+  <!-- สรุปผล -->
+  <div class="block" id="summaryBlock">
+    <div class="block-t"><span class="tag" style="background:var(--accent-deep)">∑</span> สรุปผล</div>
+    <div id="summaryBox" style="font-size:14px;line-height:1.9"></div>
+  </div>
+
+  <!-- กราฟ -->
+  <div class="block" id="chartBlock">
+    <div class="block-t"><span class="tag" style="background:var(--accent-deep)">📈</span> กราฟอุณหภูมิ–เวลา</div>
+    <div class="chartwrap" id="chartWrap"><div class="chart-empty">กราฟจะแสดงเมื่อมีข้อมูล ≥ 2 จุด</div></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn print" onclick="window.print()">🖨 พิมพ์ / บันทึก PDF</button>
+    <button class="btn" onclick="resetAll()">เริ่มใหม่ (ล้างข้อมูล)</button>
+  </div>
+  <p class="note">บันทึกอัตโนมัติในเบราว์เซอร์ของเครื่องนี้ (ไม่ส่งออกที่ไหน) · กด "เริ่มใหม่" เพื่อล้าง · พิมพ์แบบ printer-friendly ไม่มีสีพื้น</p>
+  <footer>Miss Icecream</footer>
+</div>
+
+<script>
+const PST_EVENTS=[
+  {k:'pst_before',label:'อุณหภูมิในโถปั่น ก่อนเริ่มปั่นรอบแรก',warnBelow:60,warn:'อุณหภูมิต่ำเกินไป — ต้องอุ่นให้อยู่ในช่วง 60–65 °C ก่อนปั่น'},
+  {k:'pst_after',label:'อุณหภูมิในโถ หลังพักมิกซ์รอบสุดท้าย',warnBelow:50,warn:'อุณหภูมิค่อนข้างต่ำ — ครั้งหน้าควรอุ่นมิกซ์ก่อนปั่นให้สูงขึ้น หรืออุ่นระหว่างช่วงพัก'}
+];
+const PSS_EVENTS=[
+  {k:'pss_beforeActive',label:'ก่อนเริ่ม Active Cooling'},
+  {k:'pss_endActive',label:'จบ Active Cooling',quick:[40]},
+  {k:'pss_startPassive',label:'เริ่ม Passive Setting (30 นาที)',schedule:30},
+  {k:'pss_endPassive',label:'จบ Passive Setting',warnAbove:25,warn:'อุณหภูมิจบสูงเกินไป — เติมน้ำแข็งในอ่างและแช่นิ่งต่ออีก 10 นาที · ครั้งหน้าควรปรับปรุงระบบ cooling'},
+  {k:'pss_cream',label:'เติมครีมแช่เย็นก่อนปั่น',optional:true,quick:[10],warnAbove:10,warn:'ครีมแช่เย็นต้องเติมเมื่อมิกซ์มีอุณหภูมิต่ำกว่า 10 °C แล้วเท่านั้น'},
+  {k:'pss_weightBefore',label:'น้ำหนักมิกซ์ 1 ถ้วย ก่อนปั่น',type:'weight',unit:'g'},
+  {k:'pss_startChurn',label:'เริ่มปั่นจริง'},
+  {k:'pss_endChurn',label:'ปั่นเสร็จ'},
+  {k:'pss_weightAfter',label:'น้ำหนักมิกซ์ 1 ถ้วย หลังปั่น',type:'weight',unit:'g'}
+];
+const ALL=[...PST_EVENTS,...PSS_EVENTS];
+const KEY='pst_pss_log_v1';
+let state=load()||fresh();
+
+function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{}}}
+function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function thaiDate(ts){return new Date(ts).toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})}
+function hms(ts){const d=new Date(ts);return [d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':')}
+function hm(ts){const d=new Date(ts);return [d.getHours(),d.getMinutes()].map(n=>String(n).padStart(2,'0')).join(':')}
+function fmtDur(ms){let s=Math.round(ms/1000);const m=Math.floor(s/60);s=s%60;return m+' นาที '+String(s).padStart(2,'0')+' วิ'}
+
+function setF(k,v){state[k]=v;save()}
+function setThermo(v){state.thermo=v;document.getElementById('thermoOtherWrap').style.display=v==='อื่นๆ'?'flex':'none';save()}
+
+function rowHTML(ev){
+  const unit=ev.unit||'°C';
+  let q='';if(ev.quick)q=ev.quick.map(v=>'<button class="qb" onclick="quickLog(\''+ev.k+'\','+v+')">'+v+' °C</button>').join('');
+  return '<div class="evrow" id="row_'+ev.k+'">'
+    +'<div class="evlbl">'+ev.label+(ev.optional?' <span class="opt">(ถ้ามี)</span>':'')+'</div>'
+    +'<div class="evin">'+q+'<input id="in_'+ev.k+'" type="number" step="0.1" placeholder="'+unit+'"><button class="sub-b" onclick="logEvent(\''+ev.k+'\')">＋ บันทึก</button></div>'
+    +'<div class="evres empty" id="res_'+ev.k+'">ยังไม่บันทึก</div></div>';
+}
+function logEvent(k){
+  const el=document.getElementById('in_'+k);const v=parseFloat(el.value);
+  if(isNaN(v)){alert('กรอกอุณหภูมิก่อนค่ะ');return}
+  state.events[k]={temp:Math.round(v*10)/10,t:Date.now()};el.value='';save();updateUI();
+}
+function quickLog(k,v){state.events[k]={temp:v,t:Date.now()};save();updateUI()}
+function clearEv(k){delete state.events[k];save();updateUI()}
+
+function resetAll(){
+  if(!confirm('ล้างข้อมูลทั้งหมดและเริ่มใหม่? (ลบ autosave ในเครื่องด้วย)'))return;
+  try{localStorage.removeItem(KEY)}catch(e){}
+  state=fresh();syncInputs();updateUI();
+}
+function syncInputs(){
+  ['recipe','lot','recorder','date','thermoOther'].forEach(k=>{const e=document.getElementById('f_'+(k));if(e)e.value=state[k]||''});
+  document.getElementById('f_thermo').value=state.thermo||'';
+  document.getElementById('thermoOtherWrap').style.display=state.thermo==='อื่นๆ'?'flex':'none';
+}
+
+function evMeta(k){return ALL.find(e=>e.k===k)}
+function updateUI(){
+  ALL.forEach(ev=>{
+    const r=document.getElementById('res_'+ev.k), row=document.getElementById('row_'+ev.k);
+    const d=state.events[ev.k];
+    if(!d){r.className='evres empty';r.textContent='ยังไม่บันทึก';row.classList.remove('logged');row.classList.add('empty-print');return;}
+    row.classList.add('logged');row.classList.remove('empty-print');
+    const unit=ev.unit||'°C';
+    let html='<span class="ok">✓ '+hms(d.t)+' · '+d.temp+' '+unit+'</span> <button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button>';
+    if(ev.schedule){html+=' <span class="sch">· ครบ '+ev.schedule+' นาที เวลา '+hm(d.t+ev.schedule*60000)+'</span>';}
+    if(ev.warnBelow!=null && d.temp<ev.warnBelow){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
+    if(ev.warnAbove!=null && d.temp>ev.warnAbove){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
+    r.className='evres';r.innerHTML=html;
+  });
+  // hide empty sections in print
+  const pstHas=PST_EVENTS.some(e=>state.events[e.k]);
+  const pssHas=PSS_EVENTS.some(e=>state.events[e.k]);
+  document.getElementById('pstBlock').classList.toggle('empty-print',!pstHas);
+  document.getElementById('pssBlock').classList.toggle('empty-print',!pssHas);
+  renderSummary();
+  buildChart();
+  save();
+}
+
+function renderSummary(){
+  const box=document.getElementById('summaryBox');
+  const wb=state.events.pss_weightBefore, wa=state.events.pss_weightAfter;
+  const sc=state.events.pss_startChurn, ec=state.events.pss_endChurn;
+  let items=[];
+  if(wb&&wa&&wa.temp>0){const ov=((wb.temp-wa.temp)/wa.temp)*100;items.push('<b>%Overrun = '+ov.toFixed(1)+' %</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">(ก่อนปั่น '+wb.temp+' g · หลังปั่น '+wa.temp+' g)</span>');}
+  if(sc&&ec){items.push('<b>ระยะเวลาปั่น = '+fmtDur(ec.t-sc.t)+'</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">('+hms(sc.t)+' → '+hms(ec.t)+')</span>');}
+  document.getElementById('summaryBlock').classList.toggle('empty-print',items.length===0);
+  box.innerHTML=items.length?items.map(i=>'<div>'+i+'</div>').join(''):'<span style="color:var(--muted-soft);font-style:italic;font-family:Fraunces,serif">บันทึกน้ำหนักก่อน/หลังปั่น และเวลาเริ่ม/เสร็จปั่น เพื่อคำนวณ %Overrun และระยะเวลาปั่น</span>';
+}
+function buildChart(){
+  const wrap=document.getElementById('chartWrap');
+  const pts=ALL.filter(ev=>(ev.unit||'°C')!=='g').map(ev=>state.events[ev.k]?{t:state.events[ev.k].t,v:state.events[ev.k].temp,k:ev.k}:null).filter(Boolean).sort((a,b)=>a.t-b.t);
+  document.getElementById('chartBlock').classList.toggle('empty-print',pts.length<2);
+  if(pts.length<2){wrap.innerHTML='<div class="chart-empty">กราฟจะแสดงเมื่อมีข้อมูล ≥ 2 จุด</div>';return}
+  const W=620,H=240,mL=42,mR=14,mT=14,mB=28,pw=W-mL-mR,ph=H-mT-mB;
+  const t0=pts[0].t,t1=pts[pts.length-1].t;const tr=(t1-t0)||1;
+  let vMin=Math.min(...pts.map(p=>p.v)),vMax=Math.max(...pts.map(p=>p.v));
+  vMin=Math.floor((vMin-4)/5)*5;vMax=Math.ceil((vMax+4)/5)*5;if(vMin===vMax)vMax+=10;
+  const X=t=>mL+(t-t0)/tr*pw,Y=v=>mT+ph-(v-vMin)/(vMax-vMin)*ph;
+  let g='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun,sans-serif">';
+  for(let v=vMin;v<=vMax;v+=Math.max(5,Math.round((vMax-vMin)/6/5)*5)){const y=Y(v);
+    g+='<line x1="'+mL+'" y1="'+y.toFixed(1)+'" x2="'+(W-mR)+'" y2="'+y.toFixed(1)+'" stroke="#EFE5D2"/>';
+    g+='<text x="'+(mL-6)+'" y="'+(y+3).toFixed(1)+'" font-size="10" fill="#8C7A66" text-anchor="end">'+v+'</text>';}
+  const dpath=pts.map((p,i)=>(i?'L':'M')+X(p.t).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+  g+='<path d="'+dpath+'" fill="none" stroke="#3E73A6" stroke-width="2"/>';
+  pts.forEach(p=>{g+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="3" fill="#3E73A6"/>';});
+  g+='<text x="'+X(t0).toFixed(1)+'" y="'+(H-8)+'" font-size="9" fill="#8C7A66" text-anchor="middle">'+hm(t0)+'</text>';
+  g+='<text x="'+X(t1).toFixed(1)+'" y="'+(H-8)+'" font-size="9" fill="#8C7A66" text-anchor="middle">'+hm(t1)+'</text>';
+  g+='<text x="'+mL+'" y="11" font-size="9.5" fill="#8C7A66">°C</text></svg>';
+  wrap.innerHTML=g;
+}
+
+(function(){
+  document.getElementById('pstEvents').innerHTML=PST_EVENTS.map(rowHTML).join('');
+  document.getElementById('pssEvents').innerHTML=PSS_EVENTS.map(rowHTML).join('');
+  if(!state.date)state.date=thaiDate(Date.now());
+  syncInputs();updateUI();
+})();
+</script>
+</body>
+</html>
