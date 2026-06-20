@@ -326,11 +326,18 @@ function updateUI(){
   save();
 }
 
+function phaseLine(label,a,b){
+  if(!a||!b)return null;
+  return '<b>'+label+' = '+fmtDur(b.t-a.t)+'</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">· อุณหภูมิ '+a.temp+' → '+b.temp+' °C ('+hms(a.t)+' → '+hms(b.t)+')</span>';
+}
 function renderSummary(){
   const box=document.getElementById('summaryBox');
   const wb=state.events.pss_weightBefore, wa=state.events.pss_weightAfter;
   const sc=state.events.pss_startChurn, ec=state.events.pss_endChurn;
-  let items=[];
+  let items=[],l;
+  if(l=phaseLine('PST',state.events.pst_before,state.events.pst_after))items.push(l);
+  if(l=phaseLine('PSS · Active Cooling',state.events.pss_beforeActive,state.events.pss_endActive))items.push(l);
+  if(l=phaseLine('PSS · Passive Setting',state.events.pss_startPassive,state.events.pss_endPassive))items.push(l);
   if(wb&&wa&&wa.temp>0){const ov=((wb.temp-wa.temp)/wa.temp)*100;items.push('<b>%Overrun = '+ov.toFixed(1)+' %</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">(ก่อนปั่น '+wb.temp+' g · หลังปั่น '+wa.temp+' g)</span>');}
   if(sc&&ec){items.push('<b>ระยะเวลาปั่น = '+fmtDur(ec.t-sc.t)+'</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">('+hms(sc.t)+' → '+hms(ec.t)+')</span>');}
   document.getElementById('summaryBlock').classList.toggle('empty-print',items.length===0);
