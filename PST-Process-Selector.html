@@ -126,7 +126,7 @@
 
   body.cap .back-link,body.cap header,body.cap .setup,body.cap .prompt,body.cap .printset,body.cap .actions{display:none!important}
   body.cap .print-head{display:block!important;text-align:center}
-  body.cap{background:#fff!important;background-image:none!important}
+  body.cap{background:#fff!important;background-image:none!important;--muted:#555;--muted-soft:#777}
   body.cap .step{background:#fff!important;border:1px solid #ccc!important;border-left:4px solid #999!important;box-shadow:none!important}
   body.cap .chip,body.cap .chip.warm{background:#eee!important;color:#000!important}
   body.cap .badge,body.cap .badge.main{background:#eee!important;color:#000!important}
@@ -141,7 +141,7 @@
   body.cap .print-head .ph-title{color:#000!important}
 
   @media print {
-    body{padding:0;background:#fff;background-image:none;color:#000}
+    body{padding:0;background:#fff;background-image:none;color:#000;--muted:#555;--muted-soft:#777}
     .container{max-width:100%}
     .back-link,.setup,.prompt,.actions,.printset{display:none!important}
     header{display:none}
