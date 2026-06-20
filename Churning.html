@@ -378,6 +378,8 @@
 
   .back-link:hover .arrow { transform: translateX(-3px); }
 
+  body.cap .back-link, body.cap .actions { display:none !important; }
+
   @media (max-width: 768px) {
     .table-wrap { width: 100%; }
   }
@@ -444,6 +446,7 @@
     </div>
 
     <div class="actions">
+      <button class="btn" onclick="sharePDF(this)">📤 แชร์ PDF</button>
       <button class="btn" onclick="resetAll()">รีเซ็ตทั้งหมด</button>
     </div>
 
@@ -565,6 +568,29 @@
     });
     warnMsg.textContent = '';
   }
+</script>
+<script>
+const SHARE_CFG={target:'.container',file:'Churning-Report.pdf',title:'รายงาน Churning (Overrun)',text:'รายงานการวัด %Overrun · Miss Icecream'};
+function _ld(src){return new Promise((res,rej)=>{if([...document.scripts].some(s=>s.src===src))return res();const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('โหลดไลบรารีไม่ได้ (ต้องมีอินเทอร์เน็ต)'));document.head.appendChild(s);});}
+async function sharePDF(btn){const ot=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='กำลังสร้าง PDF…';}
+  try{
+    await _ld('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    await _ld('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    document.body.classList.add('cap');
+    const canvas=await html2canvas(document.querySelector(SHARE_CFG.target),{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    document.body.classList.remove('cap');
+    const {jsPDF}=window.jspdf,pdf=new jsPDF('p','mm','a4');
+    const pw=210,ph=297,m=8,iw=pw-2*m,pageH=ph-2*m;
+    const ih=canvas.height*iw/canvas.width,img=canvas.toDataURL('image/jpeg',0.92);
+    let position=m,heightLeft=ih;
+    pdf.addImage(img,'JPEG',m,position,iw,ih);heightLeft-=pageH;
+    while(heightLeft>0){position=m-(ih-heightLeft);pdf.addPage();pdf.addImage(img,'JPEG',m,position,iw,ih);heightLeft-=pageH;}
+    const blob=pdf.output('blob'),file=new File([blob],SHARE_CFG.file,{type:'application/pdf'});
+    const txt=(typeof SHARE_CFG.text==='function'?SHARE_CFG.text():SHARE_CFG.text)||SHARE_CFG.title;
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:SHARE_CFG.title,text:txt});}
+    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=SHARE_CFG.file;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
+  }catch(e){document.body.classList.remove('cap');if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์ PDF ไม่สำเร็จ: '+((e&&e.message)||e));}
+  finally{if(btn){btn.disabled=false;btn.textContent=ot;}}}
 </script>
 </body>
 </html>
