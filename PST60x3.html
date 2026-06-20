@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PST Timer · Miss Icecream</title>
+<title>PST Rest Timer · Miss Icecream</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -181,6 +181,16 @@
   }
   .timer.done .status { color: var(--accent-deep); }
 
+  .timer .endat {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent-deep);
+    min-height: 16px;
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+  }
+
   /* progress bar */
   .progress {
     height: 4px;
@@ -274,8 +284,8 @@
 
     <header>
       <div class="eyebrow">Miss Icecream · Lab Tools</div>
-      <h1>PST <em>Timer</em></h1>
-      <p class="subtitle">Paula's Spin Technique · จับเวลาพัก 3 รอบ รอบละ 60 วินาที กดเริ่มแยกแต่ละรอบได้ตามจังหวะที่ต้องการนะคะ</p>
+      <h1>PST Rest <em>Timer</em></h1>
+      <p class="subtitle">ใช้ในคลาสไอศกรีมของ อ.พรหล้า — เครื่องปั่นที่เราใช้ตั้งเวลาเองได้ จึงจับเวลาเฉพาะ "ช่วงพัก" ระหว่างรอบเท่านั้น (3 รอบ รอบละ 60 วินาที) กดเริ่มแยกแต่ละรอบได้ตามจังหวะค่ะ</p>
     </header>
 
     <div class="timers" id="timers"></div>
@@ -301,6 +311,13 @@
     const m = Math.floor(sec / 60);
     const s = sec % 60;
     return m + ':' + String(s).padStart(2, '0');
+  }
+
+  // เวลานาฬิกาจริง (HH:MM:SS) ที่ timer จะนับถอยหลังจบ
+  function clock(ms) {
+    const d = new Date(ms);
+    return [d.getHours(), d.getMinutes(), d.getSeconds()]
+      .map(n => String(n).padStart(2, '0')).join(':');
   }
 
   // ===== เสียงเตือน =====
@@ -367,6 +384,7 @@
       <div class="round">รอบที่ ${i + 1} <span class="en">Round ${i + 1}</span></div>
       <div class="time">${fmt(DURATION)}</div>
       <div class="status">&nbsp;</div>
+      <div class="endat">&nbsp;</div>
       <div class="progress"><div class="bar"></div></div>
       <button class="btn-start">เริ่ม</button>
     `;
@@ -374,6 +392,7 @@
 
     const timeEl   = el.querySelector('.time');
     const statusEl = el.querySelector('.status');
+    const endEl    = el.querySelector('.endat');
     const barEl    = el.querySelector('.bar');
     const btn      = el.querySelector('.btn-start');
 
@@ -401,6 +420,7 @@
       el.classList.remove('running');
       el.classList.add('done');
       statusEl.textContent = 'เสร็จแล้ว';
+      endEl.innerHTML = '&nbsp;';
       btn.textContent = 'เริ่มใหม่';
       btn.classList.add('paused');
       render();
@@ -432,6 +452,7 @@
       state.endTime = Date.now() + state.remaining * 1000;
       el.classList.add('running');
       statusEl.textContent = 'กำลังนับถอยหลัง…';
+      endEl.textContent = '⏰ ครบเวลา ' + clock(state.endTime);
       btn.textContent = 'หยุด';
       btn.classList.remove('paused');
       render();
@@ -449,6 +470,7 @@
       state.endTime = null;
       el.classList.remove('running');
       statusEl.textContent = 'พักไว้';
+      endEl.innerHTML = '&nbsp;';
       btn.textContent = 'เริ่มต่อ';
       btn.classList.add('paused');
       render();
@@ -467,6 +489,7 @@
       state.remaining = DURATION;
       el.classList.remove('running', 'done');
       statusEl.innerHTML = '&nbsp;';
+      endEl.innerHTML = '&nbsp;';
       btn.textContent = 'เริ่ม';
       btn.classList.remove('paused');
       render();
