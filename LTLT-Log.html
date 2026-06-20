@@ -211,6 +211,7 @@
     <div class="block-t"><span class="n">4</span> บันทึกการลดความร้อน</div>
     <button class="btn big cool" onclick="logEvent('startCool')">▶ เริ่มลดความร้อน — บันทึกเวลา</button>
     <div class="logged empty" id="lg_startCool">ยังไม่บันทึก</div>
+    <div class="quick" style="margin-top:8px"><span style="font-size:12.5px;color:var(--muted)">อุณหภูมิตอนเริ่มลด (ไม่บังคับ):</span><input id="f_coolTemp" type="number" step="0.1" placeholder="°C" oninput="setF('coolStartTemp',this.value);updateUI()"></div>
     <button class="btn big done" style="margin-top:12px" onclick="logEvent('reachCool')">⏹ ถึง ≤4 °C — บันทึกเวลา</button>
     <div class="logged empty" id="lg_reachCool">ยังไม่บันทึก</div>
   </div>
@@ -248,7 +249,7 @@ let state=load()||fresh();
 
 function fresh(){
   return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',ctemp:'',ctime:'',interval:5,
-    startHeat:null,reachTemp:null,endHold:null,startCool:null,reachCool:null,readings:[]};
+    startHeat:null,reachTemp:null,endHold:null,startCool:null,coolStartTemp:'',reachCool:null,readings:[]};
 }
 function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
@@ -304,6 +305,7 @@ function syncInputs(){
   document.getElementById('f_ctemp').value=state.ctemp||'';
   document.getElementById('f_ctime').value=state.ctime||'';
   document.getElementById('f_interval').value=state.interval||5;
+  document.getElementById('f_coolTemp').value=state.coolStartTemp||'';
   document.getElementById('customWrap').style.display = state.program==='custom'?'flex':'none';
 }
 
@@ -322,6 +324,7 @@ function updateUI(){
   // logged labels
   setLog('startHeat','เริ่มต้ม');setLog('reachTemp','ถึงเกณฑ์ (เริ่มจับเวลา)');setLog('endHold','จบให้ความร้อน');
   setLog('startCool','เริ่มลดความร้อน');setLog('reachCool','ถึง ≤4 °C');
+  if(state.startCool&&!isNaN(parseFloat(state.coolStartTemp))){const e=document.getElementById('lg_startCool');e.textContent+=' · '+parseFloat(state.coolStartTemp)+' °C';}
 
   // schedule
   const sc=document.getElementById('schedBox');
@@ -392,7 +395,9 @@ function buildChart(c){
   if(state.reachTemp&&!isNaN(c.temp))pts.push({t:state.reachTemp,v:c.temp});
   state.readings.forEach(r=>pts.push({t:r.t,v:r.temp}));
   const lastTemp=state.readings.length?state.readings[state.readings.length-1].temp:(isNaN(c.temp)?null:c.temp);
-  if(state.startCool&&lastTemp!=null)pts.push({t:state.startCool,v:lastTemp});
+  const cst=parseFloat(state.coolStartTemp);
+  const coolTemp=!isNaN(cst)?cst:lastTemp;
+  if(state.startCool&&coolTemp!=null)pts.push({t:state.startCool,v:coolTemp});
   if(state.reachCool)pts.push({t:state.reachCool,v:4});
   pts.sort((a,b)=>a.t-b.t);
   if(pts.length<2){wrap.innerHTML='<div class="chart-empty">กราฟจะแสดงเมื่อมีข้อมูลอุณหภูมิ ≥ 2 จุด</div>';return}
