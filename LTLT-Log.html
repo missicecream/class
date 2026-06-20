@@ -104,7 +104,7 @@
     .rep-head{display:block;text-align:center;margin-bottom:8px}
     .rep-head .rt{font-family:'Fraunces',serif;font-size:18px}
     .rep-head .rs{font-size:10px;color:#555}
-    .block{box-shadow:none;border:1px solid #ccc;border-radius:8px;padding:8px 10px;margin-bottom:7px;break-inside:avoid}
+    .block{box-shadow:none;border:1px solid #ccc;border-radius:8px;padding:8px 10px;margin-bottom:7px}
     .block-t{font-size:10px;margin-bottom:6px}
     .block-t .n{width:16px;height:16px;font-size:10px}
     .fld input,.fld select{border:none;border-bottom:1px solid #ccc;border-radius:0;padding:2px 0;background:none;font-size:11px}
@@ -118,6 +118,15 @@
     .summary{padding:9px 11px;font-size:11px}
     .summary .verdict{font-size:14px}
     footer{margin-top:6px}
+    /* printer-friendly: ตัดสีพื้น เหลือเส้นขอบ */
+    body{print-color-adjust:economy;-webkit-print-color-adjust:economy}
+    .block-t .n{background:none;color:#000;border:1px solid #888}
+    .block-t{color:#000}
+    .crit,.crit.none{background:none;border:1px solid #ccc;color:#000}
+    .summary{background:none!important;border:1px solid #999!important}
+    .summary .verdict{color:#000!important}
+    .chartwrap{border:1px solid #ccc}
+    .chartwrap svg rect{display:none}
   }
 </style>
 </head>
