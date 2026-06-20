@@ -124,8 +124,29 @@
   .print-head .ph-title{font-family:'Fraunces',serif;font-size:26px;margin:6px 0 4px;color:#000;line-height:1.1}
   .print-head .ph-meta{font-size:12px;color:#555}
 
-  body.cap .back-link,body.cap header,body.cap .setup,body.cap .prompt,body.cap .printset,body.cap .actions{display:none!important}
+  body.cap .back-link,body.cap header,body.cap .setup,body.cap .prompt,body.cap .printset,body.cap .actions,body.cap .pst-cta,body.cap .pst-timer{display:none!important}
   body.cap .print-head{display:block!important;text-align:center}
+
+  /* ตัวจับเวลา PST */
+  .pst-cta{margin:22px 0 8px;background:#EFF3E7;border:1px solid #cfe0bf;border-radius:16px;padding:18px 20px;text-align:center}
+  .pst-cta-head{font-family:'Fraunces',serif;font-size:18px;color:var(--accent-deep);margin-bottom:6px}
+  .pst-cta-sub{font-size:13px;color:var(--muted);line-height:1.55;margin:0 auto 14px;max-width:460px}
+  .timer-btn{background:var(--accent-deep)!important;color:#fff!important;border:none!important}
+  .pst-timer{margin:18px 0 8px;background:var(--card);border:2px solid var(--accent);border-radius:20px;padding:24px 22px;text-align:center}
+  .pst-timer.rest{border-color:#3E73A6}
+  .pst-timer.done{border-color:var(--accent-deep);background:#EFF3E7}
+  .pt-label{font-family:'Sarabun',sans-serif;font-size:15px;color:var(--ink);margin-bottom:4px}
+  .pt-time{font-family:'Fraunces',serif;font-size:72px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;margin:4px 0}
+  .pst-timer.rest .pt-time{color:#3E73A6}
+  .pst-timer.done .pt-time{color:var(--accent-deep)}
+  .pt-endat{font-size:13px;font-weight:600;color:var(--accent-deep);min-height:18px;margin-bottom:14px}
+  .pt-progress{height:6px;background:var(--line-soft);border-radius:100px;overflow:hidden;margin-bottom:18px}
+  .pt-bar{height:100%;width:100%;background:var(--accent);border-radius:100px;transition:width .4s linear}
+  .pst-timer.rest .pt-bar{background:#3E73A6}
+  .pt-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .pt-start{background:var(--accent)!important;color:#fff!important;border:none!important}
+  .pt-start.paused{background:var(--accent-deep)!important}
+  .pt-hint{font-size:12px;color:var(--muted);line-height:1.5;margin:14px auto 0;max-width:440px}
   body.cap{background:#fff!important;background-image:none!important;--muted:#555;--muted-soft:#777}
   body.cap .step{background:#fff!important;border:1px solid #ccc!important;border-left:4px solid #999!important;box-shadow:none!important}
   body.cap .chip,body.cap .chip.warm{background:#eee!important;color:#000!important}
@@ -143,7 +164,7 @@
   @media print {
     body{padding:0;background:#fff;background-image:none;color:#000;--muted:#555;--muted-soft:#777}
     .container{max-width:100%}
-    .back-link,.setup,.prompt,.actions,.printset{display:none!important}
+    .back-link,.setup,.prompt,.actions,.printset,.pst-cta,.pst-timer{display:none!important}
     header{display:none}
     .print-head{display:block;text-align:center}
     .pathbar{margin:0 0 16px}
@@ -276,6 +297,7 @@ const RISKY={
 
 const state={purpose:null,risky:new Set(),group:null,machine:null,profile:null,fruitHigh:null,cream:null,stab:new Set(),title:'',lot:''};
 
+let curPST=null;
 const SAVE_KEY='pst_process_selector_v1';
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({...state,risky:[...state.risky],stab:[...state.stab]}));}catch(e){}}
 function load(){try{const s=localStorage.getItem(SAVE_KEY);if(!s)return;const o=JSON.parse(s);Object.assign(state,o);state.risky=new Set(o.risky||[]);state.stab=new Set(o.stab||[]);}catch(e){}}
@@ -310,6 +332,7 @@ document.querySelectorAll('[data-multi]').forEach(b=>b.addEventListener('click',
 }));
 
 function update(){
+  ptHardStop();
   const home=state.purpose==='home', sell=state.purpose==='sell';
   document.getElementById('qRisky').style.display=home?'block':'none';
   document.getElementById('homeExtra').style.display=home?'block':'none';
@@ -338,6 +361,7 @@ function render(){
   const home=state.purpose==='home';
   const m=PST[state.machine];
   const pr=pstResult(m);
+  curPST=pr;
   const groupTxt=state.group==='1'?'กลุ่ม 1':'กลุ่ม 2';
   let H='';
 
@@ -535,6 +559,26 @@ function render(){
     +'<li>สคูปสะอาดและหมาด (น้ำไหล/dipper well) ไม่ใช้น้ำนิ่งจุ่ม • แช่ถ้วยสเตนเลส/เซรามิก/แก้วให้เย็นก่อนเสิร์ฟ</li>'
     +'</ul>');
 
+  // ตัวจับเวลา PST (ปั่น + พัก) ตามผลที่ได้
+  H+='<div class="pst-cta" id="ptCta">'
+    +'<div class="pst-cta-head">อยากให้สร้างตัวจับเวลาตามผลนี้ไหม?</div>'
+    +'<p class="pst-cta-sub">ระบบจะไล่จับเวลาให้อัตโนมัติทีละช่วง: <b>ปั่น '+pr.s+' วินาที → พัก 60 วินาที</b> ครบ <b>'+pr.r+' รอบ</b> มีเสียงเตือนเมื่อจบแต่ละช่วง และบอกเวลานาฬิกาที่แต่ละช่วงจะครบ</p>'
+    +'<button class="btn timer-btn" onclick="openPstTimer()">⏱ สร้างตัวจับเวลา PST จากผลนี้</button>'
+    +'</div>';
+  H+='<div class="pst-timer" id="ptPanel" style="display:none">'
+    +'<div class="pt-label">&nbsp;</div>'
+    +'<div class="pt-time">0:00</div>'
+    +'<div class="pt-endat">&nbsp;</div>'
+    +'<div class="pt-progress"><div class="pt-bar"></div></div>'
+    +'<div class="pt-controls">'
+    +'<button class="btn pt-start" onclick="ptToggle()">เริ่ม</button>'
+    +'<button class="btn" onclick="ptSkip()">ช่วงนี้เสร็จแล้ว ▸</button>'
+    +'<button class="btn" onclick="ptReset()">เริ่มรอบ 1 ใหม่</button>'
+    +'<button class="btn" onclick="ptClose()">ปิด</button>'
+    +'</div>'
+    +'<p class="pt-hint">ถ้าเครื่องปั่นตั้งเวลาช่วงปั่นเองได้ พอเครื่องปั่นเสร็จให้กด “ช่วงนี้เสร็จแล้ว” เพื่อข้ามไปจับเวลาช่วงพักต่อทันทีค่ะ</p>'
+    +'</div>';
+
   H+='<div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์คู่มือ</button><button class="btn" onclick="sharePDF(this)">📤 แชร์ PDF</button><button class="btn" onclick="sharePNG(this)">📷 แชร์รูป</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
   return H;
 }
@@ -550,6 +594,108 @@ function resetAll(){
   try{localStorage.removeItem(SAVE_KEY);}catch(e){}
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// ===== ตัวจับเวลา PST (ปั่น + พัก แบบไล่ทีละช่วง) =====
+const PT={phases:[],idx:0,endTime:null,remaining:null,running:false,iv:null};
+let ptAudio=null;
+function ptUnlock(){try{if(!ptAudio)ptAudio=new (window.AudioContext||window.webkitAudioContext)();if(ptAudio.state==='suspended')ptAudio.resume();}catch(e){}}
+function ptBeep(){try{ptUnlock();if(!ptAudio)return;const t0=ptAudio.currentTime;for(let i=0;i<3;i++){const st=t0+i*0.3;const o=ptAudio.createOscillator(),g=ptAudio.createGain();o.connect(g);g.connect(ptAudio.destination);o.type='square';o.frequency.value=880;g.gain.setValueAtTime(0.0001,st);g.gain.exponentialRampToValueAtTime(0.55,st+0.02);g.gain.exponentialRampToValueAtTime(0.0001,st+0.25);o.start(st);o.stop(st+0.27);}}catch(e){}try{if(navigator.vibrate)navigator.vibrate([220,110,220]);}catch(e){}}
+function ptFmt(sec){const m=Math.floor(sec/60),s=sec%60;return m+':'+String(s).padStart(2,'0');}
+function ptClock(ms){const d=new Date(ms);return [d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');}
+function ptHardStop(){clearInterval(PT.iv);PT.iv=null;PT.running=false;PT.idx=0;PT.endTime=null;PT.remaining=null;PT.phases=[];}
+
+function openPstTimer(){
+  if(!curPST)return;
+  const rounds=parseInt(curPST.r)||0, spin=parseInt(curPST.s)||0, rest=60;
+  if(!rounds||!spin)return;
+  PT.phases=[];
+  for(let n=1;n<=rounds;n++){PT.phases.push({round:n,kind:'spin',dur:spin});PT.phases.push({round:n,kind:'rest',dur:rest});}
+  PT.idx=0;PT.endTime=null;PT.remaining=PT.phases[0].dur;PT.running=false;clearInterval(PT.iv);PT.iv=null;
+  ptUnlock();
+  const cta=document.getElementById('ptCta');if(cta)cta.style.display='none';
+  const panel=document.getElementById('ptPanel');if(panel){panel.style.display='block';}
+  ptPaint();
+  if(panel)panel.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function ptTick(){
+  if(!PT.running||PT.endTime==null)return;
+  const rem=Math.round((PT.endTime-Date.now())/1000);
+  if(rem<=0){
+    ptBeep();
+    const prevEnd=PT.endTime;
+    PT.idx++;
+    if(PT.idx>=PT.phases.length){PT.running=false;clearInterval(PT.iv);PT.iv=null;PT.endTime=null;PT.remaining=0;ptPaint();return;}
+    PT.remaining=PT.phases[PT.idx].dur;
+    PT.endTime=prevEnd+PT.remaining*1000;
+    ptPaint();
+  }else{PT.remaining=rem;ptPaint();}
+}
+function ptResync(){
+  if(!PT.running||PT.endTime==null)return;
+  let guard=0;
+  while(PT.endTime!=null&&Date.now()>=PT.endTime&&PT.idx<PT.phases.length&&guard<2000){
+    const prevEnd=PT.endTime;PT.idx++;
+    if(PT.idx>=PT.phases.length){PT.running=false;clearInterval(PT.iv);PT.iv=null;PT.endTime=null;PT.remaining=0;break;}
+    PT.remaining=PT.phases[PT.idx].dur;PT.endTime=prevEnd+PT.remaining*1000;guard++;
+  }
+  ptPaint();
+}
+function ptStart(){
+  ptUnlock();
+  if(PT.running||!PT.phases.length)return;
+  if(PT.idx>=PT.phases.length){PT.idx=0;PT.remaining=PT.phases[0].dur;}
+  if(PT.remaining==null||PT.remaining<=0)PT.remaining=PT.phases[PT.idx].dur;
+  PT.running=true;
+  PT.endTime=Date.now()+PT.remaining*1000;
+  PT.iv=setInterval(ptTick,250);
+  ptPaint();
+}
+function ptPause(){
+  if(PT.endTime!=null)PT.remaining=Math.max(0,Math.round((PT.endTime-Date.now())/1000));
+  PT.running=false;clearInterval(PT.iv);PT.iv=null;PT.endTime=null;ptPaint();
+}
+function ptToggle(){PT.running?ptPause():ptStart();}
+function ptSkip(){
+  if(!PT.phases.length||PT.idx>=PT.phases.length)return;
+  const wasRunning=PT.running;clearInterval(PT.iv);PT.iv=null;
+  PT.idx++;
+  if(PT.idx>=PT.phases.length){PT.running=false;PT.endTime=null;PT.remaining=0;ptPaint();return;}
+  PT.remaining=PT.phases[PT.idx].dur;
+  if(wasRunning){PT.running=true;PT.endTime=Date.now()+PT.remaining*1000;PT.iv=setInterval(ptTick,250);}else{PT.endTime=null;}
+  ptPaint();
+}
+function ptReset(){
+  clearInterval(PT.iv);PT.iv=null;PT.running=false;PT.idx=0;PT.endTime=null;
+  PT.remaining=PT.phases.length?PT.phases[0].dur:0;ptPaint();
+}
+function ptClose(){
+  clearInterval(PT.iv);PT.iv=null;PT.running=false;PT.idx=0;PT.endTime=null;PT.remaining=null;
+  const panel=document.getElementById('ptPanel');if(panel){panel.style.display='none';panel.classList.remove('rest','done');}
+  const cta=document.getElementById('ptCta');if(cta)cta.style.display='block';
+}
+function ptPaint(){
+  const panel=document.getElementById('ptPanel');if(!panel)return;
+  const lbl=panel.querySelector('.pt-label'),tm=panel.querySelector('.pt-time'),end=panel.querySelector('.pt-endat'),bar=panel.querySelector('.pt-bar'),btn=panel.querySelector('.pt-start');
+  const total=PT.phases.length, rounds=total?PT.phases[total-1].round:0;
+  if(!total||PT.idx>=total){
+    panel.classList.remove('rest');panel.classList.add('done');
+    if(lbl)lbl.innerHTML='<b>ครบทุกรอบแล้ว 🎉</b>';
+    if(tm)tm.textContent='0:00';if(end)end.innerHTML='&nbsp;';if(bar)bar.style.width='0%';
+    if(btn){btn.textContent='เริ่มรอบ 1 ใหม่';btn.classList.add('paused');}
+    return;
+  }
+  panel.classList.remove('done');
+  const ph=PT.phases[PT.idx];
+  panel.classList.toggle('rest',ph.kind==='rest');
+  const rem=(PT.running&&PT.endTime!=null)?Math.max(0,Math.round((PT.endTime-Date.now())/1000)):(PT.remaining!=null?PT.remaining:ph.dur);
+  if(lbl)lbl.innerHTML='รอบ '+ph.round+'/'+rounds+' · <b>'+(ph.kind==='spin'?'🌀 กำลังปั่น':'😴 กำลังพัก')+'</b>';
+  if(tm)tm.textContent=ptFmt(rem);
+  if(bar)bar.style.width=Math.max(0,Math.min(100,rem/ph.dur*100))+'%';
+  if(end)end.innerHTML=(PT.running&&PT.endTime!=null)?('⏰ ช่วงนี้ครบเวลา '+ptClock(PT.endTime)):'&nbsp;';
+  if(btn){btn.textContent=PT.running?'หยุดพัก':'เริ่ม';btn.classList.toggle('paused',!PT.running);}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)ptResync();});
+window.addEventListener('focus',ptResync);
 
 // คืนค่าที่บันทึกไว้ (autosave)
 (function restore(){
