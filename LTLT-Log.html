@@ -159,15 +159,19 @@
     .summary{padding:9px 11px;font-size:11px}
     .summary .verdict{font-size:14px}
     footer{margin-top:6px}
-    /* printer-friendly: ตัดสีพื้น เหลือเส้นขอบ */
+    /* printer-friendly: ตัดสีพื้น เหลือเส้นขอบ (ประหยัดหมึก) */
     body{print-color-adjust:economy;-webkit-print-color-adjust:economy}
-    .block-t .n{background:none;color:#000;border:1px solid #888}
-    .block-t{color:#000}
-    .crit,.crit.none,.prog-note{background:none;border:1px solid #999;color:#000}
+    .block{background:#fff!important;box-shadow:none!important}
+    .block-t .n{background:none!important;color:#000!important;border:1px solid #888!important}
+    .block-t{color:#000!important}
+    .crit,.crit.none,.prog-note{background:none!important;border:1px solid #999!important;color:#000!important}
     .prog-note{font-size:11px;padding:5px 9px;margin-top:6px}
-    .summary{background:none!important;border:1px solid #999!important}
-    .summary .verdict{color:#000!important}
-    .chartwrap{border:1px solid #ccc}
+    .summary,.summary.pass,.summary.fail,.summary.wait{background:none!important;border:1px solid #999!important}
+    .summary .verdict,.summary.pass .verdict,.summary.fail .verdict,.summary.wait .verdict{color:#000!important}
+    .ev .val,.ev .val.no,.pst-metrics .big{color:#000!important}
+    .chip{background:#eee!important;color:#000!important}
+    .batchbar,.remind,.countdown,.nextread,.sched,.btn-undo,.cool-lock{display:none!important}
+    .chartwrap{border:1px solid #ccc;background:#fff!important}
     .chartwrap svg rect{display:none}
   }
 </style>
