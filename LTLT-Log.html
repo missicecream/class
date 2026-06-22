@@ -231,10 +231,8 @@
   <!-- 3. บันทึกการต้ม -->
   <div class="block logging-only">
     <div class="block-t"><span class="n">3</span> บันทึกระหว่างต้ม</div>
-    <button class="btn big start" onclick="logEvent('startHeat')">▶ เริ่มต้ม — บันทึกเวลา</button>
-    <div class="logged empty" id="lg_startHeat">ยังไม่บันทึก</div>
 
-    <div style="margin-top:16px;font-size:13px;font-weight:600;color:var(--muted)">🌡 บันทึกอุณหภูมิเป็นระยะ</div>
+    <div style="font-size:13px;font-weight:600;color:var(--muted)">🌡 บันทึกอุณหภูมิเป็นระยะ <span style="font-weight:400;color:var(--muted-soft)">(ค่าแรกที่บันทึก = เริ่มต้ม)</span></div>
     <div style="font-size:12px;color:var(--muted);line-height:1.55;margin:3px 0 8px">กดปุ่มอุณหภูมิที่ <b>ต่ำกว่าแต่ใกล้ค่าที่อ่านได้มากที่สุด</b> (เช่น อ่านได้ 70.7 °C → กด 70.5) หรือพิมพ์ค่าที่อ่านได้เองในช่อง “°C เอง” · ระบบลงเวลาให้อัตโนมัติ และเริ่มจับเวลา LTLT ให้เองเมื่อถึงเกณฑ์</div>
     <div class="quick" id="quickRow">
       <button class="qb" id="qb0" onclick="quickTemp(0)" disabled>–</button>
@@ -432,7 +430,7 @@ function updateUI(){
   [0,1,2,3,4,5].forEach(i=>{const b=document.getElementById('qb'+i);b.disabled=!ok;b.textContent=ok?((Math.round((c.temp+i*0.5)*10)/10)+' °C'):'–';});
 
   // logged labels
-  setLog('startHeat','เริ่มต้ม');setLog('endHold','จบให้ความร้อน');
+  setLog('endHold','จบให้ความร้อน');
   setLog('startCool','เริ่มลดความร้อน');setLog('reachCool','ถึง ≤4 °C');
   if(state.startCool&&!isNaN(parseFloat(state.coolStartTemp))){const e=document.getElementById('lg_startCool');e.textContent+=' · '+parseFloat(state.coolStartTemp)+' °C';}
 
@@ -462,7 +460,7 @@ function updateUI(){
   const holdDur=(rt&&state.endHold)?state.endHold-rt:null;
   const coolDur=(state.startCool&&state.reachCool)?state.reachCool-state.startCool:null;
   document.getElementById('eventsBox').innerHTML=
-    ev('เริ่มต้ม',hms(state.startHeat),state.startHeat)+
+    ev('เริ่มต้ม (ค่าแรกที่บันทึก)',state.readings.length?hms(state.readings[0].t):'—',state.readings.length?state.readings[0].t:null)+
     ev('ถึงเกณฑ์ (เริ่มจับเวลา)',rt?hms(rt):'—',rt)+
     ev('จบให้ความร้อน',hms(state.endHold),state.endHold)+
     ev('ระยะเวลาคงอุณหภูมิ',holdDur!=null?fmtDur(holdDur):'—',holdDur)+
@@ -494,7 +492,7 @@ function showRemind(on){const b=document.getElementById('remindBox');if(!b)retur
 function checkReminder(){
   const box=document.getElementById('remindBox');
   if(state.endHold){if(box)box.style.display='none';return;}
-  const last=state.readings.length?state.readings[state.readings.length-1].t:state.startHeat;
+  const last=state.readings.length?state.readings[state.readings.length-1].t:null;
   if(!last){if(box)box.style.display='none';return;}
   const iv=(state.interval||3)*60000;
   const slot=Math.floor((Date.now()-last)/iv);
