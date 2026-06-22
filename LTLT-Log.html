@@ -543,7 +543,8 @@ function cdBeep(){
 function showRemind(on){const b=document.getElementById('remindBox');if(!b)return;if(on){const iv=state.interval||3;b.style.display='block';b.innerHTML='⏰ ถึงเวลาบันทึกอุณหภูมิแล้ว (ทุก '+iv+' นาที) — กดปุ่มอุณหภูมิด้านบนเพื่อบันทึกค่ะ';}else{b.style.display='none';}}
 function checkReminder(){
   const box=document.getElementById('remindBox');
-  if(state.endHold){if(box)box.style.display='none';return;}
+  const rt=getReachTime(crit());
+  if(state.endHold||!rt){if(box)box.style.display='none';return;}   // เตือนเฉพาะช่วงคงอุณหภูมิ (หลังถึงเกณฑ์)
   const last=state.readings.length?state.readings[state.readings.length-1].t:null;
   if(!last){if(box)box.style.display='none';return;}
   const iv=(state.interval||3)*60000;
@@ -555,7 +556,8 @@ function checkReminder(){
 // บรรทัดเล็ก: นับถอยหลังถึงกำหนดบันทึกอุณหภูมิครั้งถัดไป
 function renderNextRead(){
   const box=document.getElementById('nextReadBox');if(!box)return;
-  if(state.endHold||!state.readings.length){box.style.display='none';return;}
+  const rt=getReachTime(crit());
+  if(state.endHold||!state.readings.length||!rt){box.style.display='none';return;}  // เริ่มนับเฉพาะหลังถึงเกณฑ์
   const last=state.readings[state.readings.length-1].t;
   const iv=(state.interval||3)*60000;
   let rem=iv-((Date.now()-last)%iv);if(rem===iv&&Date.now()===last)rem=iv;
