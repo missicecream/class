@@ -64,6 +64,8 @@
   .countdown .big{font-family:'Fraunces',serif;font-size:30px;font-weight:400;color:var(--blue);display:block;margin:2px 0 4px;font-variant-numeric:tabular-nums}
   .countdown.done{background:#EFF3E7;border-color:#cfe0bf;color:var(--accent-deep)}
   .countdown.done .big{color:var(--accent-deep)}
+  .nextread{margin-top:8px;font-size:12.5px;color:var(--muted);text-align:center}
+  .nextread b{font-family:'Fraunces',serif;color:var(--blue);font-variant-numeric:tabular-nums}
   .remind{margin-top:10px;background:#FBEFE3;border:1px solid #E6C09A;border-radius:12px;padding:11px 14px;font-size:13.5px;color:#9A5B25;font-weight:600;text-align:center;line-height:1.5;animation:remindPulse 1.1s ease-in-out infinite}
   @keyframes remindPulse{0%,100%{background:#FBEFE3}50%{background:#F6DFC6}}
 
@@ -245,6 +247,7 @@
       <button class="sub-b" onclick="quickTempManual()">＋ บันทึก</button>
     </div>
 
+    <div class="nextread" id="nextReadBox" style="display:none"></div>
     <div class="sched" id="schedBox" style="display:none"></div>
     <div class="remind" id="remindBox" style="display:none"></div>
     <div class="countdown" id="countdownBox" style="display:none"></div>
@@ -438,12 +441,11 @@ function updateUI(){
   const rt=getReachTime(c);
   const sc=document.getElementById('schedBox');
   if(rt && !isNaN(c.time)){
-    const end=rt+c.time*60000;const iv=state.interval||3;let pts=[];
-    for(let m=iv;m<c.time;m+=iv)pts.push(hm(rt+m*60000));
+    const end=rt+c.time*60000;
     sc.style.display='block';
-    sc.innerHTML='เริ่มจับเวลา <b>'+hms(rt)+'</b> · ต้องคงอุณหภูมิไม่ต่ำกว่า <b>'+c.temp+' °C</b> ถึง <b>'+hms(end)+'</b> (≥ '+c.time+' นาที)'
-      +(pts.length?'<br>จุดที่ควรบันทึกอุณหภูมิ (ทุก '+iv+' นาที): '+pts.join(' · '):'');
+    sc.innerHTML='เริ่มจับเวลา <b>'+hms(rt)+'</b> · ต้องคงอุณหภูมิไม่ต่ำกว่า <b>'+c.temp+' °C</b> ถึง <b>'+hms(end)+'</b> (≥ '+c.time+' นาที)';
   } else sc.style.display='none';
+  renderNextRead();
   renderCountdown(c,rt);
 
   // readings table (logging)
@@ -499,6 +501,17 @@ function checkReminder(){
   if(slot<1)return;
   if(state.remindKey!==last){state.remindKey=last;state.remindCount=0;}
   if(slot>state.remindCount){state.remindCount=slot;save();cdBeep();showRemind(true);}
+}
+// บรรทัดเล็ก: นับถอยหลังถึงกำหนดบันทึกอุณหภูมิครั้งถัดไป
+function renderNextRead(){
+  const box=document.getElementById('nextReadBox');if(!box)return;
+  if(state.endHold||!state.readings.length){box.style.display='none';return;}
+  const last=state.readings[state.readings.length-1].t;
+  const iv=(state.interval||3)*60000;
+  let rem=iv-((Date.now()-last)%iv);if(rem===iv&&Date.now()===last)rem=iv;
+  const s=Math.ceil(rem/1000),mm=Math.floor(s/60),ss=s%60;
+  box.style.display='block';
+  box.innerHTML='⏱ ครบกำหนดบันทึกอุณหภูมิครั้งถัดไปในอีก <b>'+mm+':'+String(ss).padStart(2,'0')+'</b> นาที';
 }
 function renderCountdown(c,rt){
   const box=document.getElementById('countdownBox');if(!box)return;
@@ -600,9 +613,9 @@ function buildChart(c){
   PROGRAMS.forEach(p=>{const o=document.createElement('option');o.value=p.k;o.textContent=p.label+(p.temp?(' — ≥'+p.temp+' °C / ≥'+p.time+' นาที'):'');sel.appendChild(o);});
   if(!state.date)state.date=thaiDate(Date.now());
   refreshBatchSel();syncInputs();updateUI();
-  setInterval(()=>{renderCountdown();checkReminder();},1000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderCountdown();checkReminder();}});
-  window.addEventListener('focus',()=>{renderCountdown();checkReminder();});
+  setInterval(()=>{renderNextRead();renderCountdown();checkReminder();},1000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderNextRead();renderCountdown();checkReminder();}});
+  window.addEventListener('focus',()=>{renderNextRead();renderCountdown();checkReminder();});
 })();
 </script>
 <script>
