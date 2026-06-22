@@ -64,6 +64,11 @@
   .countdown .big{font-family:'Fraunces',serif;font-size:30px;font-weight:400;color:var(--blue);display:block;margin:2px 0 4px;font-variant-numeric:tabular-nums}
   .countdown.done{background:#EFF3E7;border-color:#cfe0bf;color:var(--accent-deep)}
   .countdown.done .big{color:var(--accent-deep)}
+  .cool-lock{background:#F1ECE3;border:1px dashed var(--muted-soft);border-radius:10px;padding:9px 13px;font-size:12.5px;color:var(--muted);margin-bottom:12px}
+  #coolBlock.locked{opacity:.6}
+  #coolBlock.locked .btn,#coolBlock.locked input{pointer-events:none}
+  .btn-undo{margin-top:8px;width:100%;padding:9px;border:1px dashed var(--rose);background:#fff;color:var(--rose);font-family:'Sarabun',sans-serif;font-size:12.5px;font-weight:600;border-radius:10px;cursor:pointer}
+  .btn-undo:hover{background:#FBEFEC}
   .nextread{margin-top:8px;font-size:12.5px;color:var(--muted);text-align:center}
   .nextread b{font-family:'Fraunces',serif;color:var(--blue);font-variant-numeric:tabular-nums}
   .remind{margin-top:10px;background:#FBEFE3;border:1px solid #E6C09A;border-radius:12px;padding:11px 14px;font-size:13.5px;color:#9A5B25;font-weight:600;text-align:center;line-height:1.5;animation:remindPulse 1.1s ease-in-out infinite}
@@ -232,7 +237,7 @@
 
   <!-- 3. บันทึกการต้ม -->
   <div class="block logging-only">
-    <div class="block-t"><span class="n">3</span> บันทึกระหว่างต้ม</div>
+    <div class="block-t"><span class="n">3</span> บันทึกการให้ความร้อน</div>
 
     <div style="font-size:13px;font-weight:600;color:var(--muted)">🌡 บันทึกอุณหภูมิเป็นระยะ <span style="font-weight:400;color:var(--muted-soft)">(ค่าแรกที่บันทึก = เริ่มต้ม)</span></div>
     <div style="font-size:12px;color:var(--muted);line-height:1.55;margin:3px 0 8px">กดปุ่มอุณหภูมิที่ <b>ต่ำกว่าแต่ใกล้ค่าที่อ่านได้มากที่สุด</b> (เช่น อ่านได้ 70.7 °C → กด 70.5) หรือพิมพ์ค่าที่อ่านได้เองในช่อง “°C เอง” · ระบบลงเวลาให้อัตโนมัติ และเริ่มจับเวลา LTLT ให้เองเมื่อถึงเกณฑ์</div>
@@ -252,15 +257,17 @@
     <div class="remind" id="remindBox" style="display:none"></div>
     <div class="countdown" id="countdownBox" style="display:none"></div>
 
-    <button class="btn big stop" style="margin-top:14px" onclick="logEvent('endHold')">⏹ จบการให้ความร้อน — หยุดจับเวลา LTLT</button>
+    <button class="btn big stop" style="margin-top:22px" onclick="confirmEndHold()">⏹ จบการให้ความร้อน — หยุดจับเวลา LTLT</button>
     <div class="logged empty" id="lg_endHold">ยังไม่บันทึก</div>
+    <button class="btn-undo" id="undoEndHold" style="display:none" onclick="cancelEndHold()">↩ ยกเลิกการจบการให้ความร้อน (กดผิด)</button>
 
     <table id="readTbl" style="margin-top:14px;display:none"><thead><tr><th>#</th><th>เวลา</th><th>อุณหภูมิ</th><th></th></tr></thead><tbody id="readBody"></tbody></table>
   </div>
 
   <!-- 4. ลดความร้อน -->
-  <div class="block logging-only">
+  <div class="block logging-only" id="coolBlock">
     <div class="block-t"><span class="n">4</span> บันทึกการลดความร้อน</div>
+    <div class="cool-lock" id="coolLock">🔒 ส่วนนี้จะบันทึกได้หลังจากกด “จบการให้ความร้อน” ด้านบนค่ะ</div>
     <button class="btn big cool" onclick="logEvent('startCool')">▶ เริ่มลดความร้อน — บันทึกเวลา</button>
     <div class="logged empty" id="lg_startCool">ยังไม่บันทึก</div>
     <div class="quick" style="margin-top:8px"><span style="font-size:12.5px;color:var(--muted)">อุณหภูมิตอนเริ่มลด (ไม่บังคับ):</span><input id="f_coolTemp" type="number" step="0.1" placeholder="°C" oninput="setF('coolStartTemp',this.value);updateUI()"></div>
@@ -367,6 +374,19 @@ function logEvent(name){
   if(state[name] && !confirm('บันทึกไว้แล้ว ('+hms(state[name])+') ต้องการบันทึกทับด้วยเวลาปัจจุบันไหม?')) return;
   state[name]=Date.now();save();updateUI();
 }
+function confirmEndHold(){
+  if(state.endHold){if(!confirm('บันทึกจบการให้ความร้อนไว้แล้ว ('+hms(state.endHold)+') ต้องการบันทึกทับด้วยเวลาปัจจุบันไหม?'))return;state.endHold=Date.now();save();updateUI();return;}
+  const c=crit();const rt=getReachTime(c);
+  let msg='ยืนยัน “จบการให้ความร้อน” ใช่ไหมคะ?\nระบบจะหยุดจับเวลา LTLT และเปิดส่วนบันทึกการลดความร้อน';
+  if(rt&&!isNaN(c.time)&&Date.now()<rt+c.time*60000)msg='⚠ ยังคงอุณหภูมิไม่ครบเวลาตามเกณฑ์ ('+c.time+' นาที)\n\nยืนยันจบการให้ความร้อนตอนนี้เลยไหมคะ?';
+  if(confirm(msg)){state.endHold=Date.now();save();updateUI();}
+}
+function cancelEndHold(){
+  if(!state.endHold)return;
+  if(confirm('ยกเลิกการจบการให้ความร้อน? ระบบจะกลับไปจับเวลาต่อ และบันทึกอุณหภูมิเพิ่มได้ค่ะ')){
+    state.endHold=null;state.pasteurNotified=false;save();updateUI();
+  }
+}
 function quickTemp(i){
   const c=crit();if(isNaN(c.temp)){alert('เลือกโปรแกรมก่อนค่ะ');return}
   addReading(c.temp+i*0.5);
@@ -434,6 +454,9 @@ function updateUI(){
 
   // logged labels
   setLog('endHold','จบให้ความร้อน');
+  const cb4=document.getElementById('coolBlock');if(cb4)cb4.classList.toggle('locked',!state.endHold);
+  const clk=document.getElementById('coolLock');if(clk)clk.style.display=state.endHold?'none':'block';
+  const ueh=document.getElementById('undoEndHold');if(ueh)ueh.style.display=state.endHold?'block':'none';
   setLog('startCool','เริ่มลดความร้อน');setLog('reachCool','ถึง ≤4 °C');
   if(state.startCool&&!isNaN(parseFloat(state.coolStartTemp))){const e=document.getElementById('lg_startCool');e.textContent+=' · '+parseFloat(state.coolStartTemp)+' °C';}
 
