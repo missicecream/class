@@ -414,18 +414,24 @@ function quickTempManual(){
 }
 function addReading(temp){
   const now=Date.now();
-  state.readings.push({t:now,temp:Math.round(temp*10)/10});
+  const v=Math.round(temp*10)/10;
+  const c=crit();
+  const rtBefore=getReachTime(c); // จุดเริ่มจับเวลาก่อนเพิ่มค่านี้
+  state.readings.push({t:now,temp:v});
   showRemind(false);
   save();updateUI();
-  // แจ้งเตือนเมื่อพาสเจอไรซ์สมบูรณ์ (คงอุณหภูมิครบเวลา + ไม่หลุดต่ำกว่าเกณฑ์)
-  const c=crit();const rt=getReachTime(c);
+  // (A) อุณหภูมิหลุดต่ำกว่าเกณฑ์ระหว่างจับเวลา -> ต้องเริ่มจับเวลาใหม่
+  if(!isNaN(c.temp)&&rtBefore!==null&&v<c.temp&&!state.endHold){
+    state.pasteurNotified=false;save();updateUI();
+    setTimeout(()=>alert('⚠ อุณหภูมิต่ำกว่าเกณฑ์ '+c.temp+' °C\n\nตามหลัก LTLT ต้องเริ่มจับเวลาใหม่ค่ะ\nเมื่ออุ่นกลับให้อุณหภูมิ ≥ '+c.temp+' °C แล้วบันทึกอีกครั้ง ระบบจะเริ่มนับเวลาใหม่ให้อัตโนมัติ\n\nกดตกลงเพื่อรับทราบ'),60);
+    return;
+  }
+  // (B) แจ้งเตือนเมื่อพาสเจอไรซ์สมบูรณ์ (คงอุณหภูมิครบเวลาในช่วงต่อเนื่องปัจจุบัน)
+  const rt=getReachTime(c);
   if(rt&&!isNaN(c.time)&&!state.pasteurNotified&&now>=rt+c.time*60000){
-    const broke=state.readings.some(r=>r.t>=rt&&r.t<=now&&r.temp<c.temp);
-    if(!broke){
-      state.pasteurNotified=true;save();
-      cdBeep();
-      setTimeout(()=>alert('✓ การพาสเจอไรซ์สมบูรณ์แล้ว\n\nคงอุณหภูมิ ≥ '+c.temp+' °C ครบ '+c.time+' นาทีตามเกณฑ์ LTLT\nหยุดให้ความร้อนแล้วกด “จบการให้ความร้อน” ได้เลยค่ะ'),60);
-    }
+    state.pasteurNotified=true;save();
+    cdBeep();
+    setTimeout(()=>alert('✓ การพาสเจอไรซ์สมบูรณ์แล้ว\n\nคงอุณหภูมิ ≥ '+c.temp+' °C ครบ '+c.time+' นาทีตามเกณฑ์ LTLT\nหยุดให้ความร้อนแล้วกด “จบการให้ความร้อน” ได้เลยค่ะ'),60);
   }
 }
 function delReading(i){state.readings.splice(i,1);save();updateUI()}
@@ -482,6 +488,9 @@ function updateUI(){
     const end=rt+c.time*60000;
     sc.style.display='block';
     sc.innerHTML='เริ่มจับเวลา <b>'+hms(rt)+'</b> · ต้องคงอุณหภูมิไม่ต่ำกว่า <b>'+c.temp+' °C</b> ถึง <b>'+hms(end)+'</b> (≥ '+c.time+' นาที)';
+  } else if(state.readings.length && !isNaN(c.temp)){
+    sc.style.display='block';
+    sc.innerHTML='เริ่มบันทึกข้อมูลตั้งแต่ <b>'+hms(state.readings[0].t)+'</b> · อุณหภูมิยังไม่ถึงเกณฑ์ ≥ <b>'+c.temp+' °C</b> — ยังไม่เริ่มจับเวลา (จะเริ่มให้เมื่อถึงเกณฑ์)';
   } else sc.style.display='none';
   renderNextRead();
   renderCountdown(c,rt);
@@ -514,11 +523,13 @@ function updateUI(){
   save();
 }
 
-// เวลาที่อุณหภูมิถึงเกณฑ์ครั้งแรก (ตรวจจากค่าที่บันทึกเป็นระยะ)
-function getReachTime(c){
+// เวลาเริ่มจับเวลาของ "ช่วงต่อเนื่อง" ปัจจุบัน — ถ้าอุณหภูมิหลุดต่ำกว่าเกณฑ์ จะรีเซ็ตจุดเริ่ม (ตามหลัก LTLT)
+function getReachTime(c,reads){
+  reads=reads||state.readings;
   if(!c||isNaN(c.temp))return null;
-  for(const r of state.readings){ if(r.temp>=c.temp) return r.t; }
-  return null;
+  let rt=null;
+  for(const r of reads){ if(r.temp<c.temp){rt=null;} else if(rt===null){rt=r.t;} }
+  return rt;
 }
 // นับถอยหลังแบบอิงนาฬิกาจริง — ไม่รีเซ็ตเมื่อปิดจอ/ปิดหน้า
 let _cdAudio=null,_cdLastBeepEnd=null;
