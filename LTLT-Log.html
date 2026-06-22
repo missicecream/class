@@ -220,6 +220,8 @@
     <div class="prog-note" id="progNote" style="display:none"></div>
     <div class="fld logging-only" style="margin-top:10px"><label>บันทึกอุณหภูมิระหว่างต้มทุกๆ</label>
       <select id="f_interval" onchange="setF('interval',+this.value)" style="max-width:160px">
+        <option value="1">1 นาที</option>
+        <option value="3">3 นาที</option>
         <option value="5">5 นาที</option>
         <option value="10">10 นาที</option>
       </select>
@@ -299,7 +301,7 @@ const KEY='ltlt_log_v1';            // คีย์เดิม (รุ่นบ
 const STORE_KEY='ltlt_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
 function fresh(){
-  return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',ctemp:'',ctime:'',interval:5,
+  return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',ctemp:'',ctime:'',interval:3,
     startHeat:null,reachTemp:null,endHold:null,startCool:null,coolStartTemp:'',reachCool:null,readings:[],pasteurNotified:false,remindKey:null,remindCount:0};
 }
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
@@ -405,7 +407,7 @@ function syncInputs(){
   document.getElementById('f_program').value=state.program||'';
   document.getElementById('f_ctemp').value=state.ctemp||'';
   document.getElementById('f_ctime').value=state.ctime||'';
-  document.getElementById('f_interval').value=state.interval||5;
+  document.getElementById('f_interval').value=state.interval||3;
   document.getElementById('f_coolTemp').value=state.coolStartTemp||'';
   document.getElementById('customWrap').style.display = state.program==='custom'?'flex':'none';
 }
@@ -437,7 +439,7 @@ function updateUI(){
   const rt=getReachTime(c);
   const sc=document.getElementById('schedBox');
   if(rt && !isNaN(c.time)){
-    const end=rt+c.time*60000;const iv=state.interval||5;let pts=[];
+    const end=rt+c.time*60000;const iv=state.interval||3;let pts=[];
     for(let m=iv;m<c.time;m+=iv)pts.push(hm(rt+m*60000));
     sc.style.display='block';
     sc.innerHTML='เริ่มจับเวลา <b>'+hms(rt)+'</b> · ต้องคงอุณหภูมิไม่ต่ำกว่า <b>'+c.temp+' °C</b> ถึง <b>'+hms(end)+'</b> (≥ '+c.time+' นาที)'
@@ -487,13 +489,13 @@ function cdBeep(){
   try{if(navigator.vibrate)navigator.vibrate([240,120,240]);}catch(e){}
 }
 // เตือนให้บันทึกอุณหภูมิทุกๆ ช่วงเวลา (นับจากการบันทึกครั้งล่าสุด หรือเริ่มต้ม)
-function showRemind(on){const b=document.getElementById('remindBox');if(!b)return;if(on){const iv=state.interval||5;b.style.display='block';b.innerHTML='⏰ ถึงเวลาบันทึกอุณหภูมิแล้ว (ทุก '+iv+' นาที) — กดปุ่มอุณหภูมิด้านบนเพื่อบันทึกค่ะ';}else{b.style.display='none';}}
+function showRemind(on){const b=document.getElementById('remindBox');if(!b)return;if(on){const iv=state.interval||3;b.style.display='block';b.innerHTML='⏰ ถึงเวลาบันทึกอุณหภูมิแล้ว (ทุก '+iv+' นาที) — กดปุ่มอุณหภูมิด้านบนเพื่อบันทึกค่ะ';}else{b.style.display='none';}}
 function checkReminder(){
   const box=document.getElementById('remindBox');
   if(state.endHold){if(box)box.style.display='none';return;}
   const last=state.readings.length?state.readings[state.readings.length-1].t:state.startHeat;
   if(!last){if(box)box.style.display='none';return;}
-  const iv=(state.interval||5)*60000;
+  const iv=(state.interval||3)*60000;
   const slot=Math.floor((Date.now()-last)/iv);
   if(slot<1)return;
   if(state.remindKey!==last){state.remindKey=last;state.remindCount=0;}
