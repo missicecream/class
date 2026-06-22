@@ -371,6 +371,7 @@ function quickTemp(i){
   addReading(c.temp+i*0.5);
 }
 function quickTempManual(){
+  if(!state.program){alert('กรุณาเลือกโปรแกรมก่อนบันทึกอุณหภูมิค่ะ');return}
   const el=document.getElementById('f_mtemp');const v=parseFloat(el.value);
   if(isNaN(v)){alert('กรอกอุณหภูมิก่อนค่ะ');return}
   addReading(v);el.value='';
