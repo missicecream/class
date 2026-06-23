@@ -379,6 +379,15 @@ function setF(k,v){state[k]=v;save();if(k==='product')refreshBatchSel()}
 function setCustom(){state.ctemp=document.getElementById('f_ctemp').value;state.ctime=document.getElementById('f_ctime').value;save();updateUI()}
 
 function selectProgram(k){
+  const prev=state.program;
+  // กำลังบันทึกอยู่และยังไม่กดจบ → เตือน + ยืนยันก่อนเปลี่ยนโปรแกรม
+  if(prev && k!==prev && state.readings.length && !state.endHold){
+    if(!confirm('กำลังบันทึกการให้ความร้อนอยู่ และยังไม่ได้กด “จบการให้ความร้อน”\n\nการเปลี่ยนโปรแกรมจะนำ “เกณฑ์ใหม่” มาคำนวณกับข้อมูลที่บันทึกไว้แล้ว (ไม่ลบข้อมูลที่บันทึก) — ระบบจะคิดเวลา/ผ่านเกณฑ์ใหม่ให้อัตโนมัติ ไม่ต้องเริ่มบันทึกใหม่\n\nยืนยันเปลี่ยนโปรแกรมไหมคะ?')){
+      document.getElementById('f_program').value=prev||''; // ยกเลิก = คืนค่าเดิม
+      return;
+    }
+    state.pasteurNotified=false; // ให้คำนวณสถานะ “สมบูรณ์” ใหม่ตามเกณฑ์ใหม่
+  }
   state.program=k;
   document.getElementById('customWrap').style.display = k==='custom'?'flex':'none';
   save();updateUI();
