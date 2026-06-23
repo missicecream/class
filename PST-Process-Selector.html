@@ -50,6 +50,8 @@
   .q-label .en{font-family:'Fraunces',serif;font-style:italic;font-size:12px;color:var(--muted-soft);font-weight:400}
   .q-hint{font-size:12px;color:var(--muted);font-weight:400;margin-left:auto}
   .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .risky-grp{font-size:12.5px;font-weight:700;color:var(--accent-deep);letter-spacing:.02em;margin:14px 0 8px}
+  .risky-grp:first-of-type{margin-top:4px}
   .opts.c3{grid-template-columns:1fr 1fr 1fr}
   .opt{text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:13px;padding:12px 14px;cursor:pointer;transition:all .18s;font-family:'Sarabun',sans-serif;color:var(--ink);font-size:13.5px;line-height:1.4}
   .opt:hover{border-color:var(--accent)}
@@ -204,20 +206,28 @@
     <div class="q">
       <div class="q-label">1. ผลิตเพื่ออะไร? <span class="en">Purpose</span></div>
       <div class="opts">
-        <button class="opt" data-k="purpose" data-v="home" type="button"><b>ทำทานเอง</b><span class="s">พาสเจอไรส์เฉพาะวัตถุดิบเสี่ยง + ใช้ PSS</span></button>
+        <button class="opt" data-k="purpose" data-v="home" type="button"><b>ทำทานเอง</b><span class="s">ฆ่าเชื้อเฉพาะวัตถุดิบเสี่ยง + ใช้ PSS</span></button>
         <button class="opt" data-k="purpose" data-v="sell" type="button"><b>ทำขาย / เพื่อจำหน่าย</b><span class="s">พาสเจอไรส์ทั้งหมด + บ่มมาตรฐาน (ประกาศ สธ. ฉ. 354)</span></button>
       </div>
     </div>
 
     <div class="q" id="qRisky" style="display:none">
       <div class="q-label">2. ใช้วัตถุดิบเสี่ยงตัวไหนบ้าง? <span class="en">Risky ingredients</span><span class="q-hint">เลือกได้หลายอัน</span></div>
+      <div class="risky-grp">กลุ่มเน้นฆ่าเชื้อ — ให้ความร้อนนาน 30 นาที</div>
       <div class="opts">
-        <button class="opt chk" data-multi="risky" data-v="eggYolk" type="button">ไข่แดงดิบ</button>
         <button class="opt chk" data-multi="risky" data-v="rawMilk" type="button">นมดิบ</button>
         <button class="opt chk" data-multi="risky" data-v="rawCream" type="button">ครีมดิบ</button>
-        <button class="opt chk" data-multi="risky" data-v="plantMilk" type="button">นมพืชคั้นเอง (ไม่ต้ม)</button>
+        <button class="opt chk" data-multi="risky" data-v="nutMilk" type="button">นมพืชจากนัท (อัลมอนด์/มะม่วงหิมพานต์)</button>
+        <button class="opt chk" data-multi="risky" data-v="eggYolk" type="button">ไข่แดงดิบ</button>
+      </div>
+      <div class="risky-grp">กลุ่มรักษากลิ่นรสสด — ให้ความร้อนสั้นระดับนาที</div>
+      <div class="opts">
         <button class="opt chk" data-multi="risky" data-v="freshFruit" type="button">ผลไม้สด</button>
         <button class="opt chk" data-multi="risky" data-v="freshCoconut" type="button">กะทิสดคั้นเอง</button>
+      </div>
+      <div class="risky-grp">ฆ่าเชื้อในตัวอยู่แล้ว (ไม่ต้องทำซ้ำ)</div>
+      <div class="opts">
+        <button class="opt chk" data-multi="risky" data-v="soyOat" type="button">นมถั่วเหลือง/ข้าวโอ๊ต (ทำเอง ต้มเดือดแล้ว)</button>
       </div>
     </div>
 
@@ -294,12 +304,16 @@ const PST={
   immLarge:{label:'เครื่องปั่นมือถือระดับการค้า ขนาดใหญ่ (25–50 กก.)',type:'imm',large:true,g1:{rL:4,rH:5,sL:70,sH:70},g2:{rL:5,rH:6,sL:70,sH:90}}
 };
 const RISKY={
-  eggYolk:{t:'ไข่แดงดิบ',h:'ผสม <b>ไข่แดง : น้ำตาล : ของเหลว = 1 : 1 : 5</b> ก่อน แล้วให้ความร้อน <span class="chip">70 °C</span> ค้าง <span class="chip">≥3 นาที</span> คนตลอด (หรือ 68.5 °C/30 นาที ระดับมาตรฐานขาย) → ลด <span class="chip warm">&lt;4 °C</span> ทันที — น้ำตาล/ของเหลวที่แบ่งมาหักออกจากสูตร • สะดวกสุด: ใช้ไข่แดงพาสเจอไรส์สำเร็จรูป'},
-  rawMilk:{t:'นมดิบ',h:'ไม่แนะนำ — ใช้นมพาสเจอไรส์แทน หากจำเป็น: <span class="chip">63 °C/30 นาที</span> หรือ <span class="chip">72 °C/15 วินาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที'},
-  rawCream:{t:'ครีมดิบ',h:'ไม่แนะนำ — ใช้ครีมพาสเจอไรส์แทน หากจำเป็น: <span class="chip">70 °C/30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที (ใช้ด้านสูงเพราะไขมันสูง)'},
-  plantMilk:{t:'นมพืชคั้นเอง',h:'อัลมอนด์/เม็ดมะม่วงฯ ที่ไม่ต้ม: <span class="chip">70 °C/30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> • นมถั่วเหลือง/ข้าวโอ๊ตที่ต้มเดือด ≥90 °C 5–10 นาทีแล้ว ไม่ต้องทำซ้ำ'},
-  freshFruit:{t:'ผลไม้สด',h:'ปรับ/เทียบ Brix ก่อนเสมอ แล้วเลือก: <b>ไม่ผ่านความร้อน</b> (กลิ่นสดสุด — ใช้ของสะอาด+น้ำต้มสุกเย็น, ทำขณะเย็น, ใช้ทันทีหรือเก็บ ≤24 ชม.) หรือ <b>ผ่านความร้อน</b> <span class="chip">70–75 °C/2 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที (ปรับ Brix ก่อนต้ม) • ผลไม้ที่ต้มแล้วเสียกลิ่น (มะม่วง/ลำไย) ใช้ IQF แทนได้'},
-  freshCoconut:{t:'กะทิสดคั้นเอง',h:'<span class="chip">70 °C/30 นาที</span> คนตลอด (กันก้นไหม้+ไขมันแยกชั้น) → ลด <span class="chip warm">&lt;4 °C</span> ให้เร็วที่สุด เป้า 5 นาที เพื่อรักษากลิ่น'}
+  // กลุ่มเน้นฆ่าเชื้อ — ให้ความร้อนนาน 30 นาที
+  rawMilk:{t:'นมดิบ',h:'ไม่แนะนำ — ใช้นมพาสเจอไรส์แทน หากจำเป็น: <span class="chip">63 °C / 30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที <i>(ห้ามใช้ 72 °C/15 วินาที เพราะเป็น HTST ที่ทำในหม้อไม่ได้)</i>'},
+  rawCream:{t:'ครีมดิบ',h:'ไม่แนะนำ — ใช้ครีมพาสเจอไรส์แทน หากจำเป็น: <span class="chip">70 °C / 30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที (ใช้ด้านสูงเพราะไขมันสูง)'},
+  nutMilk:{t:'นมพืชจากนัท (อัลมอนด์/เม็ดมะม่วงหิมพานต์)',h:'คั้นเองโดยไม่ต้ม จึงต้องฆ่าเชื้อเอง: <span class="chip">70 °C / 30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที'},
+  eggYolk:{t:'ไข่แดงดิบ',h:'หลัก (ไข่ยังเหลว): LTLT <span class="chip">63 °C / 30 นาที</span> คนตลอด → ลด <span class="chip warm">&lt;4 °C</span> ทันที • ทางเลือก: ทำคัสตาร์ด <span class="chip">82–85 °C</span> จนถึงจุดเคลือบหลังช้อน (nappe — ไม่จับเวลา ใช้สังเกตเนื้อ) • สะดวกสุด: ใช้ไข่แดงพาสเจอไรส์สำเร็จรูป'},
+  // กลุ่มรักษากลิ่นรสสด — ให้ความร้อนสั้นระดับนาที
+  freshFruit:{t:'ผลไม้สด',h:'ปรับ/เทียบ Brix ก่อนเสมอ แล้วเลือก: <b>ไม่ผ่านความร้อน</b> (กลิ่นสดสุด — ใช้ของสะอาด+น้ำต้มสุกเย็น, ทำขณะเย็น, ใช้ทันทีหรือเก็บ ≤24 ชม.) หรือ <b>ผ่านความร้อน</b> <span class="chip">70–75 °C / 2 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที (ปรับ Brix ก่อนต้ม) • ผลไม้ที่ต้มแล้วเสียกลิ่น (มะม่วง/ลำไย) ใช้ IQF แทนได้'},
+  freshCoconut:{t:'กะทิสดคั้นเอง',h:'<span class="chip">80 °C / 2 นาที</span> คนตลอด (กันก้นไหม้+ไขมันแยกชั้น) → ลด <span class="chip warm">&lt;4 °C</span> ให้เร็วที่สุด เป้า 5 นาที เพื่อรักษากลิ่น'},
+  // ฆ่าเชื้อในตัวอยู่แล้ว
+  soyOat:{t:'นมถั่วเหลือง/ข้าวโอ๊ต (ทำเอง)',h:'ในขั้นตอนทำต้องต้มเดือด <span class="chip">≥90 °C / 5–10 นาที</span> อยู่แล้ว จึงถือว่า<b>ฆ่าเชื้อในตัว</b> — ไม่ต้องให้ความร้อนซ้ำ เพียงลด <span class="chip warm">&lt;4 °C</span> และเก็บสะอาดจนนำเข้ามิกซ์'}
 };
 
 const state={purpose:null,risky:new Set(),group:null,machine:null,profile:null,fruitHigh:null,cream:null,stab:new Set(),title:'',lot:''};
@@ -418,12 +432,13 @@ function render(){
   if(has65&&!has85) s3+='<li style="color:var(--muted)">สูตรนี้ไม่มีสารที่ต้องแยกต้มที่ 85 °C</li>';
   s3+='<li><b>ผลไม้:</b> ล้างผิวก่อนปอก → บดละเอียด → ปรับ/เทียบ Brix</li></ul>';
   if(home){
-    s3+='<div class="branch-tag">ทำทาน — พาสเจอไรส์วัตถุดิบเสี่ยงแยกก่อน</div>';
+    s3+='<div class="branch-tag">ทำทาน — ฆ่าเชื้อวัตถุดิบเสี่ยงแยกก่อน</div>';
     if(state.risky.size){
-      state.risky.forEach(k=>{const r=RISKY[k];s3+='<div class="sub"><div class="sub-t">'+r.t+'</div><p>'+r.h+'</p></div>';});
+      state.risky.forEach(k=>{const r=RISKY[k];if(!r)return;s3+='<div class="sub"><div class="sub-t">'+r.t+'</div><p>'+r.h+'</p></div>';});
       s3+='<p class="warn" style="color:var(--rose-deep);font-size:13px">ทุกตัวที่ผ่านความร้อนแล้ว ลดอุณหภูมิ &lt;4 °C ทันที และเก็บแยกจากของดิบจนนำเข้ามิกซ์</p>';
+      s3+='<div class="sub" style="border-color:#E6C09A;background:#FBF1E7"><p style="color:#9A5B25;font-size:12.5px;margin:0">⚠ <b>ข้อควรเข้าใจเรื่องนิยาม:</b> การฆ่าเชื้อวัตถุดิบเสี่ยงแบบแยก (ทั้ง 2 กลุ่ม) <b>ไม่ใช่</b>การพาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย — ถ้าทำขาย ต้องพาสเจอไรซ์มิกซ์รวมตามประกาศ สธ. ฉบับที่ 354 แยกต่างหากเสมอ</p></div>';
     } else {
-      s3+='<p style="color:var(--muted)">ยังไม่ได้เลือกวัตถุดิบเสี่ยงในข้อ 2 — ถ้ามี เลือกไว้เพื่อดูวิธีพาสเจอไรส์แต่ละตัวค่ะ</p>';
+      s3+='<p style="color:var(--muted)">ยังไม่ได้เลือกวัตถุดิบเสี่ยงในข้อ 2 — ถ้ามี เลือกไว้เพื่อดูวิธีฆ่าเชื้อแต่ละตัวค่ะ</p>';
     }
     s3+='<p><b>ผสม + ให้ความร้อน:</b> นำวัตถุดิบเสี่ยงที่ฆ่าเชื้อแล้ว + ของแห้งที่ละลาย + ของเหลวที่เหลือ คนเข้ากัน <b>ยังไม่ใส่ครีม</b> (เก็บครีมเย็นไว้เติมขั้นปั่น) แล้วให้ความร้อนถึง <span class="chip">60–65 °C</span> เพื่อละลายและรวมเนื้อ — ไม่ต้องคงอุณหภูมิ → เข้าขั้น PST ขณะยังร้อน</p>';
   } else {

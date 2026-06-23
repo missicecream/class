@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LTLT Pasteurization Log · Miss Icecream</title>
+<title>Heat Process Log — บันทึกการให้ความร้อน · Miss Icecream</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -182,13 +182,13 @@
 
   <header>
     <div class="eyebrow">Miss Icecream · Lab Tools</div>
-    <h1>LTLT Pasteurization <em>Log</em></h1>
-    <p class="sub">บันทึกการพาสเจอไรซ์แบบ LTLT · จับเวลา–อุณหภูมิระหว่างต้ม · ตรวจว่าผ่านเกณฑ์หรือไม่ · ออกรายงาน PDF A4</p>
+    <h1>Heat Process <em>Log</em></h1>
+    <p class="sub">บันทึกการให้ความร้อนวัตถุดิบ/มิกซ์ไอศกรีม · จับเวลา–อุณหภูมิ · ตรวจว่าผ่านเกณฑ์หรือไม่ · ออกรายงาน PDF A4</p>
     <p class="sub guide-link" style="margin-top:7px"><a href="/class/LTLT-Log-guide.html" style="color:var(--accent-deep);font-weight:600;text-decoration:none">📖 คู่มือการใช้งาน</a></p>
   </header>
 
   <div class="rep-head">
-    <div class="rt">รายงานการพาสเจอไรซ์ (LTLT)</div>
+    <div class="rt">รายงานการให้ความร้อน (Heat Process Log)</div>
     <div class="rs">Miss Icecream</div>
   </div>
 
@@ -213,7 +213,7 @@
 
   <!-- 2. โปรแกรม -->
   <div class="block">
-    <div class="block-t"><span class="n">2</span> โปรแกรมพาสเจอไรซ์</div>
+    <div class="block-t"><span class="n">2</span> เลือกโปรแกรมการให้ความร้อน</div>
     <div class="grid">
       <div class="fld"><label>เลือกโปรแกรม</label>
         <select id="f_program" onchange="selectProgram(this.value)">
@@ -301,15 +301,22 @@
 
 <script>
 const PROGRAMS=[
-  {k:'iceCreamMix',label:'ไอศกรีมมิกซ์',temp:68.5,time:30},
-  {k:'eggYolk',label:'ไข่แดงดิบ',temp:70,time:3,note:'ก่อนให้ความร้อน ต้องผสม ไข่แดง : น้ำตาล : ของเหลว = 1 : 1 : 5 ให้เข้ากันก่อน แล้วจึงให้ความร้อนถึงเกณฑ์'},
-  {k:'freshFruit',label:'ผลไม้สด',temp:70,time:2},
-  {k:'freshCoconut',label:'กะทิสด',temp:70,time:30},
-  {k:'plantMilk',label:'นมพืช (คั้นเอง)',temp:70,time:30},
-  {k:'rawMilk',label:'นมดิบ',temp:63,time:30},
-  {k:'rawCream',label:'ครีมดิบ',temp:70,time:30},
-  {k:'custom',label:'ระบุเวลาและอุณหภูมิเอง',temp:null,time:null}
+  // ประเภท 1 — LTLT พาสเจอไรซ์มิกซ์ทั้งหมด (แนวทำขาย)
+  {cat:1,k:'mixAll',label:'พาสเจอไรซ์มิกซ์ไอศกรีมทั้งหมด',temp:68.5,time:30},
+  // ประเภท 2 — ฆ่าเชื้อวัตถุดิบเสี่ยง แบบให้ความร้อนนาน
+  {cat:2,k:'rawMilk',label:'นมดิบ',temp:63,time:30},
+  {cat:2,k:'rawCream',label:'ครีมดิบ',temp:70,time:30},
+  {cat:2,k:'nutMilk',label:'นมพืชจากนัท (อัลมอนด์ เม็ดมะม่วงหิมพานต์)',temp:70,time:30},
+  {cat:2,k:'eggYolkLong',label:'ไข่แดง (แบบ LTLT ไม่ทำคัสตาร์ด)',temp:63,time:30},
+  // ประเภท 3 — ฆ่าเชื้อวัตถุดิบเสี่ยง แบบรักษากลิ่นรส / ความร้อนสูงเวลาสั้น
+  {cat:3,k:'freshFruit',label:'ผลไม้สด',temp:70,tempHi:75,time:2},
+  {cat:3,k:'coconut',label:'กะทิสดคั้นเอง',temp:80,time:2},
+  {cat:3,k:'custard',label:'ไข่แดงแบบทำคัสตาร์ด (82–85 °C)',temp:82,ceiling:85,noTimer:true},
+  // ประเภท 4 — กำหนดเอง
+  {cat:4,k:'custom',label:'ระบุเวลาและอุณหภูมิเอง'}
 ];
+const CAT_LABEL={1:'① LTLT — พาสเจอไรซ์มิกซ์ทั้งหมด (แนวทำขาย)',2:'② ฆ่าเชื้อวัตถุดิบเสี่ยง — ให้ความร้อนนาน 30 นาที',3:'③ ฆ่าเชื้อวัตถุดิบเสี่ยง — ความร้อนสูง เวลาสั้น (รักษากลิ่นรส)',4:'④ กำหนดเอง'};
+const LEGACY={iceCreamMix:'mixAll',eggYolk:'eggYolkLong',freshCoconut:'coconut',plantMilk:'nutMilk'};
 const KEY='ltlt_log_v1';            // คีย์เดิม (รุ่นบันทึกเดี่ยว) ใช้ย้ายข้อมูลเข้าระบบหลาย Batch
 const STORE_KEY='ltlt_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
@@ -362,8 +369,10 @@ function fmtDur(ms){if(ms==null)return '—';let s=Math.round(ms/1000);const m=M
 
 function crit(){
   if(state.program==='custom') return {temp:parseFloat(state.ctemp),time:parseFloat(state.ctime)};
-  const p=PROGRAMS.find(x=>x.k===state.program);
-  return p?{temp:p.temp,time:p.time}:{temp:NaN,time:NaN};
+  let k=state.program; if(LEGACY[k])k=LEGACY[k];
+  const p=PROGRAMS.find(x=>x.k===k);
+  if(!p)return {temp:NaN,time:NaN};
+  return {temp:p.temp,time:p.noTimer?NaN:p.time,noTimer:!!p.noTimer,ceiling:p.ceiling,tempHi:p.tempHi,cat:p.cat};
 }
 
 function setF(k,v){state[k]=v;save();if(k==='product')refreshBatchSel()}
@@ -380,6 +389,7 @@ function logEvent(name){
   state[name]=Date.now();save();updateUI();
 }
 function heatStatus(c,rt,now){
+  if(c.noTimer){const mx=state.readings.length?Math.max(...state.readings.map(r=>r.temp)):null;return {complete:mx!=null&&mx>=82,reason:'ยังไม่ถึงเป้า 82 °C (เนื้อยังไม่เคลือบหลังช้อน)'};}
   if(!state.program||isNaN(c.temp)||isNaN(c.time))return {complete:false,reason:'ยังไม่ได้เลือกโปรแกรม/เกณฑ์'};
   if(!rt)return {complete:false,reason:'อุณหภูมิยังไม่ถึงเกณฑ์ ≥ '+c.temp+' °C (ยังไม่เริ่มจับเวลา)'};
   const end=rt+c.time*60000;
@@ -452,6 +462,7 @@ function syncInputs(){
   document.getElementById('f_lot').value=state.lot||'';
   document.getElementById('f_recorder').value=state.recorder||'';
   document.getElementById('f_date').value=state.date||'';
+  if(LEGACY[state.program])state.program=LEGACY[state.program];
   document.getElementById('f_program').value=state.program||'';
   document.getElementById('f_ctemp').value=state.ctemp||'';
   document.getElementById('f_ctime').value=state.ctime||'';
@@ -464,14 +475,15 @@ function updateUI(){
   const c=crit();
   // criteria box
   const cb=document.getElementById('critBox');
+  const tempLabel=c.tempHi?(c.temp+'–'+c.tempHi):c.temp;
   if(!state.program){cb.className='crit none';cb.textContent='ยังไม่ได้เลือกโปรแกรม';}
+  else if(c.noTimer){cb.className='crit';cb.innerHTML='โปรแกรมนี้ <b>ไม่จับเวลา</b> — ให้บันทึกอุณหภูมิสูงสุดที่ถึง (เป้า <b>82 °C</b> เพดาน <b>85 °C</b>) และสังเกตเนื้อเคลือบหลังช้อน (nappe) แล้วยกลง';}
   else if(isNaN(c.temp)||isNaN(c.time)){cb.className='crit none';cb.textContent='กรอกอุณหภูมิและเวลาที่ต้องการค่ะ';}
-  else{cb.className='crit';cb.innerHTML='เกณฑ์ LTLT: คงอุณหภูมิ <b>≥ '+c.temp+' °C</b> ต่อเนื่อง <b>≥ '+c.time+' นาที</b>';}
+  else{cb.className='crit';cb.innerHTML='เกณฑ์: คงอุณหภูมิ <b>≥ '+tempLabel+' °C</b> ต่อเนื่อง <b>≥ '+c.time+' นาที</b>';}
 
-  // program note
+  // คำเตือนนิยาม: ประเภท 2/3 = ฆ่าเชื้อเฉพาะจุด ไม่ใช่พาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย
   const pn=document.getElementById('progNote');
-  const pObj=PROGRAMS.find(x=>x.k===state.program);
-  if(pObj&&pObj.note){pn.style.display='block';pn.innerHTML='⚠ '+pObj.note;}
+  if(c.cat===2||c.cat===3){pn.style.display='block';pn.innerHTML='⚠ ประเภทนี้เป็นการ<b>ฆ่าเชื้อวัตถุดิบเสี่ยงเฉพาะจุด</b> ไม่ใช่การพาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย — ถ้าทำขาย ต้องใช้ <b>ประเภทที่ 1 (พาสเจอไรซ์มิกซ์ทั้งหมด 68.5 °C / 30 นาที)</b> แยกต่างหากเสมอ';}
   else{pn.style.display='none';pn.innerHTML='';}
 
   // quick buttons
@@ -493,7 +505,7 @@ function updateUI(){
     const end=rt+c.time*60000;
     sc.style.display='block';
     sc.innerHTML='เริ่มจับเวลา <b>'+hms(rt)+'</b> · ต้องคงอุณหภูมิไม่ต่ำกว่า <b>'+c.temp+' °C</b> ถึง <b>'+hms(end)+'</b> (≥ '+c.time+' นาที)';
-  } else if(state.readings.length && !isNaN(c.temp)){
+  } else if(state.readings.length && !isNaN(c.temp) && !c.noTimer){
     sc.style.display='block';
     sc.innerHTML='เริ่มบันทึกข้อมูลตั้งแต่ <b>'+hms(state.readings[0].t)+'</b> · อุณหภูมิยังไม่ถึงเกณฑ์ ≥ <b>'+c.temp+' °C</b> — ยังไม่เริ่มจับเวลา (จะเริ่มให้เมื่อถึงเกณฑ์)';
   } else sc.style.display='none';
@@ -531,7 +543,7 @@ function updateUI(){
 // เวลาเริ่มจับเวลาของ "ช่วงต่อเนื่อง" ปัจจุบัน — ถ้าอุณหภูมิหลุดต่ำกว่าเกณฑ์ จะรีเซ็ตจุดเริ่ม (ตามหลัก LTLT)
 function getReachTime(c,reads){
   reads=reads||state.readings;
-  if(!c||isNaN(c.temp))return null;
+  if(!c||isNaN(c.temp)||c.noTimer)return null;
   let rt=null;
   for(const r of reads){ if(r.temp<c.temp){rt=null;} else if(rt===null){rt=r.t;} }
   return rt;
@@ -596,6 +608,18 @@ function setLog(name,label){
 
 function evaluate(c,holdDur,coolDur,rt){
   const box=document.getElementById('summaryBox');
+  // โปรแกรมไม่จับเวลา (คัสตาร์ด) — สรุปจากอุณหภูมิสูงสุดที่บันทึก
+  if(c.noTimer){
+    if(!state.readings.length){box.className='summary wait';box.innerHTML='<div class="verdict">รอข้อมูล</div>บันทึกอุณหภูมิที่อ่านได้ระหว่างทำคัสตาร์ด ระบบจะเก็บค่าสูงสุดให้ค่ะ';return;}
+    const mx=Math.max(...state.readings.map(r=>r.temp));
+    const over=mx>85, reach=mx>=82;
+    let li='<li>อุณหภูมิสูงสุดที่บันทึก: <b>'+mx+' °C</b></li><li>เป้า 82 °C · เพดาน 85 °C</li><li>สังเกตเนื้อเคลือบหลังช้อน (nappe) แล้วยกลง</li>';
+    if(coolDur!=null)li+='<li>ลดความร้อนถึง ≤4 °C ใช้ <b>'+fmtDur(coolDur)+'</b></li>';
+    if(state.endHoldReason)li+='<li>หมายเหตุ: '+escapeHtml(state.endHoldReason)+'</li>';
+    box.className='summary '+(over?'fail':(reach?'pass':'wait'));
+    box.innerHTML='<div class="verdict">'+(over?'⚠ เกินเพดาน 85 °C (เสี่ยงไข่สุกเกิน)':(reach?'✓ ถึงเป้า 82 °C — สังเกตเนื้อ nappe':'รอให้ถึงเป้า 82 °C'))+'</div><ul>'+li+'</ul>';
+    return;
+  }
   if(!state.program||isNaN(c.temp)||!rt||!state.endHold){
     box.className='summary wait';box.innerHTML='<div class="verdict">รอข้อมูล</div>ต้องเลือกโปรแกรม + บันทึกอุณหภูมิให้ถึงเกณฑ์ และกด "จบการให้ความร้อน" ก่อนค่ะ';return;
   }
@@ -611,7 +635,7 @@ function evaluate(c,holdDur,coolDur,rt){
   li+='<li>อุณหภูมิระหว่างจับเวลา: '+(tempOk?'✓ ไม่หลุดต่ำกว่าเกณฑ์':'✗ มี '+low.length+' จุดต่ำกว่า '+c.temp+' °C → ตามหลัก LTLT ต้องเริ่มจับเวลาใหม่')+'</li>';
   if(coolDur!=null)li+='<li>ลดความร้อนถึง ≤4 °C ใช้ <b>'+fmtDur(coolDur)+'</b></li>';
   box.className='summary '+(pass?'pass':'fail');
-  box.innerHTML='<div class="verdict">'+(pass?'✓ ผ่านเกณฑ์ LTLT':'✗ ไม่ผ่านเกณฑ์')+'</div><ul>'+li+'</ul>';
+  box.innerHTML='<div class="verdict">'+(pass?'✓ ผ่านเกณฑ์การให้ความร้อน':'✗ ไม่ผ่านเกณฑ์')+'</div><ul>'+li+'</ul>';
 }
 
 function buildChart(c){
@@ -667,7 +691,18 @@ function buildChart(c){
 // init
 (function(){
   const sel=document.getElementById('f_program');
-  PROGRAMS.forEach(p=>{const o=document.createElement('option');o.value=p.k;o.textContent=p.label+(p.temp?(' — ≥'+p.temp+' °C / ≥'+p.time+' นาที'):'');sel.appendChild(o);});
+  [1,2,3,4].forEach(cn=>{
+    const og=document.createElement('optgroup');og.label=CAT_LABEL[cn];
+    PROGRAMS.filter(p=>p.cat===cn).forEach(p=>{
+      const o=document.createElement('option');o.value=p.k;
+      let t=p.label;
+      if(p.k==='custom'){}
+      else if(p.noTimer)t+=' — ไม่จับเวลา (เป้า 82 · เพดาน 85 °C)';
+      else t+=' — '+(p.tempHi?(p.temp+'–'+p.tempHi):p.temp)+' °C / '+p.time+' นาที';
+      o.textContent=t;og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
   if(!state.date)state.date=thaiDate(Date.now());
   refreshBatchSel();syncInputs();updateUI();
   setInterval(()=>{renderNextRead();renderCountdown();checkReminder();},1000);
@@ -676,8 +711,8 @@ function buildChart(c){
 })();
 </script>
 <script>
-const SHARE_CFG={target:'.sheet',file:'LTLT-Log.pdf',title:'รายงานพาสเจอไรซ์ LTLT',
-  text:()=>{let s='รายงานพาสเจอไรซ์ LTLT';if(state.product)s+=' · '+state.product;if(state.lot)s+=' · Lot '+state.lot;return s;}};
+const SHARE_CFG={target:'.sheet',file:'Heat-Process-Log.pdf',title:'รายงานการให้ความร้อน',
+  text:()=>{let s='รายงานการให้ความร้อน';if(state.product)s+=' · '+state.product;if(state.lot)s+=' · Lot '+state.lot;return s;}};
 function _ld(src){return new Promise((res,rej)=>{if([...document.scripts].some(s=>s.src===src))return res();const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('โหลดไลบรารีไม่ได้ (ต้องมีอินเทอร์เน็ต)'));document.head.appendChild(s);});}
 async function sharePDF(btn){const ot=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='กำลังสร้าง PDF…';}
   try{
