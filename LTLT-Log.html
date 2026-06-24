@@ -43,10 +43,10 @@
   .crit b{font-weight:700}
   .crit.none{background:var(--line-soft);border-color:var(--line);color:var(--muted)}
   .prog-note{margin-top:8px;font-size:13px;line-height:1.5;background:#FBF1E7;border:1px solid #E6C9A8;border-radius:10px;padding:9px 13px;color:#8A5A2B}
-  .prog-cat{font-size:12.5px;font-weight:700;color:var(--accent-deep);letter-spacing:.01em;margin:14px 0 8px}
+  .prog-cat{font-size:12.5px;font-weight:700;color:var(--accent-deep);letter-spacing:.01em;margin:11px 0 6px}
   .prog-cat:first-child{margin-top:2px}
-  .prog-grid{display:grid;grid-template-columns:1fr;gap:8px}
-  .prog-opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;cursor:pointer;font-family:'Sarabun',sans-serif;color:var(--ink);transition:all .18s;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .prog-grid{display:grid;grid-template-columns:1fr;gap:6px}
+  .prog-opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 13px;cursor:pointer;font-family:'Sarabun',sans-serif;color:var(--ink);transition:all .18s;display:flex;align-items:center;justify-content:space-between;gap:12px}
   .prog-opt:hover{border-color:var(--accent)}
   .prog-opt.sel{border-color:var(--accent-deep);background:#F3F6EC;box-shadow:0 4px 16px -12px rgba(79,107,58,.5)}
   .prog-opt .nm{font-weight:600;font-size:14px;line-height:1.3}
@@ -306,6 +306,7 @@ const PROGRAMS=[
   // ประเภท 2 — ฆ่าเชื้อวัตถุดิบเสี่ยง แบบให้ความร้อนนาน
   {cat:2,k:'rawMilk',label:'นมดิบ',temp:63,time:30},
   {cat:2,k:'rawCream',label:'ครีมดิบ',temp:70,time:30},
+  {cat:2,k:'coconutLong',label:'กะทิคั้นสด',temp:70,time:30},
   {cat:2,k:'nutMilk',label:'นมพืชจากนัท (อัลมอนด์ เม็ดมะม่วงหิมพานต์)',temp:70,time:30},
   {cat:2,k:'eggYolkLong',label:'ไข่แดง (แบบ LTLT ไม่ทำคัสตาร์ด)',temp:63,time:30},
   // ประเภท 3 — ฆ่าเชื้อวัตถุดิบเสี่ยง แบบรักษากลิ่นรส / ความร้อนสูงเวลาสั้น
