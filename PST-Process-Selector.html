@@ -272,8 +272,8 @@
       <div class="q">
         <div class="q-label">6. สัดส่วนผลไม้ในสูตร (ทำทาน) <span class="en">Fruit ratio</span></div>
         <div class="opts">
-          <button class="opt" data-k="fruitHigh" data-v="yes" type="button"><b>มากกว่า 20%</b><span class="s">เชอร์เบท/ซอร์เบท/ไอศกรีมผลไม้ — เติมก่อนลดความร้อน</span></button>
-          <button class="opt" data-k="fruitHigh" data-v="no" type="button"><b>น้อยกว่า 20% หรือไม่มี</b><span class="s">เติมตอนก่อนปั่น</span></button>
+          <button class="opt" data-k="fruitHigh" data-v="yes" type="button"><b>มากกว่า 10%</b><span class="s">เชอร์เบท/ซอร์เบท/ไอศกรีมผลไม้ — เติมก่อนลดความร้อน</span></button>
+          <button class="opt" data-k="fruitHigh" data-v="no" type="button"><b>น้อยกว่า 10% หรือไม่มี</b><span class="s">เติมตอนก่อนปั่น</span></button>
         </div>
       </div>
       <div class="q">
@@ -495,7 +495,7 @@ function render(){
     s5+='<div class="branch-tag">ทำทาน — Paula’s Smart Setting (PSS)</div>';
     s5+='<p>ลดความร้อน + เซ็ตมิกซ์ให้พร้อมปั่นในขั้นเดียว ใช้เวลาราวครึ่งชั่วโมง ไม่ต้องบ่มข้ามคืน</p>';
     if(state.fruitHigh==='yes'){
-      s5+='<div class="sub"><div class="sub-t">ผลไม้ ≥20% — เติมก่อนลดความร้อน</div><p>เติมผลไม้บด (ปรับ Brix+ฆ่าเชื้อแล้ว) ตอนมิกซ์อยู่ <span class="chip">50–55 °C</span> คน/ปั่นสั้นๆ ให้เข้ากัน แล้ววัดอุณหภูมิ: ถ้า &gt;40 °C ทำช่วงที่ 1 ต่อ • ถ้า ≤40 °C ข้ามไปช่วงที่ 2 ได้เลย</p></div>';
+      s5+='<div class="sub"><div class="sub-t">ผลไม้ ≥10% — เติมก่อนลดความร้อน</div><p>เติมผลไม้บด (ปรับ Brix+ฆ่าเชื้อแล้ว) ตอนมิกซ์อยู่ <span class="chip">50–55 °C</span> คน/ปั่นสั้นๆ ให้เข้ากัน แล้ววัดอุณหภูมิ: ถ้า &gt;40 °C ทำช่วงที่ 1 ต่อ • ถ้า ≤40 °C ข้ามไปช่วงที่ 2 ได้เลย</p></div>';
     }
     s5+='<div class="sub"><div class="sub-t">ช่วงที่ 1 — Active cooling <span class="chip">50–55 → 40 °C</span> ~1–2 นาที</div>'
       +'<p>วางชามในอ่างน้ำแข็ง หมุนชาม+ปาดขอบต่อเนื่อง ให้เย็นเท่ากันทั่วชาม</p>'
@@ -526,7 +526,7 @@ function render(){
     s6+='<div class="branch-tag">ทำทาน</div>';
     s6+='<p>เติมส่วนผสมที่เก็บไว้ แล้วคนเบาๆ:</p><ul>'
       +'<li>กลิ่นระเหยง่าย, เหล้า (ใส่น้อย — ทำให้แข็งตัวยาก), สีปรับเฉดขั้นสุดท้าย</li>'
-      +'<li>ผลไม้/น้ำผลไม้สดสัดส่วนน้อย (&lt;20%) เช่น น้ำมะนาว/ส้มคั้น เพื่อกลิ่นสด</li>'
+      +'<li>ผลไม้/น้ำผลไม้สดสัดส่วนน้อย (&lt;10%) เช่น น้ำมะนาว/ส้มคั้น เพื่อกลิ่นสด</li>'
       +'<li>ชิมปรับรส: เปรี้ยวด้วย CIT20, หวานด้วย SYR (เผื่อรสจางลงหลังปั่น)</li></ul>';
     if(state.cream==='yes'){
       s6+='<div class="sub"><div class="sub-t">ลดอุณหภูมิแล้วเติมครีมแช่เย็น</div>'
