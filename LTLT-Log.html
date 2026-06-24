@@ -230,12 +230,14 @@
     <div id="progPicker"></div>
     <div class="crit none" id="critBox">ยังไม่ได้เลือกโปรแกรม</div>
     <div class="prog-note" id="progNote" style="display:none"></div>
-    <div class="fld logging-only" style="margin-top:10px"><label>บันทึกอุณหภูมิระหว่างต้มทุกๆ</label>
-      <select id="f_interval" onchange="setF('interval',+this.value)" style="max-width:160px">
+    <div class="fld logging-only" style="margin-top:10px"><label>เตือนให้บันทึกอุณหภูมิระหว่างต้ม ทุกๆ</label>
+      <select id="f_interval" onchange="setF('interval',+this.value)" style="max-width:180px">
         <option value="1">1 นาที</option>
+        <option value="2">2 นาที</option>
         <option value="3">3 นาที</option>
         <option value="5">5 นาที</option>
         <option value="10">10 นาที</option>
+        <option value="0">ไม่ต้องเตือน</option>
       </select>
     </div>
   </div>
@@ -514,7 +516,7 @@ function syncInputs(){
   buildProgPicker();
   document.getElementById('f_ctemp').value=state.ctemp||'';
   document.getElementById('f_ctime').value=state.ctime||'';
-  document.getElementById('f_interval').value=state.interval||3;
+  document.getElementById('f_interval').value=(state.interval==null?3:state.interval);
   document.getElementById('f_coolTemp').value=state.coolStartTemp||'';
 }
 
@@ -608,7 +610,7 @@ function showRemind(on){const b=document.getElementById('remindBox');if(!b)retur
 function checkReminder(){
   const box=document.getElementById('remindBox');
   const rt=getReachTime(crit());
-  if(state.endHold||!rt){if(box)box.style.display='none';return;}   // เตือนเฉพาะช่วงคงอุณหภูมิ (หลังถึงเกณฑ์)
+  if(state.endHold||!rt||state.interval===0){if(box)box.style.display='none';return;}   // ปิดเตือน / เตือนเฉพาะช่วงคงอุณหภูมิ
   const last=state.readings.length?state.readings[state.readings.length-1].t:null;
   if(!last){if(box)box.style.display='none';return;}
   const iv=(state.interval||3)*60000;
@@ -621,7 +623,7 @@ function checkReminder(){
 function renderNextRead(){
   const box=document.getElementById('nextReadBox');if(!box)return;
   const rt=getReachTime(crit());
-  if(state.endHold||!state.readings.length||!rt){box.style.display='none';return;}  // เริ่มนับเฉพาะหลังถึงเกณฑ์
+  if(state.endHold||!state.readings.length||!rt||state.interval===0){box.style.display='none';return;}  // ปิดเตือน / เริ่มนับเฉพาะหลังถึงเกณฑ์
   const last=state.readings[state.readings.length-1].t;
   const iv=(state.interval||3)*60000;
   let rem=iv-((Date.now()-last)%iv);if(rem===iv&&Date.now()===last)rem=iv;
