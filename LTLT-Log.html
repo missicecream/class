@@ -474,6 +474,15 @@ function addReading(temp){
   state.readings.push({t:now,temp:v});
   showRemind(false);
   save();updateUI();
+  // เกินช่วงแนะนำ / เพดาน (ผลไม้ 70–75 °C หรือ ไข่แดงคัสตาร์ด เพดาน 85 °C)
+  const hiLimit=c.tempHi||c.ceiling;
+  if(hiLimit&&v>hiLimit){
+    cdBeep();
+    const msg=c.tempHi
+      ? '⚠ อุณหภูมิ '+v+' °C เกินช่วงแนะนำ ('+c.temp+'–'+c.tempHi+' °C)\n\nลดไฟลงเพื่อรักษากลิ่นรส อย่าให้เกิน '+c.tempHi+' °C ค่ะ'
+      : '⚠ อุณหภูมิ '+v+' °C เกินเพดาน '+hiLimit+' °C (คัสตาร์ด: เป้า 82 °C · เพดาน 85 °C)\n\nเสี่ยงไข่ตกตะกอน/แตกเป็นก้อน (โปรตีนไข่สุกเกิน) — รีบยกลงจากเตาค่ะ';
+    setTimeout(()=>alert(msg),60);
+  }
   // (A) อุณหภูมิหลุดต่ำกว่าเกณฑ์ระหว่างจับเวลา -> ต้องเริ่มจับเวลาใหม่
   if(!isNaN(c.temp)&&rtBefore!==null&&v<c.temp&&!state.endHold){
     state.pasteurNotified=false;save();updateUI();
