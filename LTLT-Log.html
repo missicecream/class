@@ -217,7 +217,7 @@
     <div class="block-t"><span class="n">1</span> ข้อมูลรายงาน</div>
     <div class="grid">
       <div class="fld"><label>ผลิตภัณฑ์</label><input id="f_product" type="text" placeholder="เช่น ไอศกรีมวานิลลา" oninput="setF('product',this.value)"></div>
-      <div class="fld"><label>หมายเลข Lot</label><input id="f_lot" type="text" placeholder="เช่น L240612-01" oninput="setF('lot',this.value)"></div>
+      <div class="fld"><label>หมายเลข Lot</label><input id="f_lot" type="text" placeholder="เช่น 260612-1" oninput="setF('lot',this.value)"></div>
       <div class="fld"><label>ผู้บันทึก</label><input id="f_recorder" type="text" placeholder="ชื่อผู้บันทึก" oninput="setF('recorder',this.value)"></div>
       <div class="fld"><label>วันที่</label><input id="f_date" type="text" oninput="setF('date',this.value)"></div>
     </div>
@@ -311,7 +311,7 @@ const PROGRAMS=[
   {cat:2,k:'eggYolkLong',label:'ไข่แดง (แบบ LTLT ไม่ทำคัสตาร์ด)',temp:63,time:30},
   // ประเภท 3 — ฆ่าเชื้อวัตถุดิบเสี่ยง แบบรักษากลิ่นรส / ความร้อนสูงเวลาสั้น
   {cat:3,k:'freshFruit',label:'ผลไม้สด',temp:70,tempHi:75,time:2},
-  {cat:3,k:'coconut',label:'กะทิสดคั้นเอง',temp:80,time:2},
+  {cat:3,k:'coconut',label:'กะทิคั้นสด',temp:80,time:2},
   {cat:3,k:'custard',label:'ไข่แดงแบบทำคัสตาร์ด (82–85 °C)',temp:82,ceiling:85,noTimer:true},
   // ประเภท 4 — กำหนดเอง
   {cat:4,k:'custom',label:'ระบุเวลาและอุณหภูมิเอง'}
