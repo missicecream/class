@@ -413,6 +413,12 @@ function selectProgram(k){
     state.pasteurNotified=false; // ให้คำนวณสถานะ “สมบูรณ์” ใหม่ตามเกณฑ์ใหม่
   }
   state.program=k;
+  // ตั้งค่า default ช่วงเตือนบันทึกตามเวลาของโปรแกรม: <3 นาที → ทุก 1 นาที, ≥3 นาที → ทุก 3 นาที
+  if(k!==prev && k!=='custom'){
+    const p=PROGRAMS.find(x=>x.k===(LEGACY[k]||k));
+    if(p){ state.interval=(p.noTimer||(typeof p.time==='number'&&p.time<3))?1:3;
+      const ivEl=document.getElementById('f_interval');if(ivEl)ivEl.value=state.interval; }
+  }
   save();buildProgPicker();updateUI();
 }
 
