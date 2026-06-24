@@ -436,7 +436,7 @@ function render(){
     if(state.risky.size){
       state.risky.forEach(k=>{const r=RISKY[k];if(!r)return;s3+='<div class="sub"><div class="sub-t">'+r.t+'</div><p>'+r.h+'</p></div>';});
       s3+='<p class="warn" style="color:var(--rose-deep);font-size:13px">ทุกตัวที่ผ่านความร้อนแล้ว ลดอุณหภูมิ &lt;4 °C ทันที และเก็บแยกจากของดิบจนนำเข้ามิกซ์</p>';
-      s3+='<div class="sub" style="border-color:#E6C09A;background:#FBF1E7"><p style="color:#9A5B25;font-size:12.5px;margin:0">⚠ <b>ข้อควรเข้าใจเรื่องนิยาม:</b> การฆ่าเชื้อวัตถุดิบเสี่ยงแบบแยก (ทั้ง 2 กลุ่ม) <b>ไม่ใช่</b>การพาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย — ถ้าทำขาย ต้องพาสเจอไรซ์มิกซ์รวมตามประกาศ สธ. ฉบับที่ 354 แยกต่างหากเสมอ</p></div>';
+      s3+='<div class="sub" style="border-color:#E6C09A;background:#FBF1E7"><p style="color:#9A5B25;font-size:12.5px;margin:0">⚠ <b>ข้อควรเข้าใจเรื่องนิยาม:</b> การฆ่าเชื้อวัตถุดิบเสี่ยงแบบแยก (ทั้ง 2 กลุ่ม) <b>ไม่ใช่</b>การพาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย — ถ้าทำขาย ต้องพาสเจอไรซ์มิกซ์รวมตามประกาศ สธ. ฉบับที่ 354 เสมอ</p></div>';
     } else {
       s3+='<p style="color:var(--muted)">ยังไม่ได้เลือกวัตถุดิบเสี่ยงในข้อ 2 — ถ้ามี เลือกไว้เพื่อดูวิธีฆ่าเชื้อแต่ละตัวค่ะ</p>';
     }
