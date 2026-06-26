@@ -205,7 +205,15 @@
         </select>
       </div>
       <div class="fld" style="grid-column:1/-1"><label>ลักษณะผิดปกติที่สังเกตเห็น</label>
-        <input id="f_defects" type="text" placeholder="เช่น buttery texture, เนื้อฟูเป็นโฟม, เนื้อแตกร่วน, ละลายเร็วผิดปกติ" oninput="setF('defects',this.value)">
+        <select id="f_defects" onchange="onDefectsChange(this.value)">
+          <option>ปกติ</option>
+          <option>buttery texture</option>
+          <option>เนื้อฟูเป็นโฟม</option>
+          <option>เนื้อแตกร่วน</option>
+          <option>ละลายเร็วผิดปกติ</option>
+          <option>ระบุรายละเอียดเอง</option>
+        </select>
+        <input id="f_defectsOther" type="text" placeholder="ระบุรายละเอียดเอง…" oninput="setF('defectsOther',this.value)" style="display:none;margin-top:6px">
       </div>
     </div>
   </div>
@@ -256,7 +264,7 @@ const ALL=[...PST_EVENTS,...PSS_EVENTS];
 const KEY='pst_pss_log_v1';            // คีย์เดิม (รุ่นบันทึกเดี่ยว) ใช้ย้ายข้อมูลเข้าระบบหลาย Batch
 const STORE_KEY='pst_pss_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
-function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:''}}
+function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:'',defectsOther:''}}
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
@@ -301,6 +309,7 @@ function hm(ts){const d=new Date(ts);return [d.getHours(),d.getMinutes()].map(n=
 function fmtDur(ms){let s=Math.round(ms/1000);const m=Math.floor(s/60);s=s%60;return m+' นาที '+String(s).padStart(2,'0')+' วิ'}
 
 function setF(k,v){state[k]=v;save();if(k==='recipe')refreshBatchSel()}
+function onDefectsChange(v){state.defects=v;if(v!=='ระบุรายละเอียดเอง')state.defectsOther='';const doth=document.getElementById('f_defectsOther');if(doth){doth.style.display=(v==='ระบุรายละเอียดเอง')?'block':'none';if(v!=='ระบุรายละเอียดเอง')doth.value='';}save();updateUI()}
 function setThermo(v){state.thermo=v;document.getElementById('thermoOtherWrap').style.display=v==='อื่นๆ'?'flex':'none';save()}
 
 function rowHTML(ev){
@@ -325,7 +334,9 @@ function resetAll(){
   persist();syncInputs();updateUI();refreshBatchSel();
 }
 function syncInputs(){
-  ['recipe','lot','recorder','date','thermoOther','dryness','stopAbn','defects'].forEach(k=>{const e=document.getElementById('f_'+(k));if(e)e.value=state[k]||''});
+  ['recipe','lot','recorder','date','thermoOther','dryness','stopAbn'].forEach(k=>{const e=document.getElementById('f_'+(k));if(e)e.value=state[k]||''});
+  const dsel=document.getElementById('f_defects');if(dsel)dsel.value=state.defects||'ปกติ';
+  const doth=document.getElementById('f_defectsOther');if(doth){doth.value=state.defectsOther||'';doth.style.display=(state.defects==='ระบุรายละเอียดเอง')?'block':'none';}
   document.getElementById('f_thermo').value=state.thermo||'';
   document.getElementById('thermoOtherWrap').style.display=state.thermo==='อื่นๆ'?'flex':'none';
 }
@@ -349,7 +360,7 @@ function updateUI(){
   const pssHas=PSS_EVENTS.some(e=>state.events[e.k]);
   document.getElementById('pstBlock').classList.toggle('empty-print',!pstHas);
   document.getElementById('pssBlock').classList.toggle('empty-print',!pssHas);
-  document.getElementById('obsBlock').classList.toggle('empty-print',!(state.dryness||state.stopAbn||state.defects));
+  document.getElementById('obsBlock').classList.toggle('empty-print',!(state.dryness||state.stopAbn||(state.defects&&state.defects!=='ปกติ')));
   renderSummary();
   buildChart();
   save();
