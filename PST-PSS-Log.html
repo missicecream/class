@@ -89,7 +89,25 @@
   body.cap .evres .ok,body.cap .evres .sch,body.cap .evres .warn{color:#000!important}
   body.cap #summaryBox b{color:#000!important}
 
+  /* โหมดพร้อมพิมพ์ (preview บนจอ) — พื้นขาว ไม่มีสี ประหยัดหมึก */
+  #pmbar{display:none}
+  body.printmode{background:#fff!important;background-image:none!important}
+  body.printmode .back-link,body.printmode .note,body.printmode .batchbar,body.printmode .clr,body.printmode header,body.printmode .actions{display:none!important}
+  body.printmode .rep-head{display:block;text-align:center;margin-bottom:8px}
+  body.printmode .block{box-shadow:none!important;border:1px solid #ccc!important;background:#fff!important}
+  body.printmode .block-t,body.printmode .block-t.pst,body.printmode .block-t.pss{color:#000!important}
+  body.printmode .block-t .tag{background:none!important;color:#000!important;border:1px solid #888!important}
+  body.printmode .fld input,body.printmode .fld select{background:none!important}
+  body.printmode .evin{display:none!important}
+  body.printmode .chartwrap{border:1px solid #ccc!important}
+  body.printmode .chartwrap svg rect{display:none!important}
+  body.printmode .block.empty-print,body.printmode .evrow.empty-print{display:none!important}
+  body.printmode #pmbar{display:flex;position:sticky;top:0;z-index:50;gap:10px;align-items:center;flex-wrap:wrap;
+    background:#fff;border:1px solid #ccc;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#333}
+  #pmbar .msg{flex:1;min-width:160px}
+  #pmbar .btn{margin:0}
   @media print{
+    #pmbar{display:none!important}
     @page{size:A4 portrait;margin:9mm}
     body{padding:0;background:#fff;background-image:none;font-size:11px;print-color-adjust:economy;-webkit-print-color-adjust:economy}
     .sheet{max-width:100%}
@@ -98,14 +116,15 @@
     .rep-head{display:block;text-align:center;margin-bottom:8px}
     .rep-head .rt{font-family:'Fraunces',serif;font-size:18px}
     .rep-head .rs{font-size:10px;color:#555}
-    .block{box-shadow:none;border:1px solid #ccc;border-radius:8px;padding:8px 10px;margin-bottom:7px}
+    .block{box-shadow:none;border:1px solid #ccc;border-radius:8px;padding:8px 10px;margin-bottom:7px;break-inside:avoid;page-break-inside:avoid}
     .block.empty-print{display:none}
     .block-t,.block-t.pst,.block-t.pss{color:#000;font-size:11px;margin-bottom:6px}
     .block-t .tag{background:none!important;color:#000;border:1px solid #888;font-size:10px}
     .fld input,.fld select{border:none;border-bottom:1px solid #ccc;border-radius:0;padding:2px 0;background:none;font-size:11px}
     .fld label{font-size:9.5px}
     .evin{display:none}
-    .evrow{padding:3px 0;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+    .evrow{padding:3px 0;display:flex;justify-content:space-between;align-items:baseline;gap:10px;break-inside:avoid;page-break-inside:avoid}
+    .fld{break-inside:avoid;page-break-inside:avoid}
     .evrow.empty-print{display:none}
     .evlbl{margin-bottom:0;font-size:10.5px;font-weight:600}
     .evres{margin-top:0;font-size:10.5px;text-align:right;white-space:nowrap}
@@ -203,13 +222,17 @@
     <div class="chartwrap" id="chartWrap"><div class="chart-empty">กราฟจะแสดงเมื่อมีข้อมูล ≥ 2 จุด</div></div>
   </div>
 
-  <div class="actions">
+  <div id="pmbar">
+    <span class="msg">✅ หน้านี้พร้อมพิมพ์แล้ว — พื้นขาว ไม่มีสี ประหยัดหมึก · กดปุ่ม <b>พิมพ์</b> หรือ <b>Ctrl/⌘ + P</b> แล้วเบราว์เซอร์จะจัดหน้าให้เอง (ไม่ตัดคำ)</span>
     <button class="btn print" onclick="window.print()">🖨 พิมพ์ / บันทึก PDF</button>
-    <button class="btn" onclick="sharePDF(this)">📤 แชร์ PDF</button>
-    <button class="btn" onclick="sharePNG(this)">📷 แชร์รูป</button>
+    <button class="btn" onclick="exitPrintMode()">✕ ออกจากโหมด</button>
+  </div>
+
+  <div class="actions">
+    <button class="btn print" onclick="enterPrintMode()">🖨 โหมดพร้อมพิมพ์ (ประหยัดหมึก)</button>
     <button class="btn" onclick="resetAll()">เริ่มใหม่ (ล้างข้อมูล)</button>
   </div>
-  <p class="note">บันทึกอัตโนมัติในเบราว์เซอร์ของเครื่องนี้ (ไม่ส่งออกที่ไหน) · กด "เริ่มใหม่" เพื่อล้าง · พิมพ์แบบ printer-friendly ไม่มีสีพื้น</p>
+  <p class="note">บันทึกอัตโนมัติในเบราว์เซอร์ของเครื่องนี้ (ไม่ส่งออกที่ไหน) · กด "เริ่มใหม่" เพื่อล้าง · กด "โหมดพร้อมพิมพ์" เพื่อดูหน้าพื้นขาวก่อนสั่งพิมพ์เอง</p>
   <footer>Miss Icecream</footer>
 </div>
 
@@ -380,42 +403,10 @@ function buildChart(){
 })();
 </script>
 <script>
-const SHARE_CFG={target:'.sheet',file:'PST-PSS-Log.pdf',title:'รายงาน PST & PSS',
-  text:()=>{let s='รายงาน PST & PSS';if(state.recipe)s+=' · สูตร '+state.recipe;if(state.lot)s+=' · Lot '+state.lot;const wb=state.events.pss_weightBefore,wa=state.events.pss_weightAfter;if(wb&&wa&&wa.temp>0)s+=' · %Overrun '+(((wb.temp-wa.temp)/wa.temp)*100).toFixed(1)+'%';return s;}};
-function _ld(src){return new Promise((res,rej)=>{if([...document.scripts].some(s=>s.src===src))return res();const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('โหลดไลบรารีไม่ได้ (ต้องมีอินเทอร์เน็ต)'));document.head.appendChild(s);});}
-async function sharePDF(btn){const ot=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='กำลังสร้าง PDF…';}
-  try{
-    await _ld('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
-    await _ld('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-    document.body.classList.add('cap');
-    const canvas=await html2canvas(document.querySelector(SHARE_CFG.target),{scale:2,backgroundColor:'#ffffff',useCORS:true});
-    document.body.classList.remove('cap');
-    const {jsPDF}=window.jspdf,pdf=new jsPDF('p','mm','a4');
-    const pw=210,ph=297,m=8,iw=pw-2*m,pageH=ph-2*m;
-    const ih=canvas.height*iw/canvas.width,img=canvas.toDataURL('image/jpeg',0.92);
-    let position=m,heightLeft=ih;
-    pdf.addImage(img,'JPEG',m,position,iw,ih);heightLeft-=pageH;
-    while(heightLeft>0){position=m-(ih-heightLeft);pdf.addPage();pdf.addImage(img,'JPEG',m,position,iw,ih);heightLeft-=pageH;}
-    const blob=pdf.output('blob'),file=new File([blob],SHARE_CFG.file,{type:'application/pdf'});
-    const txt=(typeof SHARE_CFG.text==='function'?SHARE_CFG.text():SHARE_CFG.text)||SHARE_CFG.title;
-    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:SHARE_CFG.title,text:txt});}
-    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=SHARE_CFG.file;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
-  }catch(e){document.body.classList.remove('cap');if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์ PDF ไม่สำเร็จ: '+((e&&e.message)||e));}
-  finally{if(btn){btn.disabled=false;btn.textContent=ot;}}}
-async function sharePNG(btn){const ot=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='กำลังสร้างรูป…';}
-  try{
-    if(typeof refreshPrintHead==='function')refreshPrintHead();
-    await _ld('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
-    document.body.classList.add('cap');
-    const canvas=await html2canvas(document.querySelector(SHARE_CFG.target),{scale:2,backgroundColor:'#ffffff',useCORS:true});
-    document.body.classList.remove('cap');
-    const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
-    const file=new File([blob],SHARE_CFG.file.replace(/\.pdf$/,'.png'),{type:'image/png'});
-    const txt=(typeof SHARE_CFG.text==='function'?SHARE_CFG.text():SHARE_CFG.text)||SHARE_CFG.title;
-    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:SHARE_CFG.title,text:txt});}
-    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
-  }catch(e){document.body.classList.remove('cap');if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์รูปไม่สำเร็จ: '+((e&&e.message)||e));}
-  finally{if(btn){btn.disabled=false;btn.textContent=ot;}}}
+/* โหมดพร้อมพิมพ์ — แสดงหน้าพื้นขาว ไม่มีสี แล้วให้ผู้ใช้สั่งพิมพ์เอง
+   (ใช้การพิมพ์ของเบราว์เซอร์ ข้อความจริง ไม่ตัดคำ ไม่ซ้ำ) */
+function enterPrintMode(){document.body.classList.add('printmode');window.scrollTo(0,0);}
+function exitPrintMode(){document.body.classList.remove('printmode');}
 </script>
 <div class="site-footer" style="margin:30px auto 0;max-width:760px;padding:14px 16px 4px;border-top:1px solid var(--line,#E5D9C4);text-align:center;font-size:12px;color:var(--muted,#8C7A66);line-height:1.7">Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit;text-decoration:underline">เงื่อนไขการใช้งาน</a></div>
 </body>
