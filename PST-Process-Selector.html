@@ -278,10 +278,10 @@
     <div id="homeExtra" style="display:none">
       <hr class="divider">
       <div class="q">
-        <div class="q-label">6. สัดส่วนผลไม้ในสูตร (ทำทาน) <span class="en">Fruit ratio</span></div>
+        <div class="q-label">6. มีส่วนผสมกลิ่นรสบอบบางที่ต้องเติมไหม? <span class="en">Delicate add-ins</span></div>
         <div class="opts">
-          <button class="opt" data-k="fruitHigh" data-v="yes" type="button"><b>มากกว่า 10%</b><span class="s">เชอร์เบท/ซอร์เบท/ไอศกรีมผลไม้ — เติมก่อนลดความร้อน</span></button>
-          <button class="opt" data-k="fruitHigh" data-v="no" type="button"><b>น้อยกว่า 10% หรือไม่มี</b><span class="s">เติมตอนก่อนปั่น</span></button>
+          <button class="opt" data-k="delicate" data-v="yes" type="button"><b>มี</b><span class="s">ผลไม้สด / โยเกิร์ต / กรีกโยเกิร์ต / นมพาสเจอร์ไรส์ที่กันไว้เติมทีหลัง — เติมตอนจบ PST ก่อนลดความร้อน</span></button>
+          <button class="opt" data-k="delicate" data-v="no" type="button"><b>ไม่มี</b><span class="s">ทำ active cooling ปกติ</span></button>
         </div>
       </div>
       <div class="q">
@@ -324,7 +324,7 @@ const RISKY={
   soyOat:{t:'นมถั่วเหลือง/ข้าวโอ๊ต (ทำเอง)',h:'ในขั้นตอนทำต้องต้มเดือด <span class="chip">≥90 °C / 5–10 นาที</span> อยู่แล้ว จึงถือว่า<b>ฆ่าเชื้อในตัว</b> — ไม่ต้องให้ความร้อนซ้ำ เพียงลด <span class="chip warm">&lt;4 °C</span> และเก็บสะอาดจนนำเข้ามิกซ์'}
 };
 
-const state={purpose:null,risky:new Set(),group:null,machine:null,profile:null,fruitHigh:null,cream:null,stab:new Set(),title:'',lot:''};
+const state={purpose:null,risky:new Set(),group:null,machine:null,profile:null,delicate:null,cream:null,stab:new Set(),title:'',lot:''};
 
 let curPST=null;
 const SAVE_KEY='pst_process_selector_v1';
@@ -499,13 +499,18 @@ function render(){
 
   // 5
   let s5='';
+  const delicate=state.delicate==='yes'||state.risky.has('freshFruit');
   if(home){
     s5+='<div class="branch-tag">ทำทาน — Paula’s Smart Setting (PSS)</div>';
     s5+='<p>ลดความร้อน + เซ็ตมิกซ์ให้พร้อมปั่นในขั้นเดียว ใช้เวลาราวครึ่งชั่วโมง ไม่ต้องบ่มข้ามคืน</p>';
-    if(state.fruitHigh==='yes'){
-      s5+='<div class="sub"><div class="sub-t">ผลไม้ ≥10% — เติมก่อนลดความร้อน</div><p>เติมผลไม้บด (ปรับ Brix+ฆ่าเชื้อแล้ว) ตอนมิกซ์อยู่ <span class="chip">50–55 °C</span> คน/ปั่นสั้นๆ ให้เข้ากัน แล้ววัดอุณหภูมิ: ถ้า &gt;40 °C ทำช่วงที่ 1 ต่อ • ถ้า ≤40 °C ข้ามไปช่วงที่ 2 ได้เลย</p></div>';
+    if(delicate){
+      s5+='<div class="sub"><div class="sub-t">เติมส่วนผสมกลิ่นรสบอบบาง + วัดอุณหภูมิ</div>'
+        +'<p>จบ PST มิกซ์อยู่ราว <span class="chip">50–55 °C</span> ถ้ามีส่วนผสมกลิ่นรสบอบบาง (ผลไม้สดปรับ Brix แล้ว / โยเกิร์ต / กรีกโยเกิร์ต / นมพาสเจอร์ไรส์ที่กันไว้) เติมตอนนี้ คนให้เข้ากัน แล้ววัดอุณหภูมิ:</p>'
+        +'<ul><li><b>&gt;40 °C</b> → ช่วงที่ 1 active cooling คนลดถึง 40 °C แล้วเข้าช่วงที่ 2</li>'
+        +'<li><b>≤40 °C</b> → ข้าม active cooling เข้าช่วงที่ 2 ได้เลย</li></ul>'
+        +'<p style="color:var(--muted);font-size:12.5px">ของพวกนี้ปลอดภัยทานได้อยู่แล้ว แต่กลิ่นรสไวต่อความร้อน จึงเติมตอนจบ PST ก่อนลดความร้อน</p></div>';
     }
-    s5+='<div class="sub"><div class="sub-t">ช่วงที่ 1 — Active cooling <span class="chip">50–55 → 40 °C</span> ~1–2 นาที</div>'
+    s5+='<div class="sub"><div class="sub-t">ช่วงที่ 1 — Active cooling <span class="chip">50–55 → 40 °C</span> ~1–2 นาที'+(delicate?' <span style="color:var(--muted);font-weight:400">(ทำเมื่อวัดได้ &gt;40 °C)</span>':'')+'</div>'
       +'<p>วางชามในอ่างน้ำแข็ง หมุนชาม+ปาดขอบต่อเนื่อง ให้เย็นเท่ากันทั่วชาม</p>'
       +'<ul><li><b>ถ้าสารคงตัวมีคาร์ราจีแนน</b> (เช่น SER, SEP — ดูฉลาก carrageenan/E407): <b>หยุดคนที่ ~40 °C</b> (38–42 °C ยอมรับได้) ห้ามคนต่อ เพราะคาร์ราจีแนนเริ่มล็อกเครือข่ายเจล</li>'
       +'<li><b>ถ้าไม่มีคาร์ราจีแนน</b>: ไม่มีเครือข่ายเจลให้ต้องระวัง คนต่อเนื่องได้โดยไม่ต้องหยุดที่ 40 °C เลือกได้ 2 ทาง — (1) คนต่อเนื่องลงจนถึง ≤25 °C แล้วแช่นิ่ง (passive setting) ต่ออีก 20 นาที เพื่อให้สารคงตัวพองตัวและเซ็ตเจลสมบูรณ์ หรือ (2) คนต่อเนื่องถึง 40 °C แล้วแช่นิ่ง (passive setting) 30 นาที ตามขั้นถัดไปปกติ</li></ul></div>';
@@ -532,16 +537,19 @@ function render(){
   let s6='';
   if(home){
     s6+='<div class="branch-tag">ทำทาน</div>';
-    s6+='<p>เติมส่วนผสมที่เก็บไว้ แล้วคนเบาๆ:</p><ul>'
-      +'<li>กลิ่นระเหยง่าย, เหล้า (ใส่น้อย — ทำให้แข็งตัวยาก), สีปรับเฉดขั้นสุดท้าย</li>'
-      +'<li>ผลไม้/น้ำผลไม้สดสัดส่วนน้อย (&lt;10%) เช่น น้ำมะนาว/ส้มคั้น เพื่อกลิ่นสด</li>'
-      +'<li>ชิมปรับรส: เปรี้ยวด้วย CIT20, หวานด้วย SYR (เผื่อรสจางลงหลังปั่น)</li></ul>';
+    s6+='<p>ทำตามลำดับนี้ — <b>ครีมก่อน แล้วค่อยแต่งกลิ่น/ปรับรส</b> เพราะแต่งกลิ่น เติมสี ปรับรสให้ถูกต้องได้ต่อเมื่อครีมเข้าครบแล้ว:</p>';
+    s6+='<div class="sub"><div class="sub-t">1) ลดอุณหภูมิมิกซ์ <span class="chip">≤10 °C</span></div><p>ในเครื่องปั่น 2–3 นาที หรืออ่างน้ำแข็งพร้อมคนเบาๆ</p></div>';
     if(state.cream==='yes'){
-      s6+='<div class="sub"><div class="sub-t">ลดอุณหภูมิแล้วเติมครีมแช่เย็น</div>'
-        +'<p>ลดมิกซ์ถึง <span class="chip">≤10 °C</span> ก่อน (ในเครื่องปั่น ~2–3 นาที หรืออ่างน้ำแข็งพร้อมคนเบาๆ) แล้วเติม<b>วิปปิ้งครีมพาสเจอไรส์</b> ที่แช่ 4 °C ≥8 ชม. และยัง ≤8 °C ตอนเท — ครีมต้องเย็นเพื่อรักษาผลึกไขมัน</p></div>';
+      s6+='<div class="sub"><div class="sub-t">2) เติมครีมแช่เย็น</div>'
+        +'<p>เติม<b>วิปปิ้งครีมพาสเจอไรส์</b> ที่แช่ 4 °C ≥8 ชม. และยัง <span class="chip">≤8 °C</span> ตอนเท คนให้กระจายทั่ว — ครีมต้องเย็นเพื่อรักษาผลึกไขมัน</p></div>';
     } else {
-      s6+='<p style="color:var(--muted)">สูตรนี้ไม่มีครีม → เข้าขั้นปั่นต่อได้เลย</p>';
+      s6+='<div class="sub"><div class="sub-t">2) เติมครีมแช่เย็น</div><p style="color:var(--muted)">สูตรนี้ไม่มีครีม → ข้ามขั้นนี้</p></div>';
     }
+    s6+='<div class="sub"><div class="sub-t">3) หลังครีมเข้าครบ ค่อยแต่งกลิ่น / เติมสี / ชิมปรับรส (ถ้าจำเป็น)</div><ul>'
+      +'<li>กลิ่นระเหยง่าย, แอลกอฮอล์/เหล้า (ใส่น้อย — ทำให้แข็งตัวยาก), สีปรับเฉดขั้นสุดท้าย</li>'
+      +'<li>ปรับเปรี้ยวด้วย <b>CIT20</b> หรือน้ำมะนาว, ปรับหวานด้วย <b>SYR</b> (เผื่อรสจางลงหลังปั่น)</li>'
+      +'<li class="warn">กรด/น้ำมะนาวเติมขั้นนี้เท่านั้น — ถ้าเจอความร้อนพร้อมนม โปรตีนจะจับก้อน</li></ul></div>';
+    s6+='<div class="sub"><div class="sub-t">4) พร้อมเข้าขั้นปั่น</div></div>';
   } else {
     s6+='<div class="branch-tag">ทำขาย</div>';
     s6+='<p>ส่วนผสมหลักผ่านพาสเจอไรส์มาแล้ว ขั้นนี้จัดการเท่าที่จำเป็น:</p><ul>'
@@ -613,7 +621,7 @@ function render(){
 }
 
 function resetAll(){
-  state.purpose=null;state.risky=new Set();state.group=null;state.machine=null;state.profile=null;state.fruitHigh=null;state.cream=null;state.stab=new Set();state.title='';state.lot='';
+  state.purpose=null;state.risky=new Set();state.group=null;state.machine=null;state.profile=null;state.delicate=null;state.cream=null;state.stab=new Set();state.title='';state.lot='';
   document.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
   document.getElementById('qRisky').style.display='none';
   document.getElementById('homeExtra').style.display='none';
