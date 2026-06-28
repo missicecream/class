@@ -225,13 +225,15 @@
       <div class="opts">
         <button class="opt chk" data-multi="risky" data-v="rawMilk" type="button">นมดิบ</button>
         <button class="opt chk" data-multi="risky" data-v="rawCream" type="button">ครีมดิบ</button>
+        <button class="opt chk" data-multi="risky" data-v="coconutLong" type="button">กะทิคั้นสด</button>
         <button class="opt chk" data-multi="risky" data-v="nutMilk" type="button">นมพืชจากนัท (อัลมอนด์/มะม่วงหิมพานต์)</button>
-        <button class="opt chk" data-multi="risky" data-v="eggYolk" type="button">ไข่แดงดิบ</button>
+        <button class="opt chk" data-multi="risky" data-v="eggYolk" type="button">ไข่แดง (แบบ LTLT ไม่ทำคัสตาร์ด)</button>
       </div>
       <div class="risky-grp">กลุ่มรักษากลิ่นรสสด — ให้ความร้อนสั้นระดับนาที</div>
       <div class="opts">
         <button class="opt chk" data-multi="risky" data-v="freshFruit" type="button">ผลไม้สด</button>
-        <button class="opt chk" data-multi="risky" data-v="freshCoconut" type="button">กะทิสดคั้นเอง</button>
+        <button class="opt chk" data-multi="risky" data-v="freshCoconut" type="button">กะทิคั้นสด</button>
+        <button class="opt chk" data-multi="risky" data-v="eggCustard" type="button">ไข่แดงแบบทำคัสตาร์ด (82–85 °C)</button>
       </div>
       <div class="risky-grp">ฆ่าเชื้อในตัวอยู่แล้ว (ไม่ต้องทำซ้ำ)</div>
       <div class="opts">
@@ -315,11 +317,13 @@ const RISKY={
   // กลุ่มเน้นฆ่าเชื้อ — ให้ความร้อนนาน 30 นาที
   rawMilk:{t:'นมดิบ',h:'ไม่แนะนำ — ใช้นมพาสเจอไรส์แทน หากจำเป็น: <span class="chip">63 °C / 30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที <i>(ห้ามใช้ 72 °C/15 วินาที เพราะเป็น HTST ที่ทำในหม้อไม่ได้)</i>'},
   rawCream:{t:'ครีมดิบ',h:'ไม่แนะนำ — ใช้ครีมพาสเจอไรส์แทน หากจำเป็น: <span class="chip">70 °C / 30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที (ใช้ด้านสูงเพราะไขมันสูง)'},
+  coconutLong:{t:'กะทิคั้นสด (เน้นฆ่าเชื้อ — 70 °C / 30 นาที)',h:'แบบให้ความร้อนนาน เน้นฆ่าเชื้อ: <span class="chip">70 °C / 30 นาที</span> คนตลอด (กันก้นไหม้+ไขมันแยกชั้น) → ลด <span class="chip warm">&lt;4 °C</span> ทันที'},
   nutMilk:{t:'นมพืชจากนัท (อัลมอนด์/เม็ดมะม่วงหิมพานต์)',h:'คั้นเองโดยไม่ต้ม จึงต้องฆ่าเชื้อเอง: <span class="chip">70 °C / 30 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที'},
-  eggYolk:{t:'ไข่แดงดิบ',h:'หลัก (ไข่ยังเหลว): LTLT <span class="chip">63 °C / 30 นาที</span> คนตลอด → ลด <span class="chip warm">&lt;4 °C</span> ทันที • ทางเลือก: ทำคัสตาร์ด <span class="chip">82–85 °C</span> จนถึงจุดเคลือบหลังช้อน (nappe — ไม่จับเวลา ใช้สังเกตเนื้อ) • สะดวกสุด: ใช้ไข่แดงพาสเจอไรส์สำเร็จรูป'},
+  eggYolk:{t:'ไข่แดง (แบบ LTLT ไม่ทำคัสตาร์ด)',h:'ไข่ยังเหลว: LTLT <span class="chip">63 °C / 30 นาที</span> คนตลอด → ลด <span class="chip warm">&lt;4 °C</span> ทันที • สะดวกสุด: ใช้ไข่แดงพาสเจอไรส์สำเร็จรูป'},
   // กลุ่มรักษากลิ่นรสสด — ให้ความร้อนสั้นระดับนาที
   freshFruit:{t:'ผลไม้สด',h:'ปรับ/เทียบ Brix ก่อนเสมอ แล้วเลือก: <b>ไม่ผ่านความร้อน</b> (กลิ่นสดสุด — ใช้ของสะอาด+น้ำต้มสุกเย็น, ทำขณะเย็น, ใช้ทันทีหรือเก็บ ≤24 ชม.) หรือ <b>ผ่านความร้อน</b> <span class="chip">70–75 °C / 2 นาที</span> → ลด <span class="chip warm">&lt;4 °C</span> ทันที (ปรับ Brix ก่อนต้ม) • ผลไม้ที่ต้มแล้วเสียกลิ่น (มะม่วง/ลำไย) ใช้ IQF แทนได้'},
-  freshCoconut:{t:'กะทิสดคั้นเอง',h:'<span class="chip">80 °C / 2 นาที</span> คนตลอด (กันก้นไหม้+ไขมันแยกชั้น) → ลด <span class="chip warm">&lt;4 °C</span> ให้เร็วที่สุด เป้า 5 นาที เพื่อรักษากลิ่น'},
+  freshCoconut:{t:'กะทิคั้นสด (รักษากลิ่น — 80 °C / 2 นาที)',h:'แบบให้ความร้อนสั้น เน้นรักษากลิ่น: <span class="chip">80 °C / 2 นาที</span> คนตลอด (กันก้นไหม้+ไขมันแยกชั้น) → ลด <span class="chip warm">&lt;4 °C</span> ให้เร็วที่สุด เป้า 5 นาที เพื่อรักษากลิ่น'},
+  eggCustard:{t:'ไข่แดงแบบทำคัสตาร์ด (82–85 °C)',h:'ตั้งไฟอ่อน คนตลอด ให้ถึง <span class="chip">82–85 °C</span> จนถึงจุดเคลือบหลังช้อน (nappe) — <b>ไม่จับเวลา</b> ใช้สังเกตเนื้อ → ลด <span class="chip warm">&lt;4 °C</span> ทันที (รักษากลิ่นรส ได้เนื้อคัสตาร์ด)'},
   // ฆ่าเชื้อในตัวอยู่แล้ว
   soyOat:{t:'นมถั่วเหลือง/ข้าวโอ๊ต (ทำเอง)',h:'ในขั้นตอนทำต้องต้มเดือด <span class="chip">≥90 °C / 5–10 นาที</span> อยู่แล้ว จึงถือว่า<b>ฆ่าเชื้อในตัว</b> — ไม่ต้องให้ความร้อนซ้ำ เพียงลด <span class="chip warm">&lt;4 °C</span> และเก็บสะอาดจนนำเข้ามิกซ์'}
 };
