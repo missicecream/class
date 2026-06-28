@@ -244,10 +244,10 @@
     <hr class="divider">
 
     <div class="q">
-      <div class="q-label">3. กลุ่มสูตร (สำหรับ PST) <span class="en">Recipe group</span></div>
+      <div class="q-label">3. กลุ่มทางเลือก PST <span class="en">PST option group</span></div>
       <div class="opts">
         <button class="opt" data-k="group" data-v="1" type="button"><b>กลุ่ม 1 · ไม่ต้องลดขนาดเม็ดไขมัน</b><span class="s">ไม่มีไขมัน (เช่น ซอร์เบต์) หรือมีไขมันแต่ไม่ผ่านความร้อน เช่น เติมครีมแช่เย็นทีหลัง</span></button>
-        <button class="opt" data-k="group" data-v="2" type="button"><b>กลุ่ม 2 · ต้องลดขนาดเม็ดไขมัน</b><span class="s">มีไขมันที่ผ่านความร้อน: สูตรทำขาย (พาสเจอไรส์) หรือมีน้ำมันมะพร้าว/เนยขาว/น้ำมันพืช/ช็อกโกแลต/ผงโกโก้/เพสต์ถั่ว</span></button>
+        <button class="opt" data-k="group" data-v="2" type="button"><b>กลุ่ม 2 · ต้องลดขนาดเม็ดไขมัน</b><span class="s">มีการให้ความร้อนกับไขมัน เช่น กะทิ ครีม น้ำมันมะพร้าว เนยขาว น้ำมันพืช ช็อกโกแลต ผงโกโก้ เพสต์ถั่ว รวมถึงแนวทางทำขายทั้งหมด</span></button>
       </div>
     </div>
 
@@ -356,6 +356,7 @@ document.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>
   b.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
   b.classList.add('sel');
   if(k==='machine'){state.profile=null;document.querySelectorAll('[data-k="profile"]').forEach(o=>o.classList.remove('sel'));}
+  if(k==='purpose'&&v==='sell'){state.group='2';document.querySelectorAll('[data-k="group"]').forEach(o=>o.classList.toggle('sel',o.dataset.v==='2'));}
   update();save();
 }));
 document.querySelectorAll('[data-multi]').forEach(b=>b.addEventListener('click',()=>{
