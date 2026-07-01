@@ -125,11 +125,35 @@
   </div>
 
   <div class="actions">
+    <button class="btn" onclick="sharePDFink(this)">📤 แชร์ PDF</button>
     <button class="btn" onclick="window.print()">🖨 พิมพ์ A4</button>
     <a class="btn" href="PST-Process-Selector.html" style="text-decoration:none">ดูคู่มือละเอียด</a>
   </div>
   <footer>Miss Icecream</footer>
 </div>
 <div class="site-footer" style="margin:30px auto 0;max-width:760px;padding:14px 16px 4px;border-top:1px solid var(--line,#E5D9C4);text-align:center;font-size:12px;color:var(--muted,#8C7A66);line-height:1.7">Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit;text-decoration:underline">เงื่อนไขการใช้งาน</a></div>
+<script>
+/* แชร์ PDF — ปุ่มเดียว, หน้าเดียวต่อเนื่อง (คงสีผัง) */
+function _ld(src){return new Promise((res,rej)=>{if([...document.scripts].some(s=>s.src===src))return res();const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('โหลดไลบรารีไม่ได้ (ต้องมีอินเทอร์เน็ต)'));document.head.appendChild(s);});}
+async function sharePDFink(btn){
+  const ot=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='กำลังสร้าง PDF…';}
+  const hides=[...document.querySelectorAll('.actions,.back-link')], prev=hides.map(el=>el.style.display);
+  try{
+    await _ld('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    await _ld('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    hides.forEach(el=>el.style.display='none');
+    window.scrollTo(0,0); await new Promise(r=>setTimeout(r,60));
+    const canvas=await html2canvas(document.querySelector('.sheet'),{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    hides.forEach((el,i)=>el.style.display=prev[i]);
+    const {jsPDF}=window.jspdf, w=210, h=Math.max(20,w*canvas.height/canvas.width);
+    const pdf=new jsPDF({orientation:'p',unit:'mm',format:[w,h]});
+    pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',0,0,w,h);
+    const blob=pdf.output('blob'), file=new File([blob],'Flowchart-Overview.pdf',{type:'application/pdf'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'ภาพรวมการผลิตไอศกรีม'});}
+    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Flowchart-Overview.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
+  }catch(e){ hides.forEach((el,i)=>el.style.display=prev[i]); if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์ PDF ไม่สำเร็จ: '+((e&&e.message)||e)); }
+  finally{ if(btn){btn.disabled=false;btn.textContent=ot;} }
+}
+</script>
 </body>
 </html>

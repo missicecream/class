@@ -621,7 +621,7 @@ function render(){
     +'</ul>');
 
   H+='<div id="pmbar"><span class="msg">✅ หน้านี้พร้อมพิมพ์แล้ว — พื้นขาว ไม่มีสี ประหยัดหมึก · กดปุ่ม <b>พิมพ์</b> หรือ <b>Ctrl/⌘ + P</b> แล้วเบราว์เซอร์จะจัดหน้าให้เอง (ไม่ตัดคำ)</span><button class="btn" onclick="window.print()">🖨 พิมพ์ / บันทึก PDF</button><button class="btn" onclick="exitPrintMode()">✕ ออกจากโหมด</button></div>';
-  H+='<div class="actions"><button class="btn" onclick="enterPrintMode()">🖨 โหมดพร้อมพิมพ์ (ประหยัดหมึก)</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
+  H+='<div class="actions"><button class="btn" onclick="sharePDFink(this)">📤 แชร์ PDF</button><button class="btn" onclick="enterPrintMode()">🖨 พิมพ์เอกสาร</button><button class="btn" onclick="resetAll()">เริ่มใหม่</button></div>';
   return H;
 }
 
@@ -752,6 +752,32 @@ window.addEventListener('focus',ptResync);
    ใช้การพิมพ์ของเบราว์เซอร์: ข้อความจริง ไม่ตัดคำ ไม่ซ้ำ */
 function enterPrintMode(){if(typeof refreshPrintHead==='function')refreshPrintHead();document.body.classList.add('cap');document.body.classList.add('printmode');window.scrollTo(0,0);}
 function exitPrintMode(){document.body.classList.remove('cap');document.body.classList.remove('printmode');}
+
+/* แชร์ PDF (ประหยัดหมึก) — ปุ่มเดียว, หน้าเดียวต่อเนื่อง: ไม่ตัดกล่อง ไม่มีที่ว่างยาวๆ */
+function _ld(src){return new Promise((res,rej)=>{if([...document.scripts].some(s=>s.src===src))return res();const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('โหลดไลบรารีไม่ได้ (ต้องมีอินเทอร์เน็ต)'));document.head.appendChild(s);});}
+async function sharePDFink(btn){
+  const ot=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='กำลังสร้าง PDF…';}
+  const body=document.body, hadCap=body.classList.contains('cap'), hadPM=body.classList.contains('printmode');
+  const hides=[...document.querySelectorAll('.actions,.back-link,.pst-cta,.pst-timer')], prev=hides.map(el=>el.style.display);
+  try{
+    await _ld('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+    await _ld('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    if(typeof refreshPrintHead==='function')refreshPrintHead();
+    body.classList.add('cap'); body.classList.add('printmode');
+    hides.forEach(el=>el.style.display='none');
+    window.scrollTo(0,0); await new Promise(r=>setTimeout(r,60));
+    const canvas=await html2canvas(document.querySelector('.container'),{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    hides.forEach((el,i)=>el.style.display=prev[i]);
+    if(!hadCap)body.classList.remove('cap'); if(!hadPM)body.classList.remove('printmode');
+    const {jsPDF}=window.jspdf, w=210, h=Math.max(20,w*canvas.height/canvas.width);
+    const pdf=new jsPDF({orientation:'p',unit:'mm',format:[w,h]});
+    pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',0,0,w,h);
+    const blob=pdf.output('blob'), file=new File([blob],'Process-Selector.pdf',{type:'application/pdf'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'คู่มือกระบวนการทำไอศกรีม'});}
+    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Process-Selector.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
+  }catch(e){ hides.forEach((el,i)=>el.style.display=prev[i]); if(!hadCap)body.classList.remove('cap'); if(!hadPM)body.classList.remove('printmode'); if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์ PDF ไม่สำเร็จ: '+((e&&e.message)||e)); }
+  finally{ if(btn){btn.disabled=false;btn.textContent=ot;} }
+}
 </script>
 <div class="site-footer" style="margin:30px auto 0;max-width:760px;padding:14px 16px 4px;border-top:1px solid var(--line,#E5D9C4);text-align:center;font-size:12px;color:var(--muted,#8C7A66);line-height:1.7">Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit;text-decoration:underline">เงื่อนไขการใช้งาน</a></div>
 </body>
