@@ -98,25 +98,50 @@
 </div>
 <div class="site-footer" style="margin:30px auto 0;max-width:760px;padding:14px 16px 4px;border-top:1px solid var(--line,#E5D9C4);text-align:center;font-size:12px;color:var(--muted,#8C7A66);line-height:1.7">Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit;text-decoration:underline">เงื่อนไขการใช้งาน</a></div>
 <script>
-/* แชร์ PDF — ปุ่มเดียว, หน้าเดียวต่อเนื่อง (คงสีผัง) */
+/* แชร์ PDF — ปุ่มเดียว แบ่งหน้า A4 หลายหน้า (คงสีผัง) */
 function _ld(src){return new Promise((res,rej)=>{if([...document.scripts].some(s=>s.src===src))return res();const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('โหลดไลบรารีไม่ได้ (ต้องมีอินเทอร์เน็ต)'));document.head.appendChild(s);});}
 async function sharePDFink(btn){
+  /* แชร์ PDF (โหมดพิมพ์เอกสาร) — ปุ่มเดียว แบ่งหน้า A4 หลายหน้า ตัดตรงรอยต่อกล่อง (อ่านง่าย ไม่ตัดคำ) */
   const ot=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='กำลังสร้าง PDF…';}
-  const hides=[...document.querySelectorAll('.actions,.back-link')], prev=hides.map(el=>el.style.display);
+  const body=document.body, hadCap=body.classList.contains('cap'), hadPM=body.classList.contains('printmode');
+  const hides=[...document.querySelectorAll('.actions,.back-link')], prevD=hides.map(el=>el.style.display);
+  const undo=()=>{hides.forEach((el,i)=>el.style.display=prevD[i]); if(!hadCap)body.classList.remove('cap'); if(!hadPM)body.classList.remove('printmode');};
   try{
     await _ld('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
     await _ld('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    if(typeof refreshPrintHead==='function')refreshPrintHead();
+    
     hides.forEach(el=>el.style.display='none');
     window.scrollTo(0,0); await new Promise(r=>setTimeout(r,60));
-    const canvas=await html2canvas(document.querySelector('.sheet'),{scale:2,backgroundColor:'#ffffff',useCORS:true});
-    hides.forEach((el,i)=>el.style.display=prev[i]);
-    const {jsPDF}=window.jspdf, w=210, h=Math.max(20,w*canvas.height/canvas.width);
-    const pdf=new jsPDF({orientation:'p',unit:'mm',format:[w,h]});
-    pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',0,0,w,h);
-    const blob=pdf.output('blob'), file=new File([blob],'Flowchart-Sell.pdf',{type:'application/pdf'});
+    const target=document.querySelector('.sheet');
+    const canvas=await html2canvas(target,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    const tr=target.getBoundingClientRect(), sc=canvas.height/tr.height;
+    let bs=[0];
+    target.querySelectorAll('.step').forEach(el=>{ if(getComputedStyle(el).display==='none')return; const b=Math.round((el.getBoundingClientRect().bottom-tr.top)*sc); if(b>4&&b<canvas.height-4)bs.push(b); });
+    bs.push(canvas.height); bs=[...new Set(bs)].sort((a,b)=>a-b);
+    undo();
+    const {jsPDF}=window.jspdf, pdf=new jsPDF('p','mm','a4');
+    const pw=210, ph=297, m=8, iw=pw-2*m, uh=ph-2*m, mmPerPx=iw/canvas.width, pageMaxPx=uh/mmPerPx;
+    let pages=[], start=0, i=1;
+    while(i<bs.length){
+      if(bs[i]-start<=pageMaxPx){ i++; continue; }
+      let cut=bs[i-1]; if(cut<=start)cut=Math.min(start+Math.floor(pageMaxPx),canvas.height);
+      pages.push([start,cut]); start=cut;
+    }
+    if(start<canvas.height)pages.push([start,canvas.height]);
+    for(let p=0;p<pages.length;p++){
+      const y0=pages[p][0], hpx=pages[p][1]-y0; if(hpx<=0)continue;
+      const pc=document.createElement('canvas'); pc.width=canvas.width; pc.height=hpx;
+      pc.getContext('2d').drawImage(canvas,0,y0,canvas.width,hpx,0,0,canvas.width,hpx);
+      if(p>0)pdf.addPage();
+      pdf.addImage(pc.toDataURL('image/jpeg',0.92),'JPEG',m,m,iw,hpx*mmPerPx);
+    }
+    let name='Flowchart-Sell.pdf';
+    
+    const blob=pdf.output('blob'), file=new File([blob],name,{type:'application/pdf'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'ผังทำไอศกรีม (ทำขาย)'});}
-    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Flowchart-Sell.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
-  }catch(e){ hides.forEach((el,i)=>el.style.display=prev[i]); if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์ PDF ไม่สำเร็จ: '+((e&&e.message)||e)); }
+    else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
+  }catch(e){ undo(); if(!(e&&e.name==='AbortError'))alert('สร้าง/แชร์ PDF ไม่สำเร็จ: '+((e&&e.message)||e)); }
   finally{ if(btn){btn.disabled=false;btn.textContent=ot;} }
 }
 </script>
