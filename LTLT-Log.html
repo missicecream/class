@@ -38,6 +38,12 @@
   .fld label{font-size:12px;color:var(--muted);font-weight:500}
   .fld input,.fld select{font-family:'Sarabun',sans-serif;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);outline:none;width:100%}
   .fld input:focus,.fld select:focus{border-color:var(--accent);background:#fff}
+  .fld textarea{font-family:'Sarabun',sans-serif;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);outline:none;width:100%;resize:none;line-height:1.65;min-height:64px;overflow:hidden}
+  .fld textarea:focus{border-color:var(--accent);background:#fff}
+  .et-in{font-family:'Fraunces',serif;font-size:14px;padding:6px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .et-in:focus{border-color:var(--accent);outline:none}
+  .et-ok{padding:7px 12px;border-radius:9px;border:none;background:var(--ink);color:var(--bg);font-weight:600;cursor:pointer;font-size:13px;font-family:'Sarabun',sans-serif}
+  .ed-t{color:var(--blue);cursor:pointer;font-size:12px;border:none;background:none;font-family:'Sarabun',sans-serif}
 
   .crit{margin-top:10px;font-size:13.5px;background:#EFF3E7;border:1px solid #cfe0bf;border-radius:10px;padding:9px 13px;color:var(--accent-deep)}
   .crit b{font-weight:700}
@@ -134,7 +140,9 @@
   .bbtn.new{background:var(--accent-deep);color:#fff;border:none}
   .bbtn.del{color:var(--rose)}
 
-  body.cap .back-link,body.cap .actions,body.cap .note,body.cap .logging-only,body.cap .batchbar,body.cap .del,body.cap .guide-link,body.cap #progPicker,body.cap .prog-hint,body.cap #customWrap{display:none!important}
+  body.cap .back-link,body.cap .actions,body.cap .note,body.cap .logging-only,body.cap .batchbar,body.cap .del,body.cap .ed-t,body.cap .guide-link,body.cap #progPicker,body.cap .prog-hint,body.cap #customWrap{display:none!important}
+  body.cap #noteBlock.empty-note{display:none!important}
+  body.cap .fld textarea{background:none!important;border:1px solid #ccc!important}
   body.cap .rep-head{display:block!important}
   body.cap{background:#fff!important;background-image:none!important}
   body.cap .block{background:#fff!important;border:1px solid #ccc!important;box-shadow:none!important}
@@ -160,7 +168,9 @@
     .block,tr,.ev,.fld,.evrow{break-inside:avoid;page-break-inside:avoid}
     body{padding:0;background:#fff;background-image:none;font-size:11px}
     .sheet{max-width:100%}
-    .back-link,.actions,.note,.logging-only,.batchbar,.del{display:none!important}
+    .back-link,.actions,.note,.logging-only,.batchbar,.del,.ed-t{display:none!important}
+    #noteBlock.empty-note{display:none!important}
+    .fld textarea{border:1px solid #ccc;border-radius:4px;padding:3px 6px;background:none;font-size:11px;min-height:0}
     header{display:none}
     .rep-head{display:block;text-align:center;margin-bottom:8px}
     .rep-head .rt{font-family:'Fraunces',serif;font-size:18px}
@@ -290,6 +300,15 @@
     <div class="logged empty" id="lg_reachCool">ยังไม่บันทึก</div>
   </div>
 
+  <!-- บันทึกเพิ่มเติม -->
+  <div class="block" id="noteBlock">
+    <div class="block-t"><span class="n" style="background:#A85B47">📝</span> บันทึกเพิ่มเติม</div>
+    <div class="fld">
+      <label>ข้อความสำคัญที่ต้องเก็บไว้กับข้อมูล Batch นี้ (ถ้ามี)</label>
+      <textarea id="f_note" rows="3" placeholder="พิมพ์บันทึก เช่น เหตุการณ์ผิดปกติ สิ่งที่อยากปรับครั้งหน้า…" oninput="setNote(this)"></textarea>
+    </div>
+  </div>
+
   <!-- 5. สรุป + กราฟ -->
   <div class="block">
     <div class="block-t"><span class="n">5</span> สรุปผล + กราฟ</div>
@@ -338,7 +357,7 @@ const STORE_KEY='ltlt_store_v1';    // คีย์ใหม่ เก็บไ�
 
 function fresh(){
   return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',ctemp:'',ctime:'',interval:3,
-    startHeat:null,reachTemp:null,endHold:null,endHoldReason:'',startCool:null,coolStartTemp:'',reachCool:null,readings:[],pasteurNotified:false,remindKey:null,remindCount:0};
+    startHeat:null,reachTemp:null,endHold:null,endHoldReason:'',startCool:null,coolStartTemp:'',reachCool:null,readings:[],pasteurNotified:false,remindKey:null,remindCount:0,note:''};
 }
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -514,6 +533,43 @@ function addReading(temp){
 }
 function delReading(i){state.readings.splice(i,1);save();updateUI()}
 
+/* แก้เวลาย้อนหลัง — กรณีลืมบันทึกแล้วมาบันทึกทีหลัง */
+function editReadTime(i){
+  const cell=document.getElementById('rt_'+i);const r=state.readings[i];if(!cell||!r)return;
+  const d=new Date(r.t),hh=String(d.getHours()).padStart(2,'0'),mm=String(d.getMinutes()).padStart(2,'0');
+  cell.innerHTML='<input type="time" class="et-in" id="etr_'+i+'" value="'+hh+':'+mm+'"> <button class="et-ok" onclick="saveReadTime('+i+')">✓ ตกลง</button> <button class="del" onclick="updateUI()">ยกเลิก</button>';
+  const inp=document.getElementById('etr_'+i);if(inp)inp.focus();
+}
+function saveReadTime(i){
+  const el=document.getElementById('etr_'+i);const r=state.readings[i];if(!el||!r)return;
+  if(!el.value){alert('เลือกเวลาก่อนค่ะ');return}
+  const p=el.value.split(':').map(Number);
+  const d=new Date(r.t);d.setHours(p[0],p[1],0,0);
+  r.t=d.getTime();
+  state.readings.sort((a,b)=>a.t-b.t);   // เรียงตามเวลาใหม่ ให้การคำนวณ LTLT ถูกต้อง
+  state.pasteurNotified=false;           // คำนวณสถานะสมบูรณ์ใหม่ตามเวลาที่แก้
+  save();updateUI();
+}
+function editEvTime(name){
+  const el=document.getElementById('lg_'+name);const ts=state[name];if(!el||!ts)return;
+  const d=new Date(ts),hh=String(d.getHours()).padStart(2,'0'),mm=String(d.getMinutes()).padStart(2,'0');
+  el.className='logged';
+  el.innerHTML='แก้เวลาเป็น <input type="time" class="et-in" id="et_'+name+'" value="'+hh+':'+mm+'"> <button class="et-ok" onclick="saveEvTime(\''+name+'\')">✓ ตกลง</button> <button class="del" onclick="updateUI()">ยกเลิก</button>';
+  const inp=document.getElementById('et_'+name);if(inp)inp.focus();
+}
+function saveEvTime(name){
+  const el=document.getElementById('et_'+name);if(!el||!state[name])return;
+  if(!el.value){alert('เลือกเวลาก่อนค่ะ');return}
+  const p=el.value.split(':').map(Number);
+  const d=new Date(state[name]);d.setHours(p[0],p[1],0,0);
+  state[name]=d.getTime();save();updateUI();
+}
+
+/* บันทึกเพิ่มเติม (note) */
+function autoGrow(el){el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px'}
+function setNote(el){state.note=el.value;autoGrow(el);save();toggleNotePrint()}
+function toggleNotePrint(){const b=document.getElementById('noteBlock');if(b)b.classList.toggle('empty-note',!(state.note||'').trim())}
+
 function resetAll(){
   if(!confirm('ล้างข้อมูลใน Batch นี้และเริ่มบันทึกใหม่?'))return;
   const id=store.current;store.batches[id]=fresh();state=store.batches[id];
@@ -531,6 +587,7 @@ function syncInputs(){
   document.getElementById('f_ctime').value=state.ctime||'';
   document.getElementById('f_interval').value=(state.interval==null?3:state.interval);
   document.getElementById('f_coolTemp').value=state.coolStartTemp||'';
+  const nt=document.getElementById('f_note');if(nt){nt.value=state.note||'';autoGrow(nt)}
 }
 
 function updateUI(){
@@ -557,8 +614,9 @@ function updateUI(){
   const cb4=document.getElementById('coolBlock');if(cb4)cb4.classList.toggle('locked',!state.endHold);
   const clk=document.getElementById('coolLock');if(clk)clk.style.display=state.endHold?'none':'block';
   const ueh=document.getElementById('undoEndHold');if(ueh)ueh.style.display=state.endHold?'block':'none';
-  setLog('startCool','เริ่มลดความร้อน');setLog('reachCool','ถึง ≤4 °C');
-  if(state.startCool&&!isNaN(parseFloat(state.coolStartTemp))){const e=document.getElementById('lg_startCool');e.textContent+=' · '+parseFloat(state.coolStartTemp)+' °C';}
+  const cst0=parseFloat(state.coolStartTemp);
+  setLog('startCool','เริ่มลดความร้อน',(state.startCool&&!isNaN(cst0))?(' · '+cst0+' °C'):'');
+  setLog('reachCool','ถึง ≤4 °C');
 
   // เวลาที่ถึงเกณฑ์ — ตรวจจับอัตโนมัติจากค่าที่บันทึก (ค่าแรกที่ ≥ เกณฑ์)
   const rt=getReachTime(c);
@@ -577,7 +635,7 @@ function updateUI(){
   // readings table (logging)
   const rb=document.getElementById('readBody');rb.innerHTML='';
   document.getElementById('readTbl').style.display=state.readings.length?'table':'none';
-  for(let i=state.readings.length-1;i>=0;i--){const r=state.readings[i];rb.innerHTML+='<tr><td>'+(i+1)+'</td><td class="t">'+hms(r.t)+'</td><td class="t">'+r.temp+' °C</td><td><button class="del" onclick="delReading('+i+')">ลบ</button></td></tr>';}
+  for(let i=state.readings.length-1;i>=0;i--){const r=state.readings[i];rb.innerHTML+='<tr><td>'+(i+1)+'</td><td class="t" id="rt_'+i+'">'+hms(r.t)+' <button class="ed-t" onclick="editReadTime('+i+')">✎</button></td><td class="t">'+r.temp+' °C</td><td><button class="del" onclick="delReading('+i+')">ลบ</button></td></tr>';}
 
   // report readings table (ค่าล่าสุดอยู่บนสุด)
   const rrb=document.getElementById('repReadBody');rrb.innerHTML='';
@@ -591,12 +649,13 @@ function updateUI(){
     ev('เริ่มต้ม (ค่าแรกที่บันทึก)',state.readings.length?hms(state.readings[0].t):'—',state.readings.length?state.readings[0].t:null)+
     ev('ถึงเกณฑ์ (เริ่มจับเวลา)',rt?hms(rt):'—',rt)+
     ev('จบให้ความร้อน',hms(state.endHold),state.endHold)+
-    ev('ระยะเวลาคงอุณหภูมิ',holdDur!=null?fmtDur(holdDur):'—',holdDur)+
+    ev('ระยะเวลาคงอุณหภูมิ',holdDur!=null?(holdDur<0?'⚠ เวลาไม่ถูกต้อง':fmtDur(holdDur)):'—',holdDur)+
     ev('เริ่มลดความร้อน',hms(state.startCool),state.startCool)+
     ev('ถึง ≤4 °C',hms(state.reachCool),state.reachCool)+
-    ev('เวลาที่ใช้ลดความร้อน',coolDur!=null?fmtDur(coolDur):'—',coolDur)+
+    ev('เวลาที่ใช้ลดความร้อน',coolDur!=null?(coolDur<0?'⚠ เวลาไม่ถูกต้อง':fmtDur(coolDur)):'—',coolDur)+
     (state.endHoldReason?ev('เหตุผลที่จบก่อนสมบูรณ์',escapeHtml(state.endHoldReason),true):'');
 
+  toggleNotePrint();
   buildChart(c);
   evaluate(c,holdDur,coolDur,rt);
   save();
@@ -662,9 +721,9 @@ function renderCountdown(c,rt){
   }
 }
 function ev(l,v,has){return '<div class="ev"><span class="lbl">'+l+'</span><span class="val'+(has?'':' no')+'">'+v+'</span></div>'}
-function setLog(name,label){
+function setLog(name,label,extra){
   const el=document.getElementById('lg_'+name);if(!el)return;
-  if(state[name]){el.className='logged';el.textContent='✓ '+label+': '+hms(state[name]);}
+  if(state[name]){el.className='logged';el.innerHTML='✓ '+label+': '+hms(state[name])+(extra||'')+' <button class="ed-t" onclick="editEvTime(\''+name+'\')">✎ แก้เวลา</button>';}
   else{el.className='logged empty';el.textContent='ยังไม่บันทึก';}
 }
 
@@ -676,7 +735,7 @@ function evaluate(c,holdDur,coolDur,rt){
     const mx=Math.max(...state.readings.map(r=>r.temp));
     const over=mx>85, reach=mx>=82;
     let li='<li>อุณหภูมิสูงสุดที่บันทึก: <b>'+mx+' °C</b></li><li>เป้า 82 °C · เพดาน 85 °C</li><li>สังเกตเนื้อเคลือบหลังช้อน (nappe) แล้วยกลง</li>';
-    if(coolDur!=null)li+='<li>ลดความร้อนถึง ≤4 °C ใช้ <b>'+fmtDur(coolDur)+'</b></li>';
+    if(coolDur!=null){li+=coolDur<0?'<li style="color:var(--rose)">⚠ เวลาลดความร้อนไม่ถูกต้อง (ถึง ≤4 °C ก่อนเวลาเริ่มลด) — กด ✎ แก้เวลา เพื่อแก้ไข</li>':'<li>ลดความร้อนถึง ≤4 °C ใช้ <b>'+fmtDur(coolDur)+'</b></li>';}
     if(state.endHoldReason)li+='<li>หมายเหตุ: '+escapeHtml(state.endHoldReason)+'</li>';
     box.className='summary '+(over?'fail':(reach?'pass':'wait'));
     box.innerHTML='<div class="verdict">'+(over?'⚠ เกินเพดาน 85 °C (เสี่ยงไข่สุกเกิน)':(reach?'✓ ถึงเป้า 82 °C — สังเกตเนื้อ nappe':'รอให้ถึงเป้า 82 °C'))+'</div><ul>'+li+'</ul>';
@@ -684,6 +743,11 @@ function evaluate(c,holdDur,coolDur,rt){
   }
   if(!state.program||isNaN(c.temp)||!rt||!state.endHold){
     box.className='summary wait';box.innerHTML='<div class="verdict">รอข้อมูล</div>ต้องเลือกโปรแกรม + บันทึกอุณหภูมิให้ถึงเกณฑ์ และกด "จบการให้ความร้อน" ก่อนค่ะ';return;
+  }
+  if(holdDur!=null&&holdDur<0){
+    box.className='summary fail';
+    box.innerHTML='<div class="verdict">⚠ เวลาไม่ถูกต้อง</div>เวลา “จบให้ความร้อน” ('+hms(state.endHold)+') อยู่ก่อนเวลาถึงเกณฑ์ ('+hms(rt)+') — กดปุ่ม ✎ แก้เวลา ที่รายการที่ผิดเพื่อแก้ไขค่ะ';
+    return;
   }
   const minutes=holdDur/60000;
   const timeOk=minutes>=c.time;
@@ -695,7 +759,7 @@ function evaluate(c,holdDur,coolDur,rt){
   li+='<li>เกณฑ์: ≥ '+c.temp+' °C · ≥ '+c.time+' นาที</li>';
   li+='<li>คงอุณหภูมิจริง: <b>'+minutes.toFixed(1)+' นาที</b> '+(timeOk?'✓ ครบเวลา':'✗ ยังไม่ครบเวลา')+'</li>';
   li+='<li>อุณหภูมิระหว่างจับเวลา: '+(tempOk?'✓ ไม่หลุดต่ำกว่าเกณฑ์':'✗ มี '+low.length+' จุดต่ำกว่า '+c.temp+' °C → ตามหลัก LTLT ต้องเริ่มจับเวลาใหม่')+'</li>';
-  if(coolDur!=null)li+='<li>ลดความร้อนถึง ≤4 °C ใช้ <b>'+fmtDur(coolDur)+'</b></li>';
+  if(coolDur!=null){li+=coolDur<0?'<li style="color:var(--rose)">⚠ เวลาลดความร้อนไม่ถูกต้อง (ถึง ≤4 °C ก่อนเวลาเริ่มลด) — กด ✎ แก้เวลา เพื่อแก้ไข</li>':'<li>ลดความร้อนถึง ≤4 °C ใช้ <b>'+fmtDur(coolDur)+'</b></li>';}
   box.className='summary '+(pass?'pass':'fail');
   box.innerHTML='<div class="verdict">'+(pass?'✓ ผ่านเกณฑ์การให้ความร้อน':'✗ ไม่ผ่านเกณฑ์')+'</div><ul>'+li+'</ul>';
 }
