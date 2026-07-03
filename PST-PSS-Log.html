@@ -42,6 +42,10 @@
   .fld label{font-size:12px;color:var(--muted);font-weight:500}
   .fld input,.fld select{font-family:'Sarabun',sans-serif;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);outline:none;width:100%}
   .fld input:focus,.fld select:focus{border-color:var(--accent);background:#fff}
+  .fld textarea{font-family:'Sarabun',sans-serif;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);outline:none;width:100%;resize:none;line-height:1.65;min-height:64px;overflow:hidden}
+  .fld textarea:focus{border-color:var(--accent);background:#fff}
+  .et-in{font-family:'Fraunces',serif;font-size:14px;padding:6px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .et-in:focus{border-color:var(--accent);outline:none}
 
   .evrow{padding:11px 0;border-bottom:1px solid var(--line-soft)}
   .evrow:last-child{border-bottom:none}
@@ -97,7 +101,7 @@
   body.printmode .block{box-shadow:none!important;border:1px solid #ccc!important;background:#fff!important}
   body.printmode .block-t,body.printmode .block-t.pst,body.printmode .block-t.pss{color:#000!important}
   body.printmode .block-t .tag{background:none!important;color:#000!important;border:1px solid #888!important}
-  body.printmode .fld input,body.printmode .fld select{background:none!important}
+  body.printmode .fld input,body.printmode .fld select,body.printmode .fld textarea{background:none!important}
   body.printmode .evin{display:none!important}
   body.printmode .chartwrap{border:1px solid #ccc!important}
   body.printmode .chartwrap svg rect{display:none!important}
@@ -121,6 +125,7 @@
     .block-t,.block-t.pst,.block-t.pss{color:#000;font-size:11px;margin-bottom:6px}
     .block-t .tag{background:none!important;color:#000;border:1px solid #888;font-size:10px}
     .fld input,.fld select{border:none;border-bottom:1px solid #ccc;border-radius:0;padding:2px 0;background:none;font-size:11px}
+    .fld textarea{border:1px solid #ccc;border-radius:4px;padding:3px 6px;background:none;font-size:11px;min-height:0}
     .fld label{font-size:9.5px}
     .evin{display:none}
     .evrow{padding:3px 0;display:flex;justify-content:space-between;align-items:baseline;gap:10px;break-inside:avoid;page-break-inside:avoid}
@@ -217,6 +222,15 @@
     </div>
   </div>
 
+  <!-- บันทึกเพิ่มเติม -->
+  <div class="block" id="noteBlock">
+    <div class="block-t" style="color:#A85B47"><span class="tag" style="background:#A85B47">📝</span> บันทึกเพิ่มเติม</div>
+    <div class="fld">
+      <label>ข้อความสำคัญที่ต้องเก็บไว้กับข้อมูล Batch นี้ (ถ้ามี)</label>
+      <textarea id="f_note" rows="3" placeholder="พิมพ์บันทึก เช่น เหตุการณ์ผิดปกติ สิ่งที่อยากปรับครั้งหน้า…" oninput="setNote(this)"></textarea>
+    </div>
+  </div>
+
   <!-- สรุปผล -->
   <div class="block" id="summaryBlock">
     <div class="block-t"><span class="tag" style="background:var(--accent-deep)">∑</span> สรุปผล</div>
@@ -264,7 +278,7 @@ const ALL=[...PST_EVENTS,...PSS_EVENTS];
 const KEY='pst_pss_log_v1';            // คีย์เดิม (รุ่นบันทึกเดี่ยว) ใช้ย้ายข้อมูลเข้าระบบหลาย Batch
 const STORE_KEY='pst_pss_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
-function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:'',defectsOther:''}}
+function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:'',defectsOther:'',note:''}}
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
@@ -328,6 +342,31 @@ function logEvent(k){
 function quickLog(k,v){state.events[k]={temp:v,t:Date.now()};save();updateUI()}
 function clearEv(k){delete state.events[k];save();updateUI()}
 
+/* แก้เวลาย้อนหลัง — กรณีลืมบันทึกแล้วมาบันทึกทีหลัง */
+function editTime(k){
+  const d=state.events[k];if(!d)return;
+  const r=document.getElementById('res_'+k);
+  const dt=new Date(d.t);
+  const hh=String(dt.getHours()).padStart(2,'0'),mm=String(dt.getMinutes()).padStart(2,'0');
+  r.className='evres';
+  r.innerHTML='แก้เวลาเป็น <input class="et-in" id="et_'+k+'" type="time" value="'+hh+':'+mm+'"> '
+    +'<button class="sub-b" onclick="saveTime(\''+k+'\')">✓ ตกลง</button> '
+    +'<button class="clr" onclick="updateUI()">ยกเลิก</button>';
+  const inp=document.getElementById('et_'+k);if(inp)inp.focus();
+}
+function saveTime(k){
+  const el=document.getElementById('et_'+k);const d=state.events[k];if(!el||!d)return;
+  if(!el.value){alert('เลือกเวลาก่อนค่ะ');return}
+  const p=el.value.split(':').map(Number);
+  const dt=new Date(d.t);dt.setHours(p[0],p[1],0,0);
+  d.t=dt.getTime();save();updateUI();
+}
+
+/* บันทึกเพิ่มเติม (note) */
+function autoGrow(el){el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px'}
+function setNote(el){state.note=el.value;autoGrow(el);save();toggleNotePrint()}
+function toggleNotePrint(){const b=document.getElementById('noteBlock');if(b)b.classList.toggle('empty-print',!(state.note||'').trim())}
+
 function resetAll(){
   if(!confirm('ล้างข้อมูลใน Batch นี้และเริ่มใหม่?'))return;
   const id=store.current;store.batches[id]=fresh();state=store.batches[id];
@@ -340,6 +379,7 @@ function syncInputs(){
   const doth=document.getElementById('f_defectsOther');if(doth){doth.value=state.defectsOther||'';doth.style.display=(state.defects==='ระบุรายละเอียดเอง')?'block':'none';}
   document.getElementById('f_thermo').value=state.thermo||'';
   document.getElementById('thermoOtherWrap').style.display=state.thermo==='อื่นๆ'?'flex':'none';
+  const nt=document.getElementById('f_note');if(nt){nt.value=state.note||'';autoGrow(nt)}
 }
 
 function evMeta(k){return ALL.find(e=>e.k===k)}
@@ -350,7 +390,7 @@ function updateUI(){
     if(!d){r.className='evres empty';r.textContent='ยังไม่บันทึก';row.classList.remove('logged');row.classList.add('empty-print');return;}
     row.classList.add('logged');row.classList.remove('empty-print');
     const unit=ev.unit||'°C';
-    let html='<span class="ok">✓ '+hms(d.t)+' · '+d.temp+' '+unit+'</span> <button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button>';
+    let html='<span class="ok">✓ '+hms(d.t)+' · '+d.temp+' '+unit+'</span> <button class="clr" style="color:var(--blue)" onclick="editTime(\''+ev.k+'\')">✎ แก้เวลา</button> <button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button>';
     if(ev.schedule){html+=' <span class="sch">· ครบ '+ev.schedule+' นาที เวลา '+hm(d.t+ev.schedule*60000)+'</span>';}
     if(ev.warnBelow!=null && d.temp<ev.warnBelow){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
     if(ev.warnAbove!=null && d.temp>ev.warnAbove){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
@@ -362,6 +402,7 @@ function updateUI(){
   document.getElementById('pstBlock').classList.toggle('empty-print',!pstHas);
   document.getElementById('pssBlock').classList.toggle('empty-print',!pssHas);
   document.getElementById('obsBlock').classList.toggle('empty-print',!((state.dryness&&state.dryness!=='เนื้อแห้งตามปกติ')||state.stopAbn||(state.defects&&state.defects!=='ปกติ')));
+  toggleNotePrint();
   renderSummary();
   buildChart();
   save();
@@ -369,6 +410,7 @@ function updateUI(){
 
 function phaseLine(label,a,b){
   if(!a||!b)return null;
+  if(b.t<a.t)return '<b>'+label+'</b> &nbsp;<span style="color:var(--rose);font-size:12.5px">⚠ เวลาไม่ถูกต้อง — เวลาจบ ('+hms(b.t)+') อยู่ก่อนเวลาเริ่ม ('+hms(a.t)+') · กด ✎ แก้เวลา ที่รายการนั้นเพื่อแก้ไข</span>';
   return '<b>'+label+' = '+fmtDur(b.t-a.t)+'</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">· อุณหภูมิ '+a.temp+' → '+b.temp+' °C ('+hms(a.t)+' → '+hms(b.t)+')</span>';
 }
 function renderSummary(){
@@ -380,7 +422,10 @@ function renderSummary(){
   if(l=phaseLine('PSS · Active Cooling',state.events.pss_beforeActive,state.events.pss_endActive))items.push(l);
   if(l=phaseLine('PSS · Passive Setting',state.events.pss_startPassive,state.events.pss_endPassive))items.push(l);
   if(wb&&wa&&wa.temp>0){const ov=((wb.temp-wa.temp)/wa.temp)*100;items.push('<b>%Overrun = '+ov.toFixed(1)+' %</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">(ก่อนปั่น '+wb.temp+' g · หลังปั่น '+wa.temp+' g)</span>');}
-  if(sc&&ec){items.push('<b>ระยะเวลาปั่น = '+fmtDur(ec.t-sc.t)+'</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">('+hms(sc.t)+' → '+hms(ec.t)+')</span>');}
+  if(sc&&ec){
+    if(ec.t<sc.t)items.push('<b>ระยะเวลาปั่น</b> &nbsp;<span style="color:var(--rose);font-size:12.5px">⚠ เวลาไม่ถูกต้อง — เวลาปั่นเสร็จ ('+hms(ec.t)+') อยู่ก่อนเวลาเริ่มปั่น ('+hms(sc.t)+') · กด ✎ แก้เวลา ที่รายการนั้นเพื่อแก้ไข</span>');
+    else items.push('<b>ระยะเวลาปั่น = '+fmtDur(ec.t-sc.t)+'</b> &nbsp;<span style="color:var(--muted);font-size:12.5px">('+hms(sc.t)+' → '+hms(ec.t)+')</span>');
+  }
   document.getElementById('summaryBlock').classList.toggle('empty-print',items.length===0);
   box.innerHTML=items.length?items.map(i=>'<div>'+i+'</div>').join(''):'<span style="color:var(--muted-soft);font-style:italic;font-family:Fraunces,serif">บันทึกน้ำหนักก่อน/หลังปั่น และเวลาเริ่ม/เสร็จปั่น เพื่อคำนวณ %Overrun และระยะเวลาปั่น</span>';
 }
