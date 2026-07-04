@@ -51,6 +51,11 @@
   .prog-note{margin-top:8px;font-size:13px;line-height:1.5;background:#FBF1E7;border:1px solid #E6C9A8;border-radius:10px;padding:9px 13px;color:#8A5A2B}
   .prog-cat{font-size:12.5px;font-weight:700;color:var(--accent-deep);letter-spacing:.01em;margin:11px 0 6px}
   .prog-cat:first-child{margin-top:2px}
+  .mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  @media(max-width:560px){.mode-grid{grid-template-columns:1fr}}
+  .mode-btn{font-family:'Sarabun',sans-serif;text-align:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 8px;cursor:pointer;font-weight:600;font-size:13.5px;line-height:1.4;color:var(--ink);transition:all .18s}
+  .mode-btn:hover{border-color:var(--accent)}
+  .mode-btn.sel{border-color:var(--accent-deep);background:#F3F6EC;color:var(--accent-deep);box-shadow:0 4px 16px -12px rgba(79,107,58,.5)}
   .prog-grid{display:grid;grid-template-columns:1fr;gap:6px}
   .prog-opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 13px;cursor:pointer;font-family:'Sarabun',sans-serif;color:var(--ink);transition:all .18s;display:flex;align-items:center;justify-content:space-between;gap:12px}
   .prog-opt:hover{border-color:var(--accent)}
@@ -244,7 +249,7 @@
   <!-- 2. โปรแกรม -->
   <div class="block">
     <div class="block-t"><span class="n">2</span> เลือกโปรแกรมการให้ความร้อน</div>
-    <div class="prog-hint" style="font-size:12.5px;color:var(--muted);margin-bottom:6px">กดเลือกตามชื่อวัตถุดิบ — ระบบเติมอุณหภูมิ/เวลาให้เอง</div>
+    <div class="prog-hint" style="font-size:12.5px;color:var(--muted);margin-bottom:6px">เลือกแนวการผลิตก่อน แล้วเลือกโปรแกรมตามวัตถุดิบ — ระบบเติมอุณหภูมิ/เวลาให้เอง</div>
     <div id="progPicker"></div>
     <div class="crit none" id="critBox">ยังไม่ได้เลือกโปรแกรม</div>
     <div class="prog-note" id="progNote" style="display:none"></div>
@@ -282,7 +287,7 @@
     <div class="remind" id="remindBox" style="display:none"></div>
     <div class="countdown" id="countdownBox" style="display:none"></div>
 
-    <button class="btn big stop" style="margin-top:22px" onclick="confirmEndHold()">⏹ จบการให้ความร้อน — หยุดจับเวลา LTLT</button>
+    <button class="btn big stop" style="margin-top:22px" onclick="confirmEndHold()">⏹ จบการให้ความร้อน — หยุดจับเวลา</button>
     <div class="logged empty" id="lg_endHold">ยังไม่บันทึก</div>
     <button class="btn-undo" id="undoEndHold" style="display:none" onclick="cancelEndHold()">↩ ยกเลิกการจบการให้ความร้อน (กดผิด)</button>
 
@@ -346,6 +351,7 @@ const PROGRAMS=[
   // ประเภท 3 — ฆ่าเชื้อวัตถุดิบเสี่ยง แบบรักษากลิ่นรส / ความร้อนสูงเวลาสั้น
   {cat:3,k:'freshFruit',label:'ผลไม้สด',temp:70,tempHi:75,time:2},
   {cat:3,k:'coconut',label:'กะทิคั้นสด',temp:80,time:2},
+  {cat:3,k:'mixShort',label:'ให้ความร้อนกับมิกซ์ทั้งหมด',temp:80,time:2},
   {cat:3,k:'custard',label:'ไข่แดงแบบทำคัสตาร์ด (82–85 °C)',temp:82,ceiling:85,noTimer:true},
   // ประเภท 4 — กำหนดเอง
   {cat:4,k:'custom',label:'ระบุเวลาและอุณหภูมิเอง'}
@@ -356,7 +362,7 @@ const KEY='ltlt_log_v1';            // คีย์เดิม (รุ่นบ
 const STORE_KEY='ltlt_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
 function fresh(){
-  return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',ctemp:'',ctime:'',interval:3,
+  return {product:'',lot:'',recorder:'',date:thaiDate(Date.now()),program:'',progMode:'',ctemp:'',ctime:'',interval:3,
     startHeat:null,reachTemp:null,endHold:null,endHoldReason:'',startCool:null,coolStartTemp:'',reachCool:null,readings:[],pasteurNotified:false,remindKey:null,remindCount:0,note:''};
 }
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
@@ -411,30 +417,60 @@ function crit(){
 }
 
 function setF(k,v){state[k]=v;save();if(k==='product')refreshBatchSel()}
-function setCustom(){state.program='custom';state.ctemp=document.getElementById('f_ctemp').value;state.ctime=document.getElementById('f_ctime').value;save();updateUI()}
+function setCustom(){state.program='custom';state.progMode='custom';state.ctemp=document.getElementById('f_ctemp').value;state.ctime=document.getElementById('f_ctime').value;save();updateUI()}
 
+/* โหมดการผลิต: sell = ทำขาย · home = ทำทาน · custom = กำหนดเอง */
+function progMode(){
+  if(state.progMode)return state.progMode;
+  if(state.program==='custom')return 'custom';
+  if(state.program){const p=PROGRAMS.find(x=>x.k===(LEGACY[state.program]||state.program));if(p)return p.cat===1?'sell':'home';}
+  return '';
+}
+function setMode(m){
+  if(m==='sell'){selectProgram('mixAll');return;}          // เลือกโปรแกรมทำขายให้อัตโนมัติ
+  if(m==='custom'){selectProgram('custom');return;}        // เปิดแถบกำหนดเอง
+  // home — คงโปรแกรมเดิมถ้าเป็นแนวทำทานอยู่แล้ว มิฉะนั้นให้เลือกใหม่จากรายการ
+  const p=PROGRAMS.find(x=>x.k===(LEGACY[state.program]||state.program));
+  if(state.program && !(p&&(p.cat===2||p.cat===3))){
+    if(state.readings.length && !state.endHold){
+      if(!confirm('กำลังบันทึกการให้ความร้อนอยู่ — เปลี่ยนเป็น “ผลิตเพื่อทำทาน” จะยกเลิกโปรแกรมเดิม และต้องกดเลือกโปรแกรมใหม่จากรายการทันที ระบบจึงจะคำนวณต่อได้\n\nยืนยันไหมคะ?')){buildProgPicker();return;}
+      state.pasteurNotified=false;
+    }
+    state.program='';
+  }
+  state.progMode='home';save();buildProgPicker();updateUI();
+}
+function progBtnHTML(p){
+  const meta=p.noTimer?'ไม่จับเวลา · 82–85 °C':((p.tempHi?(p.temp+'–'+p.tempHi):p.temp)+' °C / '+p.time+' นาที');
+  return '<button type="button" class="prog-opt'+(state.program===p.k?' sel':'')+'" onclick="selectProgram(\''+p.k+'\')"><span class="nm">'+p.label+'</span><span class="meta">'+meta+'</span></button>';
+}
 function buildProgPicker(){
   const wrap=document.getElementById('progPicker');if(!wrap)return;
-  let h='';
-  [1,2,3,4].forEach(cn=>{
-    h+='<div class="prog-cat">'+CAT_LABEL[cn]+'</div><div class="prog-grid">';
-    PROGRAMS.filter(p=>p.cat===cn).forEach(p=>{
-      if(p.k==='custom'){
-        h+='<div class="prog-opt custom'+(state.program==='custom'?' sel':'')+'">'
-          +'<span class="nm">กำหนดเอง</span>'
-          +'<span style="display:flex;align-items:center;gap:6px">'
-          +'<input id="f_ctemp" type="number" step="0.1" placeholder="°C" value="'+(state.ctemp||'')+'" oninput="setCustom()">'
-          +'<span style="color:var(--muted);font-size:12.5px">°C /</span>'
-          +'<input id="f_ctime" type="number" step="1" placeholder="นาที" value="'+(state.ctime||'')+'" oninput="setCustom()">'
-          +'<span style="color:var(--muted);font-size:12.5px">นาที</span>'
-          +'</span></div>';
-        return;
-      }
-      const meta=p.noTimer?'ไม่จับเวลา · 82–85 °C':((p.tempHi?(p.temp+'–'+p.tempHi):p.temp)+' °C / '+p.time+' นาที');
-      h+='<button type="button" class="prog-opt'+(state.program===p.k?' sel':'')+'" onclick="selectProgram(\''+p.k+'\')"><span class="nm">'+p.label+'</span><span class="meta">'+meta+'</span></button>';
-    });
-    h+='</div>';
-  });
+  const m=progMode();
+  let h='<div class="mode-grid">'
+    +'<button type="button" class="mode-btn'+(m==='sell'?' sel':'')+'" onclick="setMode(\'sell\')">🛒 ผลิตเพื่อทำขาย</button>'
+    +'<button type="button" class="mode-btn'+(m==='home'?' sel':'')+'" onclick="setMode(\'home\')">🏠 ผลิตเพื่อทำทาน</button>'
+    +'<button type="button" class="mode-btn'+(m==='custom'?' sel':'')+'" onclick="setMode(\'custom\')">⚙ กำหนดอุณหภูมิและเวลาเอง</button>'
+    +'</div>';
+  if(m==='sell'){
+    h+='<div class="prog-cat">พาสเจอไรซ์มิกซ์ทั้งหมดตามประกาศ สธ.354</div><div class="prog-grid">'
+      +PROGRAMS.filter(p=>p.cat===1).map(progBtnHTML).join('')+'</div>';
+  }else if(m==='home'){
+    h+='<div class="prog-cat">① พาสเจอร์ไรส์วัตถุดิบเสี่ยง</div><div class="prog-grid">'
+      +PROGRAMS.filter(p=>p.cat===2).map(progBtnHTML).join('')+'</div>';
+    h+='<div class="prog-cat">② ให้ความร้อนสูง ระยะเวลาสั้น (เน้นรักษากลิ่นรส ฆ่าเชื้อแต่ไม่ใช่การพาสเจอร์ไรส์มาตรฐาน)</div><div class="prog-grid">'
+      +PROGRAMS.filter(p=>p.cat===3).map(progBtnHTML).join('')+'</div>';
+  }else if(m==='custom'){
+    h+='<div class="prog-cat">กำหนดเกณฑ์เอง</div><div class="prog-grid">'
+      +'<div class="prog-opt custom'+(state.program==='custom'?' sel':'')+'">'
+      +'<span class="nm">กรอกอุณหภูมิและเวลาที่ต้องการ</span>'
+      +'<span style="display:flex;align-items:center;gap:6px">'
+      +'<input id="f_ctemp" type="number" step="0.1" placeholder="°C" value="'+(state.ctemp||'')+'" oninput="setCustom()">'
+      +'<span style="color:var(--muted);font-size:12.5px">°C /</span>'
+      +'<input id="f_ctime" type="number" step="1" placeholder="นาที" value="'+(state.ctime||'')+'" oninput="setCustom()">'
+      +'<span style="color:var(--muted);font-size:12.5px">นาที</span>'
+      +'</span></div></div>';
+  }
   wrap.innerHTML=h;
 }
 function selectProgram(k){
@@ -448,6 +484,9 @@ function selectProgram(k){
     state.pasteurNotified=false; // ให้คำนวณสถานะ “สมบูรณ์” ใหม่ตามเกณฑ์ใหม่
   }
   state.program=k;
+  // อัปเดตโหมดการผลิตให้สอดคล้องกับโปรแกรมที่เลือก
+  if(k==='custom')state.progMode='custom';
+  else{const pm=PROGRAMS.find(x=>x.k===(LEGACY[k]||k));if(pm)state.progMode=pm.cat===1?'sell':'home';}
   // ตั้งค่า default ช่วงเตือนบันทึกตามเวลาของโปรแกรม: <3 นาที → ทุก 1 นาที, ≥3 นาที → ทุก 3 นาที
   if(k!==prev && k!=='custom'){
     const p=PROGRAMS.find(x=>x.k===(LEGACY[k]||k));
@@ -615,7 +654,8 @@ function updateUI(){
 
   // คำเตือนนิยาม: ประเภท 2/3 = ฆ่าเชื้อเฉพาะจุด ไม่ใช่พาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย
   const pn=document.getElementById('progNote');
-  if(c.cat===2||c.cat===3){pn.style.display='block';pn.innerHTML='⚠ ประเภทนี้เป็นการ<b>ฆ่าเชื้อวัตถุดิบเสี่ยงเฉพาะจุด</b> ไม่ใช่การพาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย — ถ้าทำขาย ต้องใช้ <b>ประเภทที่ 1 (พาสเจอไรซ์มิกซ์ทั้งหมด 68.5 °C / 30 นาที)</b> เสมอ';}
+  if(state.program==='mixShort'){pn.style.display='block';pn.innerHTML='⚠ โปรแกรมนี้ให้ความร้อนมิกซ์ทั้งหมดแบบสั้นสำหรับ<b>ทำทานเอง</b> — เป็นการฆ่าเชื้อ แต่<b>ไม่ใช่การพาสเจอไรซ์ตามประกาศ สธ.354</b> ถ้าทำขาย ต้องใช้ <b>ผลิตเพื่อทำขาย (68.5 °C / 30 นาที)</b> เสมอ';}
+  else if(c.cat===2||c.cat===3){pn.style.display='block';pn.innerHTML='⚠ ประเภทนี้เป็นการ<b>ฆ่าเชื้อวัตถุดิบเสี่ยงเฉพาะจุด</b> ไม่ใช่การพาสเจอไรซ์มิกซ์ทั้งหมดตามกฎหมาย — ถ้าทำขาย ต้องใช้ <b>ผลิตเพื่อทำขาย (พาสเจอไรซ์มิกซ์ทั้งหมด 68.5 °C / 30 นาที)</b> เสมอ';}
   else{pn.style.display='none';pn.innerHTML='';}
 
   // quick buttons
