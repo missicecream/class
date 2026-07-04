@@ -1,0 +1,338 @@
+<!--
+  Copyright © 2026 Miss Icecream Co., Ltd. / พรหล้า ขาวเธียร (Paula Kaothien)
+  All Rights Reserved.
+  สงวนลิขสิทธิ์ — ห้ามคัดลอก ดัดแปลง หรือนำตัวเครื่องมือ/โค้ดไปใช้
+  เชิงพาณิชย์โดยไม่ได้รับอนุญาต · www.missicecream.com
+-->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class PST Timer · Miss Icecream</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4ECE0; --card:#FBF6EC; --ink:#2B1F15; --muted:#8C7A66; --muted-soft:#BFB09B;
+    --line:#E5D9C4; --line-soft:#EFE5D2; --accent:#6B8E4E; --accent-deep:#4F6B3A;
+    --gold:#C9A227; --gold-deep:#9A7A1F; --rose:#A85B47;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{-webkit-font-smoothing:antialiased}
+  body{
+    background:var(--bg);color:var(--ink);font-family:'Sarabun',sans-serif;min-height:100vh;padding:38px 18px 46px;
+    background-image:radial-gradient(circle at 15% 5%,rgba(220,229,200,.5)0%,transparent 40%),radial-gradient(circle at 88% 95%,rgba(201,120,98,.10)0%,transparent 40%);
+  }
+  .container{max-width:680px;margin:0 auto}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}
+  .back-link{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;background:var(--card);border:1px solid var(--line);border-radius:100px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:all .22s}
+  .back-link:hover{color:var(--ink);border-color:var(--accent)}
+  .sound-toggle{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:var(--card);border:1px solid var(--line);border-radius:100px;color:var(--muted);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .22s}
+  .sound-toggle:hover{color:var(--ink);border-color:var(--accent)}
+  .sound-toggle.off{color:var(--muted-soft)}
+
+  header{text-align:center;margin-bottom:30px}
+  .eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;font-weight:500}
+  h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(32px,5vw,46px);line-height:1.05;letter-spacing:-.02em;margin-bottom:10px}
+  h1 em{font-style:italic;color:var(--accent-deep)}
+  .subtitle{color:var(--muted);font-size:14px;max-width:520px;margin:0 auto;line-height:1.65}
+
+  /* ===== เมนูเลือกเบส ===== */
+  .day-title{font-family:'Fraunces',serif;font-size:19px;color:var(--accent-deep);margin:22px 0 10px;text-align:center}
+  .day-title:first-child{margin-top:0}
+  .menu-grid{display:grid;grid-template-columns:1fr;gap:10px}
+  .preset{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;cursor:pointer;font-family:'Sarabun',sans-serif;transition:all .18s;box-shadow:0 4px 22px -18px rgba(43,31,21,.25)}
+  .preset:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .preset .nm{font-size:17px;font-weight:700;color:var(--ink)}
+  .preset .meta{flex-shrink:0;white-space:nowrap;font-size:12.5px;color:var(--accent-deep);background:#EFF3E7;border:1px solid #cfe0bf;border-radius:100px;padding:4px 12px;font-weight:600}
+
+  /* ===== หน้าจับเวลา ===== */
+  #timerView{display:none}
+  .tcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 4px 24px -16px rgba(43,31,21,.15)}
+  .tname{font-family:'Fraunces',serif;font-size:26px;margin-bottom:2px}
+  .tspec{font-size:13px;color:var(--muted);margin-bottom:16px}
+
+  .phase-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 20px;border-radius:100px;font-size:16px;font-weight:700;margin-bottom:4px}
+  .phase-chip.blend{background:#EFF3E7;color:var(--accent-deep);border:1px solid #cfe0bf}
+  .phase-chip.rest{background:#FAF3DC;color:var(--gold-deep);border:1px solid #E8D391}
+  .phase-chip.idle{background:var(--line-soft);color:var(--muted);border:1px solid var(--line)}
+  .phase-chip.done{background:#EFF3E7;color:var(--accent-deep);border:1px solid #cfe0bf}
+  .round-lbl{font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:2px}
+
+  .bigtime{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(88px,26vw,150px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin:2px 0 0}
+  .bigtime.blend{color:var(--accent-deep)}
+  .bigtime.rest{color:var(--gold-deep)}
+  .bigtime.idle{color:var(--muted-soft)}
+  .bigunit{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .endat{font-size:13px;font-weight:600;color:var(--accent-deep);min-height:18px;margin-bottom:16px}
+
+  /* แถบ progress ของทุกช่วง เรียงตามลำดับ */
+  .segs{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
+  .segrow{display:grid;grid-template-columns:118px 1fr;align-items:center;gap:10px}
+  .seglbl{font-size:12px;font-weight:600;color:var(--muted);text-align:right;white-space:nowrap}
+  .segrow.active .seglbl{color:var(--ink)}
+  .segbar{height:12px;background:var(--line-soft);border-radius:100px;overflow:hidden}
+  .segbar .fill{height:100%;width:0%;border-radius:100px;transition:width .25s linear}
+  .segbar .fill.blend{background:var(--accent)}
+  .segbar .fill.rest{background:var(--gold)}
+  .segrow.active .segbar{box-shadow:0 0 0 2px rgba(107,142,78,.25)}
+
+  .tbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .btn{font-family:'Sarabun',sans-serif;font-weight:600;font-size:15px;border-radius:100px;cursor:pointer;padding:13px 30px;transition:all .2s;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+  .btn.main{background:var(--accent);border-color:var(--accent);color:#fff;font-size:16px;padding:13px 44px}
+  .btn.main:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+  .btn.main.pause{background:var(--gold);border-color:var(--gold)}
+  .btn.main.pause:hover{background:var(--gold-deep);border-color:var(--gold-deep)}
+  .btn.ghost:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+  footer{text-align:center;margin-top:32px;color:var(--muted);font-size:12.5px;line-height:1.8}
+  footer .note{font-family:'Fraunces',serif;font-style:italic}
+  footer .brand{margin-top:6px;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted-soft)}
+
+  @media(max-width:480px){
+    body{padding:26px 12px 38px}
+    .segrow{grid-template-columns:96px 1fr}
+    .seglbl{font-size:11px}
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <a class="back-link" href="index.html">← กลับหน้าหลัก</a>
+      <button class="sound-toggle" id="soundToggle" type="button">🔔 เสียง: เปิด</button>
+    </div>
+
+    <header>
+      <div class="eyebrow">Miss Icecream · Class Tools</div>
+      <h1>Class PST <em>Timer</em></h1>
+      <p class="subtitle">จับเวลา ปั่น–พัก สำหรับคลาสไอศกรีมของ อ.พรหล้า — เลือกเบสที่กำลังทำ แล้วกดเริ่ม ระบบจะนับถอยหลังทีละช่วงและส่งเสียงเตือนเมื่อเปลี่ยนช่วงให้อัตโนมัติค่ะ</p>
+    </header>
+
+    <!-- เมนูเลือกเบส -->
+    <div id="menuView"></div>
+
+    <!-- หน้าจับเวลา -->
+    <div id="timerView">
+      <div class="tcard">
+        <div class="tname" id="tName"></div>
+        <div class="tspec" id="tSpec"></div>
+        <div><span class="phase-chip idle" id="phaseChip">พร้อมเริ่ม</span></div>
+        <div class="round-lbl" id="roundLbl">&nbsp;</div>
+        <div class="bigtime idle" id="bigTime">30</div>
+        <div class="bigunit">วินาที</div>
+        <div class="endat" id="endAt">&nbsp;</div>
+        <div class="segs" id="segList"></div>
+        <div class="tbtns">
+          <button class="btn main" id="btnGo" onclick="toggleRun()">▶ เริ่ม</button>
+          <button class="btn ghost" onclick="resetTimer()">⟲ เริ่มใหม่</button>
+          <button class="btn ghost" onclick="backToMenu()">← เลือกเบสอื่น</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p class="note">แถบสีเขียว = ช่วงปั่น · แถบสีเหลือง = ช่วงพัก · ครบแต่ละช่วงมีเสียงเตือน</p>
+      <p class="brand">Miss Icecream</p>
+    </footer>
+
+  </div>
+
+<script>
+  /* ===== รายการเบส ===== */
+  const GROUPS=[
+    {day:'คลาสวันแรก',items:[
+      {name:'เบสกะทิ',blend:30,rest:60,rounds:3},
+      {name:'เบสนมโอ๊ต',blend:30,rest:60,rounds:3},
+      {name:'เบสนม',blend:30,rest:60,rounds:2}
+    ]},
+    {day:'คลาสวันที่สอง',items:[
+      {name:'เบสโยเกิร์ต',blend:30,rest:60,rounds:2},
+      {name:'เบสเชอร์เบท',blend:30,rest:60,rounds:2},
+      {name:'เบสซอร์เบต์',blend:30,rest:60,rounds:2}
+    ]}
+  ];
+
+  /* ===== เสียงเตือน (อิงของเดิม — ทำงานบนมือถือ) ===== */
+  let soundOn=true,audioCtx=null;
+  function unlockAudio(){try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();}catch(e){}}
+  function beep(n){
+    if(!soundOn)return;
+    try{
+      unlockAudio();if(!audioCtx)return;
+      const t0=audioCtx.currentTime,count=n||3;
+      for(let i=0;i<count;i++){
+        const s=t0+i*0.32,o=audioCtx.createOscillator(),g=audioCtx.createGain();
+        o.connect(g);g.connect(audioCtx.destination);o.type='square';o.frequency.value=880;
+        g.gain.setValueAtTime(0.0001,s);g.gain.exponentialRampToValueAtTime(0.6,s+0.02);g.gain.exponentialRampToValueAtTime(0.0001,s+0.26);
+        o.start(s);o.stop(s+0.28);
+      }
+    }catch(e){}
+  }
+  function buzz(){if(!soundOn)return;try{if(navigator.vibrate)navigator.vibrate([250,120,250,120,250]);}catch(e){}}
+  const soundToggle=document.getElementById('soundToggle');
+  soundToggle.addEventListener('click',()=>{
+    soundOn=!soundOn;
+    if(soundOn){unlockAudio();soundToggle.textContent='🔔 เสียง: เปิด';soundToggle.classList.remove('off');}
+    else{soundToggle.textContent='🔕 เสียง: ปิด';soundToggle.classList.add('off');}
+  });
+
+  /* ===== สร้างเมนู ===== */
+  const menuView=document.getElementById('menuView'),timerView=document.getElementById('timerView');
+  function buildMenu(){
+    let h='';
+    GROUPS.forEach((g,gi)=>{
+      h+='<div class="day-title">'+g.day+'</div><div class="menu-grid">';
+      g.items.forEach((p,pi)=>{
+        h+='<button type="button" class="preset" onclick="choose('+gi+','+pi+')">'
+          +'<span class="nm">'+p.name+'</span>'
+          +'<span class="meta">ปั่น '+p.blend+' วิ · พัก '+p.rest+' วิ · '+p.rounds+' รอบ</span></button>';
+      });
+      h+='</div>';
+    });
+    menuView.innerHTML=h;
+  }
+  buildMenu();
+
+  /* ===== สถานะจับเวลา ===== */
+  let sel=null,segs=[],segIdx=0,segRemaining=0,endTime=null,running=false,done=false,tick=null;
+
+  const tName=document.getElementById('tName'),tSpec=document.getElementById('tSpec'),
+        phaseChip=document.getElementById('phaseChip'),roundLbl=document.getElementById('roundLbl'),
+        bigTime=document.getElementById('bigTime'),endAt=document.getElementById('endAt'),
+        segList=document.getElementById('segList'),btnGo=document.getElementById('btnGo');
+
+  function clock(ms){const d=new Date(ms);return [d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':')}
+
+  function choose(gi,pi){
+    unlockAudio(); // ปลดล็อกเสียงตั้งแต่แตะแรก (สำคัญบนมือถือ)
+    sel=GROUPS[gi].items[pi];
+    segs=[];
+    for(let r=1;r<=sel.rounds;r++){
+      segs.push({type:'blend',dur:sel.blend,round:r});
+      segs.push({type:'rest',dur:sel.rest,round:r});
+    }
+    tName.textContent=sel.name;
+    tSpec.textContent='ปั่น '+sel.blend+' วินาที · พัก '+sel.rest+' วินาที · '+sel.rounds+' รอบ';
+    buildSegRows();
+    resetTimer();
+    menuView.style.display='none';timerView.style.display='block';
+    window.scrollTo(0,0);
+  }
+  function backToMenu(){
+    stopTick();running=false;
+    timerView.style.display='none';menuView.style.display='block';
+  }
+
+  function buildSegRows(){
+    segList.innerHTML=segs.map((s,i)=>
+      '<div class="segrow" id="segrow_'+i+'">'
+      +'<span class="seglbl">รอบ '+s.round+' · '+(s.type==='blend'?'🌀 ปั่น':'☕ พัก')+' '+s.dur+' วิ</span>'
+      +'<div class="segbar"><div class="fill '+s.type+'" id="segfill_'+i+'"></div></div></div>'
+    ).join('');
+  }
+
+  function stopTick(){if(tick){clearInterval(tick);tick=null;}}
+
+  /* เหลือกี่วินาทีในช่วงปัจจุบัน (ตอนกำลังวิ่งใช้นาฬิกาจริง) */
+  function curRemaining(){
+    if(running&&endTime!=null)return Math.max(0,(endTime-Date.now())/1000);
+    return segRemaining;
+  }
+  function totalRemaining(){
+    let t=curRemaining();
+    for(let i=segIdx+1;i<segs.length;i++)t+=segs[i].dur;
+    return t;
+  }
+
+  function render(){
+    const s=segs[segIdx];
+    if(done){
+      phaseChip.className='phase-chip done';phaseChip.textContent='✓ เสร็จแล้ว';
+      roundLbl.innerHTML='&nbsp;';
+      bigTime.className='bigtime blend';bigTime.textContent='0';
+      endAt.innerHTML='&nbsp;';
+      btnGo.textContent='▶ เริ่มอีกครั้ง';btnGo.className='btn main';
+    }else if(!running&&segIdx===0&&segRemaining===segs[0].dur){
+      phaseChip.className='phase-chip idle';phaseChip.textContent='พร้อมเริ่ม';
+      roundLbl.textContent='ทั้งหมด '+sel.rounds+' รอบ';
+      bigTime.className='bigtime idle';bigTime.textContent=Math.ceil(segRemaining);
+      endAt.innerHTML='&nbsp;';
+      btnGo.textContent='▶ เริ่ม';btnGo.className='btn main';
+    }else{
+      phaseChip.className='phase-chip '+s.type;
+      phaseChip.textContent=s.type==='blend'?'🌀 ปั่น':'☕ พัก';
+      roundLbl.textContent='รอบที่ '+s.round+' / '+sel.rounds;
+      bigTime.className='bigtime '+s.type;
+      bigTime.textContent=Math.ceil(curRemaining());
+      if(running){endAt.textContent='⏰ เสร็จทั้งหมดเวลา '+clock(Date.now()+totalRemaining()*1000);}
+      else{endAt.textContent='⏸ พักจับเวลาไว้';}
+      btnGo.textContent=running?'⏸ หยุด':'▶ เริ่มต่อ';
+      btnGo.className='btn main'+(running?' pause':'');
+    }
+    // แถบ progress: ช่วงที่ผ่านแล้ว = เต็ม · ช่วงปัจจุบัน = เดินหน้า · ช่วงถัดไป = ว่าง
+    segs.forEach((sg,i)=>{
+      const fill=document.getElementById('segfill_'+i),row=document.getElementById('segrow_'+i);
+      if(!fill)return;
+      let pct;
+      if(done||i<segIdx)pct=100;
+      else if(i===segIdx)pct=(sg.dur-curRemaining())/sg.dur*100;
+      else pct=0;
+      fill.style.width=Math.max(0,Math.min(100,pct))+'%';
+      row.classList.toggle('active',!done&&i===segIdx&&(running||curRemaining()<sg.dur));
+    });
+  }
+
+  function sync(){
+    if(!running)return;
+    let advanced=false;
+    while(running){
+      const rem=(endTime-Date.now())/1000;
+      if(rem>0){segRemaining=rem;break;}
+      // จบช่วงนี้ → ไปช่วงถัดไป (ชดเชยเวลาที่เกินมา เผื่อสลับแอปนาน)
+      segIdx++;advanced=true;
+      if(segIdx>=segs.length){finishAll();return;}
+      endTime+=segs[segIdx].dur*1000;
+    }
+    if(advanced){beep(3);buzz();}
+    render();
+  }
+
+  function finishAll(){
+    stopTick();running=false;done=true;endTime=null;segIdx=segs.length-1;segRemaining=0;
+    beep(5);buzz();
+    render();
+  }
+
+  function toggleRun(){
+    unlockAudio();
+    if(done){resetTimer();}
+    if(running){ // หยุดพัก
+      segRemaining=curRemaining();
+      stopTick();running=false;endTime=null;
+      render();
+    }else{ // เริ่ม / เริ่มต่อ
+      running=true;
+      endTime=Date.now()+segRemaining*1000;
+      tick=setInterval(sync,200);
+      render();
+    }
+  }
+
+  function resetTimer(){
+    stopTick();running=false;done=false;endTime=null;segIdx=0;segRemaining=segs.length?segs[0].dur:0;
+    render();
+  }
+
+  /* กลับมาที่หน้า (สลับแอป/ปลุกจอ) → คำนวณเวลาใหม่ทันที */
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync();});
+  window.addEventListener('focus',()=>sync());
+  window.addEventListener('pageshow',()=>sync());
+</script>
+<div class="site-footer" style="margin:30px auto 0;max-width:760px;padding:14px 16px 4px;border-top:1px solid var(--line,#E5D9C4);text-align:center;font-size:12px;color:var(--muted,#8C7A66);line-height:1.7">Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit;text-decoration:underline">เงื่อนไขการใช้งาน</a></div>
+</body>
+</html>
