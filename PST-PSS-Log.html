@@ -278,7 +278,7 @@ const ALL=[...PST_EVENTS,...PSS_EVENTS];
 const KEY='pst_pss_log_v1';            // คีย์เดิม (รุ่นบันทึกเดี่ยว) ใช้ย้ายข้อมูลเข้าระบบหลาย Batch
 const STORE_KEY='pst_pss_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
-function fresh(){return {recipe:'',lot:'',thermo:'',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:'',defectsOther:'',note:''}}
+function fresh(){return {recipe:'',lot:'',thermo:'อินฟราเรด',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:'',defectsOther:'',note:''}}
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
@@ -396,7 +396,8 @@ function syncInputs(){
   const dry=document.getElementById('f_dryness');if(dry)dry.value=state.dryness||'เนื้อแห้งตามปกติ';
   const dsel=document.getElementById('f_defects');if(dsel)dsel.value=state.defects||'ปกติ';
   const doth=document.getElementById('f_defectsOther');if(doth){doth.value=state.defectsOther||'';doth.style.display=(state.defects==='ระบุรายละเอียดเอง')?'block':'none';}
-  document.getElementById('f_thermo').value=state.thermo||'';
+  if(!state.thermo){state.thermo='อินฟราเรด';save();}   // batch เก่าที่ยังไม่เลือก → default อินฟราเรด
+  document.getElementById('f_thermo').value=state.thermo;
   document.getElementById('thermoOtherWrap').style.display=state.thermo==='อื่นๆ'?'flex':'none';
   const nt=document.getElementById('f_note');if(nt){nt.value=state.note||'';autoGrow(nt)}
 }
