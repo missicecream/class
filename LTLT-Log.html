@@ -635,8 +635,8 @@ function syncInputs(){
   document.getElementById('f_date').value=state.date||'';
   if(LEGACY[state.program])state.program=LEGACY[state.program];
   buildProgPicker();
-  document.getElementById('f_ctemp').value=state.ctemp||'';
-  document.getElementById('f_ctime').value=state.ctime||'';
+  const ct=document.getElementById('f_ctemp');if(ct)ct.value=state.ctemp||'';   // มีเฉพาะโหมดกำหนดเอง
+  const cti=document.getElementById('f_ctime');if(cti)cti.value=state.ctime||'';
   document.getElementById('f_interval').value=(state.interval==null?3:state.interval);
   document.getElementById('f_coolTemp').value=state.coolStartTemp||'';
   const nt=document.getElementById('f_note');if(nt){nt.value=state.note||'';autoGrow(nt)}
