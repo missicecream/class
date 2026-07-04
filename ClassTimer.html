@@ -136,7 +136,7 @@
     </div>
 
     <footer>
-      <p class="note">แถบสีเขียว = ช่วงปั่น · แถบสีเหลือง = ช่วงพัก · ครบแต่ละช่วงมีเสียงเตือน</p>
+      <p class="note">แถบสีเขียว = ช่วงปั่น · แถบสีเหลือง = ช่วงพัก · 5 วินาทีสุดท้ายมีเสียงติ๊กทุกวินาที และครบช่วงมีเสียงเตือน 3 ครั้ง</p>
       <p class="brand">Miss Icecream</p>
     </footer>
 
@@ -174,6 +174,18 @@
     }catch(e){}
   }
   function buzz(){if(!soundOn)return;try{if(navigator.vibrate)navigator.vibrate([250,120,250,120,250]);}catch(e){}}
+  /* เสียงติ๊กสั้น 1 ครั้ง — ใช้นับถอยหลัง 5 วินาทีสุดท้าย (โทนต่ำกว่าเสียงจบช่วง) */
+  function tickBeep(){
+    if(!soundOn)return;
+    try{
+      unlockAudio();if(!audioCtx)return;
+      const s=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();
+      o.connect(g);g.connect(audioCtx.destination);o.type='square';o.frequency.value=660;
+      g.gain.setValueAtTime(0.0001,s);g.gain.exponentialRampToValueAtTime(0.45,s+0.015);g.gain.exponentialRampToValueAtTime(0.0001,s+0.15);
+      o.start(s);o.stop(s+0.17);
+    }catch(e){}
+    try{if(navigator.vibrate)navigator.vibrate(80);}catch(e){}
+  }
   const soundToggle=document.getElementById('soundToggle');
   soundToggle.addEventListener('click',()=>{
     soundOn=!soundOn;
@@ -200,6 +212,35 @@
 
   /* ===== สถานะจับเวลา ===== */
   let sel=null,segs=[],segIdx=0,segRemaining=0,endTime=null,running=false,done=false,tick=null;
+  let cdKey=null; // กันเสียงนับถอยหลังซ้ำในวินาทีเดียวกัน
+
+  /* ===== จำสถานะข้ามการปิด/เปิดหน้า — อิงนาฬิกาจริง (endTime เป็นเวลาจริง ไม่ใช่ตัวนับใน JS) ===== */
+  const SKEY='classtimer_v1';
+  function saveState(){
+    try{
+      if(!sel){localStorage.removeItem(SKEY);return;}
+      localStorage.setItem(SKEY,JSON.stringify({name:sel.name,segIdx,segRemaining,endTime,running,done}));
+    }catch(e){}
+  }
+  function restoreState(){
+    try{
+      const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(!s||!s.name)return false;
+      let gi=-1,pi=-1;
+      GROUPS.forEach((g,i)=>{const j=g.items.findIndex(p=>p.name===s.name);if(j>=0){gi=i;pi=j;}});
+      if(gi<0)return false;
+      choose(gi,pi);
+      segIdx=Math.max(0,Math.min(s.segIdx||0,segs.length-1));
+      segRemaining=(typeof s.segRemaining==='number')?s.segRemaining:segs[segIdx].dur;
+      done=!!s.done;endTime=s.endTime||null;running=false;
+      if(s.running&&!s.done&&endTime!=null){
+        running=true;
+        tick=setInterval(sync,200);
+        sync(); // คำนวณจากนาฬิกาจริงทันที — ข้ามช่วงที่ผ่านไปแล้ว/จบเอง ถ้าเวลาล่วงเลย
+      }
+      render();saveState();
+      return true;
+    }catch(e){return false}
+  }
 
   const tName=document.getElementById('tName'),tSpec=document.getElementById('tSpec'),
         phaseChip=document.getElementById('phaseChip'),roundLbl=document.getElementById('roundLbl'),
@@ -224,7 +265,8 @@
     window.scrollTo(0,0);
   }
   function backToMenu(){
-    stopTick();running=false;
+    stopTick();running=false;sel=null;
+    try{localStorage.removeItem(SKEY);}catch(e){} // ออกจากตัวจับเวลา = ล้างสถานะที่จำไว้
     timerView.style.display='none';menuView.style.display='block';
   }
 
@@ -298,14 +340,19 @@
       if(segIdx>=segs.length){finishAll();return;}
       endTime+=segs[segIdx].dur*1000;
     }
-    if(advanced){beep(3);buzz();}
+    if(advanced){beep(3);buzz();saveState();}
+    // นับถอยหลัง 5 วินาทีสุดท้ายของทุกช่วง: ติ๊กที่ 5-4-3-2-1 (ครบ 0 คือ beep 3 ทีด้านบน)
+    if(running&&!done&&!advanced){
+      const sec=Math.ceil(curRemaining());
+      if(sec<=5&&sec>=1){const k=segIdx+':'+sec;if(cdKey!==k){cdKey=k;tickBeep();}}
+    }
     render();
   }
 
   function finishAll(){
     stopTick();running=false;done=true;endTime=null;segIdx=segs.length-1;segRemaining=0;
     beep(5);buzz();
-    render();
+    render();saveState();
   }
 
   function toggleRun(){
@@ -321,17 +368,21 @@
       tick=setInterval(sync,200);
       render();
     }
+    saveState();
   }
 
   function resetTimer(){
-    stopTick();running=false;done=false;endTime=null;segIdx=0;segRemaining=segs.length?segs[0].dur:0;
-    render();
+    stopTick();running=false;done=false;endTime=null;segIdx=0;segRemaining=segs.length?segs[0].dur:0;cdKey=null;
+    render();saveState();
   }
 
   /* กลับมาที่หน้า (สลับแอป/ปลุกจอ) → คำนวณเวลาใหม่ทันที */
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync();});
   window.addEventListener('focus',()=>sync());
   window.addEventListener('pageshow',()=>sync());
+
+  /* เปิดหน้าใหม่/รีเฟรช → ฟื้นตัวจับเวลาที่ค้างไว้จากนาฬิกาจริง */
+  restoreState();
 </script>
 <div class="site-footer" style="margin:30px auto 0;max-width:760px;padding:14px 16px 4px;border-top:1px solid var(--line,#E5D9C4);text-align:center;font-size:12px;color:var(--muted,#8C7A66);line-height:1.7">Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit;text-decoration:underline">เงื่อนไขการใช้งาน</a></div>
 </body>
