@@ -56,6 +56,8 @@
   .mode-btn{font-family:'Sarabun',sans-serif;text-align:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 8px;cursor:pointer;font-weight:600;font-size:13.5px;line-height:1.4;color:var(--ink);transition:all .18s}
   .mode-btn:hover{border-color:var(--accent)}
   .mode-btn.sel{border-color:var(--accent-deep);background:#F3F6EC;color:var(--accent-deep);box-shadow:0 4px 16px -12px rgba(79,107,58,.5)}
+  .chg-prog{margin-top:8px;width:100%;padding:9px;border:1px dashed var(--line);background:#fff;color:var(--muted);font-family:'Sarabun',sans-serif;font-size:12.5px;font-weight:600;border-radius:10px;cursor:pointer}
+  .chg-prog:hover{border-color:var(--accent);color:var(--accent-deep)}
   .prog-grid{display:grid;grid-template-columns:1fr;gap:6px}
   .prog-opt{text-align:left;background:#fff;border:1px solid var(--line);border-radius:11px;padding:9px 13px;cursor:pointer;font-family:'Sarabun',sans-serif;color:var(--ink);transition:all .18s;display:flex;align-items:center;justify-content:space-between;gap:12px}
   .prog-opt:hover{border-color:var(--accent)}
@@ -420,6 +422,7 @@ function setF(k,v){state[k]=v;save();if(k==='product')refreshBatchSel()}
 function setCustom(){state.program='custom';state.progMode='custom';state.ctemp=document.getElementById('f_ctemp').value;state.ctime=document.getElementById('f_ctime').value;save();updateUI()}
 
 /* โหมดการผลิต: sell = ทำขาย · home = ทำทาน · custom = กำหนดเอง */
+let _homeListOpen=false; // ทำทาน: เปิดรายการเต็มชั่วคราวเมื่อกด "เปลี่ยนโปรแกรม"
 function progMode(){
   if(state.progMode)return state.progMode;
   if(state.program==='custom')return 'custom';
@@ -456,10 +459,19 @@ function buildProgPicker(){
     h+='<div class="prog-cat">พาสเจอไรซ์มิกซ์ทั้งหมดตามประกาศ สธ.354</div><div class="prog-grid">'
       +PROGRAMS.filter(p=>p.cat===1).map(progBtnHTML).join('')+'</div>';
   }else if(m==='home'){
-    h+='<div class="prog-cat">① พาสเจอร์ไรส์วัตถุดิบเสี่ยง</div><div class="prog-grid">'
-      +PROGRAMS.filter(p=>p.cat===2).map(progBtnHTML).join('')+'</div>';
-    h+='<div class="prog-cat">② ให้ความร้อนสูง ระยะเวลาสั้น (เน้นรักษากลิ่นรส ฆ่าเชื้อแต่ไม่ใช่การพาสเจอร์ไรส์มาตรฐาน)</div><div class="prog-grid">'
-      +PROGRAMS.filter(p=>p.cat===3).map(progBtnHTML).join('')+'</div>';
+    const pcur=PROGRAMS.find(x=>x.k===(LEGACY[state.program]||state.program));
+    const homeSel=pcur&&(pcur.cat===2||pcur.cat===3);
+    if(homeSel&&!_homeListOpen){
+      // เลือกแล้ว → ยุบรายการ เหลือเฉพาะโปรแกรมที่เลือก + ปุ่มเปลี่ยน
+      h+='<div class="prog-cat">'+(pcur.cat===2?'① พาสเจอร์ไรส์วัตถุดิบเสี่ยง':'② ให้ความร้อนสูง ระยะเวลาสั้น (เน้นรักษากลิ่นรส ฆ่าเชื้อแต่ไม่ใช่การพาสเจอร์ไรส์มาตรฐาน)')+'</div>';
+      h+='<div class="prog-grid">'+progBtnHTML(pcur)+'</div>';
+      h+='<button type="button" class="chg-prog" onclick="_homeListOpen=true;buildProgPicker()">🔁 เปลี่ยนโปรแกรม — ดูรายการทั้งหมด</button>';
+    }else{
+      h+='<div class="prog-cat">① พาสเจอร์ไรส์วัตถุดิบเสี่ยง</div><div class="prog-grid">'
+        +PROGRAMS.filter(p=>p.cat===2).map(progBtnHTML).join('')+'</div>';
+      h+='<div class="prog-cat">② ให้ความร้อนสูง ระยะเวลาสั้น (เน้นรักษากลิ่นรส ฆ่าเชื้อแต่ไม่ใช่การพาสเจอร์ไรส์มาตรฐาน)</div><div class="prog-grid">'
+        +PROGRAMS.filter(p=>p.cat===3).map(progBtnHTML).join('')+'</div>';
+    }
   }else if(m==='custom'){
     h+='<div class="prog-cat">กำหนดเกณฑ์เอง</div><div class="prog-grid">'
       +'<div class="prog-opt custom'+(state.program==='custom'?' sel':'')+'">'
@@ -484,6 +496,7 @@ function selectProgram(k){
     state.pasteurNotified=false; // ให้คำนวณสถานะ “สมบูรณ์” ใหม่ตามเกณฑ์ใหม่
   }
   state.program=k;
+  _homeListOpen=false; // เลือกแล้ว → ยุบรายการ
   // อัปเดตโหมดการผลิตให้สอดคล้องกับโปรแกรมที่เลือก
   if(k==='custom')state.progMode='custom';
   else{const pm=PROGRAMS.find(x=>x.k===(LEGACY[k]||k));if(pm)state.progMode=pm.cat===1?'sell':'home';}
