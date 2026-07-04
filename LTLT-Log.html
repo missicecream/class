@@ -790,7 +790,7 @@ function buildChart(c){
   pts.sort((a,b)=>a.t-b.t);
   if(pts.length<2){wrap.innerHTML='<div class="chart-empty">กราฟจะแสดงเมื่อมีข้อมูลอุณหภูมิ ≥ 2 จุด</div>';return}
 
-  const W=620,H=240,mL=42,mR=14,mT=14,mB=30,pw=W-mL-mR,ph=H-mT-mB;
+  const W=620,H=240,mL=42,mR=14,mT=14,mB=46,pw=W-mL-mR,ph=H-mT-mB;
   const t0=pts[0].t,t1=pts[pts.length-1].t;const tr=(t1-t0)||1;
   const vals=pts.map(p=>p.v).concat(isNaN(c.temp)?[]:[c.temp]);
   let vMin=Math.min(...vals),vMax=Math.max(...vals);
@@ -819,9 +819,29 @@ function buildChart(c){
   const dpath=pts.map((p,i)=>(i?'L':'M')+X(p.t).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
   g+='<path d="'+dpath+'" fill="none" stroke="#3E73A6" stroke-width="2"/>';
   pts.forEach(p=>{g+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="3" fill="#3E73A6"/>';});
-  // x labels: start, reach, end, cool
-  function xl(ts,txt){if(!ts)return;const x=X(ts);g+='<text x="'+x.toFixed(1)+'" y="'+(H-9)+'" font-size="9" fill="#8C7A66" text-anchor="middle">'+txt+'</text>';g+='<line x1="'+x.toFixed(1)+'" y1="'+(mT+ph)+'" x2="'+x.toFixed(1)+'" y2="'+(mT+ph+4)+'" stroke="#BFB09B"/>';}
-  xl(t0,hm(t0));xl(t1,hm(t1));
+  // แกน x: เส้นประ + ชื่อเหตุการณ์ (ถึงเกณฑ์ / จบให้ความร้อน / ถึง ≤4 °C) + เวลา
+  function anchorFor(x){return x<mL+34?'start':(x>W-mR-34?'end':'middle')}
+  function tick(x){g+='<line x1="'+x.toFixed(1)+'" y1="'+(mT+ph)+'" x2="'+x.toFixed(1)+'" y2="'+(mT+ph+4)+'" stroke="#BFB09B"/>'}
+  const marks=[];
+  if(rt)marks.push({t:rt,name:'ถึงเกณฑ์'});
+  if(state.endHold)marks.push({t:state.endHold,name:'จบให้ความร้อน'});
+  if(state.reachCool)marks.push({t:state.reachCool,name:'ถึง ≤4 °C'});
+  const inMarks=marks.filter(m=>m.t>=t0&&m.t<=t1).sort((a,b)=>a.t-b.t);
+  let lastNameX=-1e9,lastRow=1; // สลับสองแถวเมื่อชื่ออยู่ใกล้กัน กันทับ
+  inMarks.forEach(m=>{
+    const x=X(m.t);m.x=x;
+    g+='<line x1="'+x.toFixed(1)+'" y1="'+mT+'" x2="'+x.toFixed(1)+'" y2="'+(mT+ph)+'" stroke="#4F6B3A" stroke-width="1" stroke-dasharray="3 3" opacity="0.55"/>';
+    const row=(x-lastNameX<95&&lastRow===1)?2:1;
+    const y=row===1?(H-21):(H-32);
+    g+='<text x="'+x.toFixed(1)+'" y="'+y+'" font-size="8.5" fill="#4F6B3A" font-weight="600" text-anchor="'+anchorFor(x)+'">'+m.name+'</text>';
+    lastNameX=x;lastRow=row;
+  });
+  // เวลาบนแกน: เหตุการณ์ก่อน แล้วค่อยจุดเริ่ม/จุดสุดท้าย (ข้ามอันที่ทับกัน)
+  const tl=[];
+  function addT(ts,color){if(ts==null)return;const x=X(ts);if(tl.some(o=>Math.abs(o.x-x)<36))return;tl.push({x,txt:hm(ts),color:color||'#8C7A66'})}
+  inMarks.forEach(m=>addT(m.t,'#4F6B3A'));
+  addT(t0);addT(t1);
+  tl.forEach(o=>{tick(o.x);g+='<text x="'+o.x.toFixed(1)+'" y="'+(H-9)+'" font-size="9" fill="'+o.color+'" text-anchor="'+anchorFor(o.x)+'">'+o.txt+'</text>';});
   g+='<text x="'+(mL)+'" y="11" font-size="9.5" fill="#8C7A66">°C</text>';
   g+='</svg>';
   wrap.innerHTML=g;
