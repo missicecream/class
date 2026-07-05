@@ -954,7 +954,11 @@ async function sharePDFink(btn){
       pdf.addImage(pc.toDataURL('image/jpeg',0.92),'JPEG',m,m,iw,hpx*mmPerPx);
     }
     let name='Heat-Process-Log.pdf';
-    if(typeof state!=='undefined'&&state.lot){const t=String(state.lot).replace(/[^\w\-]/g,'');if(t)name='Heat-Process-Log-'+t+'.pdf';}
+    if(typeof state!=='undefined'){
+      // ใช้ทั้งชื่อผลิตภัณฑ์และ Lot ในชื่อไฟล์ (รองรับภาษาไทย ตัดเฉพาะอักขระต้องห้ามของชื่อไฟล์)
+      const parts=[state.product,state.lot].map(v=>String(v||'').trim().replace(/[\\\/:*?"<>|#%]+/g,'').replace(/\s+/g,'-')).filter(Boolean);
+      if(parts.length)name='Heat-Process-Log-'+parts.join('-')+'.pdf';
+    }
     const blob=pdf.output('blob'), file=new File([blob],name,{type:'application/pdf'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'รายงานการให้ความร้อน'});}
     else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}
