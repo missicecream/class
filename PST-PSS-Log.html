@@ -145,7 +145,7 @@
   <header>
     <div class="eyebrow">Miss Icecream · Lab Tools</div>
     <h1>PST &amp; PSS <em>Log</em></h1>
-    <p class="sub">พรหล้าทำเครื่องมือนี้ไว้ให้ทีมงานบันทึกผลการทดลองอย่างละเอียดเพื่อพัฒนาสูตรค่ะ การทำไอศกรีมทั่วไปไม่จำเป็นต้องบันทึกถึงขนาดนี้ แต่แชร์ไว้เผื่อใครอยากเก็บข้อมูล จะได้สะดวกกว่าจดลงกระดาษเอง</p>
+    <p class="sub">เครื่องมือนี้สำหรับทีมงานบันทึกผลการทดลองเพื่อพัฒนาสูตร</p>
   </header>
   <div class="rep-head"><div class="rt">รายงานบันทึก PST &amp; PSS</div><div class="rs">Miss Icecream</div></div>
 
@@ -172,7 +172,15 @@
         </select>
       </div>
       <div class="fld" id="thermoOtherWrap" style="display:none"><label>ระบุชนิดเทอร์โมมิเตอร์</label><input id="f_thermoOther" type="text" placeholder="ระบุ" oninput="setF('thermoOther',this.value)"></div>
-      <div class="fld"><label>ผู้บันทึก</label><input id="f_recorder" type="text" placeholder="ชื่อผู้บันทึก" oninput="setF('recorder',this.value)"></div>
+      <div class="fld"><label>ผู้บันทึก</label>
+        <select id="f_recorder" onchange="setRecorder(this.value)">
+          <option value="Nat">Nat</option>
+          <option value="Kob">Kob</option>
+          <option value="Lek">Lek</option>
+          <option value="อื่นๆ">ระบุเอง</option>
+        </select>
+      </div>
+      <div class="fld" id="recorderOtherWrap" style="display:none"><label>ระบุชื่อผู้บันทึก</label><input id="f_recorderOther" type="text" placeholder="ชื่อผู้บันทึก" oninput="setF('recorderOther',this.value)"></div>
       <div class="fld"><label>วันที่</label><input id="f_date" type="text" oninput="setF('date',this.value)"></div>
     </div>
   </div>
@@ -278,7 +286,7 @@ const ALL=[...PST_EVENTS,...PSS_EVENTS];
 const KEY='pst_pss_log_v1';            // คีย์เดิม (รุ่นบันทึกเดี่ยว) ใช้ย้ายข้อมูลเข้าระบบหลาย Batch
 const STORE_KEY='pst_pss_store_v1';    // คีย์ใหม่ เก็บได้หลาย Batch
 
-function fresh(){return {recipe:'',lot:'',thermo:'อินฟราเรด',thermoOther:'',recorder:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:'',defectsOther:'',note:''}}
+function fresh(){return {recipe:'',lot:'',thermo:'อินฟราเรด',thermoOther:'',recorder:'Nat',recorderOther:'',date:thaiDate(Date.now()),events:{},dryness:'',stopAbn:'',defects:'',defectsOther:'',note:''}}
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
@@ -325,6 +333,12 @@ function fmtDur(ms){let s=Math.round(ms/1000);const m=Math.floor(s/60);s=s%60;re
 function setF(k,v){state[k]=v;save();if(k==='recipe')refreshBatchSel()}
 function onDefectsChange(v){state.defects=v;if(v!=='ระบุรายละเอียดเอง')state.defectsOther='';const doth=document.getElementById('f_defectsOther');if(doth){doth.style.display=(v==='ระบุรายละเอียดเอง')?'block':'none';if(v!=='ระบุรายละเอียดเอง')doth.value='';}save();updateUI()}
 function setThermo(v){state.thermo=v;document.getElementById('thermoOtherWrap').style.display=v==='อื่นๆ'?'flex':'none';save()}
+function setRecorder(v){
+  state.recorder=v;
+  const w=document.getElementById('recorderOtherWrap');if(w)w.style.display=v==='อื่นๆ'?'flex':'none';
+  if(v!=='อื่นๆ'){state.recorderOther='';const e=document.getElementById('f_recorderOther');if(e)e.value='';}
+  save();
+}
 
 function rowHTML(ev){
   const unit=ev.unit||'°C';
@@ -392,7 +406,13 @@ function resetAll(){
   persist();syncInputs();updateUI();refreshBatchSel();
 }
 function syncInputs(){
-  ['recipe','lot','recorder','date','thermoOther','stopAbn'].forEach(k=>{const e=document.getElementById('f_'+(k));if(e)e.value=state[k]||''});
+  ['recipe','lot','date','thermoOther','stopAbn'].forEach(k=>{const e=document.getElementById('f_'+(k));if(e)e.value=state[k]||''});
+  // ผู้บันทึก: default Nat · ชื่อเก่าที่พิมพ์ไว้เอง → ย้ายไปช่องระบุเอง
+  if(!state.recorder){state.recorder='Nat';save();}
+  if(!['Nat','Kob','Lek','อื่นๆ'].includes(state.recorder)){state.recorderOther=state.recorder;state.recorder='อื่นๆ';save();}
+  const rsel=document.getElementById('f_recorder');if(rsel)rsel.value=state.recorder;
+  const rw=document.getElementById('recorderOtherWrap');if(rw)rw.style.display=state.recorder==='อื่นๆ'?'flex':'none';
+  const roth=document.getElementById('f_recorderOther');if(roth)roth.value=state.recorderOther||'';
   const dry=document.getElementById('f_dryness');if(dry)dry.value=state.dryness||'เนื้อแห้งตามปกติ';
   const dsel=document.getElementById('f_defects');if(dsel)dsel.value=state.defects||'ปกติ';
   const doth=document.getElementById('f_defectsOther');if(doth){doth.value=state.defectsOther||'';doth.style.display=(state.defects==='ระบุรายละเอียดเอง')?'block':'none';}
