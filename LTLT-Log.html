@@ -955,9 +955,9 @@ async function sharePDFink(btn){
     }
     let name='Heat-Process-Log.pdf';
     if(typeof state!=='undefined'){
-      // ใช้ทั้งชื่อผลิตภัณฑ์และ Lot ในชื่อไฟล์ (รองรับภาษาไทย ตัดเฉพาะอักขระต้องห้ามของชื่อไฟล์)
+      // ชื่อสั้น: Log-ผลิตภัณฑ์-Lot.pdf (รองรับภาษาไทย ตัดเฉพาะอักขระต้องห้ามของชื่อไฟล์)
       const parts=[state.product,state.lot].map(v=>String(v||'').trim().replace(/[\\\/:*?"<>|#%]+/g,'').replace(/\s+/g,'-')).filter(Boolean);
-      if(parts.length)name='Heat-Process-Log-'+parts.join('-')+'.pdf';
+      if(parts.length)name='Log-'+parts.join('-')+'.pdf';
     }
     const blob=pdf.output('blob'), file=new File([blob],name,{type:'application/pdf'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'รายงานการให้ความร้อน'});}

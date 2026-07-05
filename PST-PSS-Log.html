@@ -525,9 +525,9 @@ async function sharePDFink(btn){
     }
     let name='PST-PSS-Log.pdf';
     if(typeof state!=='undefined'){
-      // ชื่อสั้น: Log-รหัสสูตร-รอบ.pdf (รองรับภาษาไทย ตัดเฉพาะอักขระต้องห้ามของชื่อไฟล์)
+      // ชื่อสั้น: Lab-รหัสสูตร-รอบ.pdf (รองรับภาษาไทย ตัดเฉพาะอักขระต้องห้ามของชื่อไฟล์)
       const parts=[state.recipe,state.lot].map(v=>String(v||'').trim().replace(/[\\\/:*?"<>|#%]+/g,'').replace(/\s+/g,'-')).filter(Boolean);
-      if(parts.length)name='Log-'+parts.join('-')+'.pdf';
+      if(parts.length)name='Lab-'+parts.join('-')+'.pdf';
     }
     const blob=pdf.output('blob'), file=new File([blob],name,{type:'application/pdf'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'รายงาน PST & PSS'});}
