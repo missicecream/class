@@ -199,7 +199,7 @@
   <!-- ส่วนที่ 1: ตารางชั่ง -->
   <div class="block" id="weighBlock" style="display:none">
     <div class="block-t p1"><span class="tag">1</span> บันทึกน้ำหนักทุก 5 นาที</div>
-    <div class="hint">ถึงเวลาชั่ง: ยกตะแกรง(พร้อมไอศกรีม)ขึ้น ชั่ง <b>ถ้วย + น้ำไอศกรีมที่ละลาย</b> แล้วกรอกตัวเลข ระบบลบน้ำหนักถ้วยและคิด % ให้เอง · ช่วงที่ยังไม่มีน้ำหยดให้กรอกน้ำหนักถ้วยเปล่า (= น้ำ 0 g)</div>
+    <div class="hint">ถึงเวลาชั่ง: ยกตะแกรง(พร้อมไอศกรีม)ขึ้น ชั่ง <b>ถ้วย + น้ำไอศกรีมที่ละลาย</b> แล้วกรอกตัวเลข ระบบลบน้ำหนักถ้วยและคิด % ให้เอง · <b>ก่อนกดปุ่ม 💧 หยดแรก</b> ระบบจะบันทึกน้ำหนักถ้วยเปล่าให้อัตโนมัติทุก 5 นาที (มีกล่องยืนยัน) และเสียงนับถอยหลังจะเริ่มทำงานหลังกดปุ่มหยดแรกค่ะ</div>
     <table><thead><tr><th>นาทีที่</th><th>เวลานัดชั่ง</th><th>ถ้วย+น้ำ (g)</th><th>น้ำที่ละลาย</th><th>% ละลาย</th></tr></thead><tbody id="weighBody"></tbody></table>
   </div>
 
@@ -429,6 +429,25 @@ function cancelPart2(){
 
 /* ===== นาฬิกา + เสียงเตือน (อิงนาฬิกาจริง) ===== */
 const _beeped={};   // กันเสียงซ้ำ key = part:slot:sec
+const _asked={};    // กันถามซ้ำ auto-บันทึกถ้วยเปล่า key = นาที
+
+/* ก่อนหยดแรก: ครบ 5 นาทีแล้วยังไม่มีหยด → บันทึกน้ำหนักถ้วยเปล่าอัตโนมัติ (ถามยืนยัน) */
+function autoZero(now){
+  if(!state.mStart||state.drop)return;
+  const c=num(state.cupW);if(c==null)return;
+  const due=MR_SLOTS.filter(min=>now>=state.mStart+min*60000&&(state.weights[min]==null||state.weights[min]==='')&&!_asked[min]);
+  if(!due.length)return;
+  due.forEach(min=>{_asked[min]=1});
+  const ok=confirm('นาทีที่ '+due.join(', ')+': ไอศกรีมยังไม่หยด\n\nบันทึกน้ำหนักเป็นน้ำหนักถ้วยเปล่า ('+c+' g = น้ำที่ละลาย 0 g) ให้อัตโนมัติเลยไหมคะ?\n\nระบบจะบันทึกแบบนี้ไปเรื่อยๆ ทุก 5 นาที จนกว่าจะกดปุ่ม 💧 หยดแรก');
+  if(ok){
+    due.forEach(min=>{
+      state.weights[min]=String(c);
+      const inp=document.querySelector('#mrow_'+min+' input');if(inp)inp.value=c;
+      renderRow(min);
+    });
+    save();renderSummary();buildChart();toggleEmpty();
+  }
+}
 function nextSlot(start,slots){
   if(!start)return null;
   const now=Date.now();
@@ -445,20 +464,23 @@ function tickClock(){
     if(ns){
       const rem=(ns.t-now)/1000,sec=Math.ceil(rem);
       const mm=Math.floor(sec/60),ss=sec%60;
-      cd1.className='countdown'+(sec<=15?' warn':'');
-      cd1.innerHTML='⏳ ชั่งครั้งถัดไป <b>นาทีที่ '+ns.min+'</b> (เวลา '+hm(ns.t)+') ในอีก<span class="big">'+mm+':'+String(ss).padStart(2,'0')+'</span>ยกตะแกรงขึ้น แล้วชั่งถ้วย+น้ำ';
-      // เสียง: 15, 10, 5-4-3-2-1
-      if(sec<=15&&sec>=1&&(sec===15||sec===10||sec<=5)){
+      cd1.className='countdown'+(sec<=15&&state.drop?' warn':'');
+      cd1.innerHTML='⏳ ชั่งครั้งถัดไป <b>นาทีที่ '+ns.min+'</b> (เวลา '+hm(ns.t)+') ในอีก<span class="big">'+mm+':'+String(ss).padStart(2,'0')+'</span>'
+        +(state.drop?'ยกตะแกรงขึ้น แล้วชั่งถ้วย+น้ำ':'ยังไม่มีหยดแรก — ระบบจะบันทึกถ้วยเปล่าให้อัตโนมัติ (เสียงเตือนเริ่มหลังกด 💧 หยดแรก)');
+      // เสียงเตือนทำงานหลังกดปุ่มหยดแรกแล้วเท่านั้น: 15, 10, 5-4-3-2-1
+      if(state.drop&&sec<=15&&sec>=1&&(sec===15||sec===10||sec<=5)){
         const k='1:'+ns.min+':'+sec;
         if(!_beeped[k]){_beeped[k]=1;tickBeep();}
       }
-      // ครบเวลา (ข้ามเป็น slot ใหม่) → beep 3 ที
-      MR_SLOTS.forEach(min=>{const t=state.mStart+min*60000;const k='1:'+min+':0';
+      // ครบเวลา (ข้ามเป็น slot ใหม่) → beep 3 ที (เฉพาะหลังมีหยดแรกแล้ว)
+      if(state.drop)MR_SLOTS.forEach(min=>{const t=state.mStart+min*60000;const k='1:'+min+':0';
         if(now>=t&&now-t<3000&&!_beeped[k]){_beeped[k]=1;beep(3);}});
     }else{
       cd1.className='countdown done';
       cd1.innerHTML='✓ ครบ 1 ชั่วโมงแล้ว — กรอกน้ำหนักช่องสุดท้ายให้ครบ แล้วดูสรุปผล/กราฟด้านล่างได้เลยค่ะ';
     }
+    // ก่อนหยดแรก: บันทึกถ้วยเปล่าอัตโนมัติเมื่อครบเวลา
+    autoZero(now);
     // ไฮไลต์แถวที่ถึงเวลาแล้วแต่ยังไม่กรอก
     MR_SLOTS.forEach(min=>{const r=document.getElementById('mrow_'+min);if(!r)return;
       r.classList.toggle('due',now>=state.mStart+min*60000&&(state.weights[min]==null||state.weights[min]===''));});
