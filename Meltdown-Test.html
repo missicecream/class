@@ -56,6 +56,10 @@
   .btn.print{background:var(--accent-deep);color:#fff;border:none}
   .btn:disabled{opacity:.45;cursor:default}
   .btn-undo{margin-top:8px;width:100%;padding:8px;border:1px dashed var(--rose);background:#fff;color:var(--rose);font-family:'Sarabun',sans-serif;font-size:12.5px;font-weight:600;border-radius:10px;cursor:pointer}
+  .tbl-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .tbl-actions .btn{flex:1;min-width:180px}
+  .btn.stopRec{color:var(--rose);border-color:#e0b8ab}
+  .btn.stopRec:hover{background:#FBEFEC}
   .logged{font-family:'Fraunces',serif;font-size:14px;color:var(--accent-deep);margin-top:7px;text-align:center}
   .logged.empty{color:var(--muted-soft);font-style:italic}
 
@@ -201,6 +205,11 @@
     <div class="block-t p1"><span class="tag">1</span> บันทึกน้ำหนักทุก 5 นาที</div>
     <div class="hint">ถึงเวลาชั่ง: ยกตะแกรง(พร้อมไอศกรีม)ขึ้น ชั่ง <b>ถ้วย + น้ำไอศกรีมที่ละลาย</b> แล้วกรอกตัวเลข ระบบลบน้ำหนักถ้วยและคิด % ให้เอง · <b>ก่อนกดปุ่ม 💧 หยดแรก</b> ระบบจะบันทึกน้ำหนักถ้วยเปล่าให้อัตโนมัติทุก 5 นาที (มีกล่องยืนยัน) และเสียงนับถอยหลังจะเริ่มทำงานหลังกดปุ่มหยดแรกค่ะ</div>
     <table><thead><tr><th>นาทีที่</th><th>เวลานัดชั่ง</th><th>ถ้วย+น้ำ (g)</th><th>น้ำที่ละลาย</th><th>% ละลาย</th></tr></thead><tbody id="weighBody"></tbody></table>
+    <div class="tbl-actions">
+      <button class="btn" id="btnExtend" onclick="extendHour()">➕ เพิ่มการบันทึกอีก 1 ชั่วโมง</button>
+      <button class="btn stopRec" id="btnStopRec" onclick="stopRecording()">⏹ หยุดบันทึก</button>
+    </div>
+    <div class="logged empty" id="lg_mStop" style="display:none"></div>
   </div>
 
   <!-- ส่วนที่ 2 -->
@@ -261,12 +270,13 @@
 
 <script>
 const KEY='meltdown_store_v1';
-const MR_SLOTS=[5,10,15,20,25,30,35,40,45,50,55,60];   // นาทีชั่ง ส่วนที่ 1
+function mrEnd(){return state&&state.mExt?120:60}      // ต่อเวลาได้อีก 1 ชั่วโมง (ถึงนาที 120)
+function mrSlots(){const a=[];for(let m=5;m<=mrEnd();m+=5)a.push(m);return a}  // นาทีชั่ง ส่วนที่ 1
 const AP_SLOTS=[10,20,30,40,50,60];                    // นาทีสังเกต ส่วนที่ 2
 const LOOKS=['ละลายปกติ','แยกเป็นน้ำใส','เป็นฟอง','จับตัวเป็นก้อน','เป็นเกล็ดน้ำแข็ง','อื่นๆ (เขียนในช่องบันทึก)'];
 
 function fresh(){return {recipe:'',lot:'',date:thaiDate(Date.now()),recorder:'',roomTemp:'',humidity:'',
-  cupW:'',cupGridW:'',iceTemp:'',totalW:'',mStart:null,drop:null,weights:{},
+  cupW:'',cupGridW:'',iceTemp:'',totalW:'',mStart:null,drop:null,weights:{},mExt:false,mStop:null,
   plateW:'',plateTotalW:'',aStart:null,looks:{},lookNotes:{},note:''}}
 function newId(){return 'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
@@ -356,8 +366,20 @@ function startPart1(){
 function cancelPart1(){
   if(!state.mStart)return;
   if(!confirm('ยกเลิกการเริ่มส่วนที่ 1? (ข้อมูลน้ำหนักที่กรอกในตารางจะยังอยู่)'))return;
-  state.mStart=null;state.drop=null;save();updateUI();
+  state.mStart=null;state.drop=null;state.mStop=null;save();updateUI();
 }
+function extendHour(){
+  if(state.mExt){alert('ต่อเวลาเป็น 2 ชั่วโมงไปแล้วค่ะ (ถึงนาที 120)');return;}
+  if(!confirm('เพิ่มการบันทึกอีก 1 ชั่วโมง (ถึงนาที 120)?\nข้อมูลที่บันทึกไว้แล้วอยู่ครบเหมือนเดิมค่ะ'))return;
+  state.mExt=true;state.mStop=null;   // ต่อเวลา = กลับมาบันทึกต่อถ้าเคยกดหยุดไว้
+  save();updateUI();
+}
+function stopRecording(){
+  if(state.mStop)return;
+  if(!confirm('หยุดบันทึกส่วนที่ 1?\nเสียงเตือนและการบันทึกอัตโนมัติจะหยุด — ข้อมูลที่บันทึกแล้วยังอยู่ครบ และกลับมาบันทึกต่อได้ค่ะ'))return;
+  state.mStop=Date.now();save();updateUI();
+}
+function resumeRecording(){state.mStop=null;save();updateUI();}
 function logDrop(){
   unlockAudio();
   if(!state.mStart)return;
@@ -389,13 +411,14 @@ function renderTables(){
   const wb=document.getElementById('weighBody');
   document.getElementById('weighBlock').style.display=state.mStart?'block':'none';
   if(state.mStart&&wb){
-    if(!wb.dataset.built||wb.dataset.start!=String(state.mStart)){
-      wb.innerHTML=MR_SLOTS.map(min=>'<tr id="mrow_'+min+'"><td class="t">'+min+'</td><td class="t">'+hm(state.mStart+min*60000)+'</td>'
+    const key=String(state.mStart)+'-'+mrEnd();
+    if(!wb.dataset.built||wb.dataset.start!=key){
+      wb.innerHTML=mrSlots().map(min=>'<tr id="mrow_'+min+'"><td class="t">'+min+'</td><td class="t">'+hm(state.mStart+min*60000)+'</td>'
         +'<td><input type="number" step="0.1" placeholder="g" value="'+(state.weights[min]!=null?escapeHtml(state.weights[min]):'')+'" oninput="setWeight('+min+',this.value)"></td>'
         +'<td class="wat" id="mw_'+min+'">—</td><td class="pct" id="mp_'+min+'">—</td></tr>').join('');
-      wb.dataset.built='1';wb.dataset.start=String(state.mStart);
+      wb.dataset.built='1';wb.dataset.start=key;
     }
-    MR_SLOTS.forEach(renderRow);
+    mrSlots().forEach(renderRow);
   } else if(wb){wb.innerHTML='';delete wb.dataset.built;delete wb.dataset.start;}
   // ส่วนที่ 2
   const lb=document.getElementById('lookBody');
@@ -435,7 +458,8 @@ const _asked={};    // กันถามซ้ำ auto-บันทึกถ้
 function autoZero(now){
   if(!state.mStart||state.drop)return;
   const c=num(state.cupW);if(c==null)return;
-  const due=MR_SLOTS.filter(min=>now>=state.mStart+min*60000&&(state.weights[min]==null||state.weights[min]==='')&&!_asked[min]);
+  if(state.mStop)return;
+  const due=mrSlots().filter(min=>now>=state.mStart+min*60000&&(state.weights[min]==null||state.weights[min]==='')&&!_asked[min]);
   if(!due.length)return;
   due.forEach(min=>{_asked[min]=1});
   const ok=confirm('นาทีที่ '+due.join(', ')+': ไอศกรีมยังไม่หยด\n\nบันทึกน้ำหนักเป็นน้ำหนักถ้วยเปล่า ('+c+' g = น้ำที่ละลาย 0 g) ให้อัตโนมัติเลยไหมคะ?\n\nระบบจะบันทึกแบบนี้ไปเรื่อยๆ ทุก 5 นาที จนกว่าจะกดปุ่ม 💧 หยดแรก');
@@ -458,8 +482,13 @@ function tickClock(){
   const now=Date.now();
   // ส่วนที่ 1
   const cd1=document.getElementById('cd1');
-  if(state.mStart){
-    const ns=nextSlot(state.mStart,MR_SLOTS);
+  if(state.mStart&&state.mStop){
+    cd1.style.display='block';
+    cd1.className='countdown done';
+    cd1.innerHTML='⏹ หยุดบันทึกแล้ว (ที่ '+fmtDur(state.mStop-state.mStart)+' หลังเริ่ม) — ข้อมูลอยู่ครบ กด "บันทึกต่อ" ด้านล่างตารางได้ถ้าต้องการ';
+    mrSlots().forEach(min=>{const r=document.getElementById('mrow_'+min);if(r)r.classList.remove('due');});
+  }else if(state.mStart){
+    const ns=nextSlot(state.mStart,mrSlots());
     cd1.style.display='block';
     if(ns){
       const rem=(ns.t-now)/1000,sec=Math.ceil(rem);
@@ -473,16 +502,16 @@ function tickClock(){
         if(!_beeped[k]){_beeped[k]=1;tickBeep();}
       }
       // ครบเวลา (ข้ามเป็น slot ใหม่) → beep 3 ที (เฉพาะหลังมีหยดแรกแล้ว)
-      if(state.drop)MR_SLOTS.forEach(min=>{const t=state.mStart+min*60000;const k='1:'+min+':0';
+      if(state.drop)mrSlots().forEach(min=>{const t=state.mStart+min*60000;const k='1:'+min+':0';
         if(now>=t&&now-t<3000&&!_beeped[k]){_beeped[k]=1;beep(3);}});
     }else{
       cd1.className='countdown done';
-      cd1.innerHTML='✓ ครบ 1 ชั่วโมงแล้ว — กรอกน้ำหนักช่องสุดท้ายให้ครบ แล้วดูสรุปผล/กราฟด้านล่างได้เลยค่ะ';
+      cd1.innerHTML='✓ ครบ '+(mrEnd()/60)+' ชั่วโมงแล้ว — กรอกน้ำหนักช่องสุดท้ายให้ครบ แล้วดูสรุปผล/กราฟ หรือกด "เพิ่มการบันทึกอีก 1 ชั่วโมง" ท้ายตารางได้ค่ะ';
     }
     // ก่อนหยดแรก: บันทึกถ้วยเปล่าอัตโนมัติเมื่อครบเวลา
     autoZero(now);
     // ไฮไลต์แถวที่ถึงเวลาแล้วแต่ยังไม่กรอก
-    MR_SLOTS.forEach(min=>{const r=document.getElementById('mrow_'+min);if(!r)return;
+    mrSlots().forEach(min=>{const r=document.getElementById('mrow_'+min);if(!r)return;
       r.classList.toggle('due',now>=state.mStart+min*60000&&(state.weights[min]==null||state.weights[min]===''));});
   }else{cd1.style.display='none';}
   // ส่วนที่ 2
@@ -516,7 +545,8 @@ function renderSummary(){
   }
   const i=iceW();
   if(i)items.push('น้ำหนักไอศกรีมทดสอบส่วนที่ 1 = <b>'+i+' g</b>'+(aIceW()?' · ส่วนที่ 2 = <b>'+aIceW()+' g</b>':''));
-  [30,60].forEach(min=>{const p=pctOf(min);if(p!=null)items.push('% ละลายที่ '+min+' นาที = <b>'+p+' %</b>');});
+  (state.mExt?[30,60,90,120]:[30,60]).forEach(min=>{const p=pctOf(min);if(p!=null)items.push('% ละลายที่ '+min+' นาที = <b>'+p+' %</b>');});
+  if(state.mStart&&state.mStop)items.push('หยุดบันทึกที่ <b>'+fmtDur(state.mStop-state.mStart)+'</b> หลังเริ่ม');
   const abn=[];
   AP_SLOTS.forEach(min=>{
     const l=state.looks[min]||'',n=(state.lookNotes[min]||'').trim();
@@ -532,24 +562,25 @@ function renderSummary(){
 function buildChart(){
   const wrap=document.getElementById('chartWrap');
   const pts=[{m:0,p:0}];
-  MR_SLOTS.forEach(min=>{const p=pctOf(min);if(p!=null)pts.push({m:min,p:p});});
+  mrSlots().forEach(min=>{const p=pctOf(min);if(p!=null)pts.push({m:min,p:p});});
   document.getElementById('chartBlock').classList.toggle('empty-print',pts.length<2);
   if(pts.length<2){wrap.innerHTML='<div class="chart-empty">กราฟจะแสดงเมื่อบันทึกน้ำหนัก ≥ 1 จุด</div>';return;}
   const W=620,H=250,mL=44,mR=16,mT=14,mB=34,pw=W-mL-mR,ph=H-mT-mB;
+  const xEnd=mrEnd(),xStep=xEnd>60?20:10;
   let pMax=Math.max(10,...pts.map(p=>p.p));pMax=Math.ceil(pMax/10)*10;
-  const X=m=>mL+m/60*pw,Y=p=>mT+ph-p/pMax*ph;
+  const X=m=>mL+m/xEnd*pw,Y=p=>mT+ph-p/pMax*ph;
   let g='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun,sans-serif">';
   for(let p=0;p<=pMax;p+=Math.max(10,Math.round(pMax/5/10)*10)){
     g+='<line x1="'+mL+'" y1="'+Y(p).toFixed(1)+'" x2="'+(W-mR)+'" y2="'+Y(p).toFixed(1)+'" stroke="#EFE5D2"/>';
     g+='<text x="'+(mL-6)+'" y="'+(Y(p)+3).toFixed(1)+'" font-size="10" fill="#8C7A66" text-anchor="end">'+p+'</text>';
   }
-  for(let m=0;m<=60;m+=10){
+  for(let m=0;m<=xEnd;m+=xStep){
     g+='<text x="'+X(m).toFixed(1)+'" y="'+(H-9)+'" font-size="9.5" fill="#8C7A66" text-anchor="middle">'+m+'</text>';
     g+='<line x1="'+X(m).toFixed(1)+'" y1="'+(mT+ph)+'" x2="'+X(m).toFixed(1)+'" y2="'+(mT+ph+4)+'" stroke="#BFB09B"/>';
   }
   // เส้นหยดแรก
   if(state.mStart&&state.drop){
-    const dm=Math.min(60,Math.max(0,(state.drop-state.mStart)/60000));
+    const dm=Math.min(mrEnd(),Math.max(0,(state.drop-state.mStart)/60000));
     g+='<line x1="'+X(dm).toFixed(1)+'" y1="'+mT+'" x2="'+X(dm).toFixed(1)+'" y2="'+(mT+ph)+'" stroke="#A85B47" stroke-width="1.2" stroke-dasharray="4 3"/>';
     g+='<text x="'+X(dm).toFixed(1)+'" y="'+(mT+10)+'" font-size="8.5" fill="#A85B47" font-weight="600" text-anchor="'+(dm<8?'start':'middle')+'">💧 หยดแรก</text>';
   }
@@ -562,7 +593,7 @@ function buildChart(){
 }
 function toggleEmpty(){
   document.getElementById('noteBlock').classList.toggle('empty-print',!(state.note||'').trim());
-  const anyW=MR_SLOTS.some(m=>state.weights[m]!=null&&state.weights[m]!=='');
+  const anyW=mrSlots().some(m=>state.weights[m]!=null&&state.weights[m]!=='');
   document.getElementById('weighBlock').classList.toggle('empty-print',!anyW);
   const anyL=AP_SLOTS.some(m=>(state.looks[m]&&state.looks[m]!=='ละลายปกติ')||(state.lookNotes[m]||'').trim())||state.aStart;
   document.getElementById('lookBlock').classList.toggle('empty-print',!anyL);
@@ -586,6 +617,14 @@ function updateUI(){
   else{lg1.className='logged empty';lg1.textContent='ยังไม่เริ่ม';}
   document.getElementById('btnStart1').style.display=state.mStart?'none':'block';
   document.getElementById('undoStart1').style.display=state.mStart?'block':'none';
+  // ปุ่มท้ายตาราง: ต่อเวลา / หยุดบันทึก
+  const be=document.getElementById('btnExtend'),bs=document.getElementById('btnStopRec'),lgs=document.getElementById('lg_mStop');
+  if(be)be.style.display=state.mExt?'none':'block';
+  if(bs)bs.style.display=state.mStop?'none':'block';
+  if(lgs){
+    if(state.mStop){lgs.style.display='block';lgs.className='logged';lgs.innerHTML='⏹ หยุดบันทึกแล้ว เวลา '+hms(state.mStop)+' ('+fmtDur(state.mStop-state.mStart)+' หลังเริ่ม) <button class="bbtn" style="font-size:11px;padding:3px 10px" onclick="resumeRecording()">↩ บันทึกต่อ</button>';}
+    else{lgs.style.display='none';}
+  }
   document.getElementById('btnDrop').style.display=(state.mStart&&!state.drop)?'block':'none';
   const lgd=document.getElementById('lg_drop');
   lgd.style.display=state.mStart?'block':'none';
