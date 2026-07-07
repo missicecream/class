@@ -784,6 +784,19 @@ function cdBeep(){
   }catch(e){}
   try{if(navigator.vibrate)navigator.vibrate([240,120,240]);}catch(e){}
 }
+// เสียงติ๊กสั้นสำหรับนับถอยหลัง 5-4-3-2-1
+let _lastTickKey=null;
+function tickBeep(){
+  try{if(!_cdAudio)_cdAudio=new (window.AudioContext||window.webkitAudioContext)();if(_cdAudio.state==='suspended')_cdAudio.resume();
+    const t0=_cdAudio.currentTime;const o=_cdAudio.createOscillator(),g=_cdAudio.createGain();o.connect(g);g.connect(_cdAudio.destination);o.type='square';o.frequency.value=660;g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.4,t0+0.015);g.gain.exponentialRampToValueAtTime(0.0001,t0+0.12);o.start(t0);o.stop(t0+0.14);
+  }catch(e){}
+  try{if(navigator.vibrate)navigator.vibrate(60);}catch(e){}
+}
+// ติ๊กเมื่อ countdown ที่แสดงอยู่เหลือ 5..1 วินาที (dedup ต่อเป้าหมาย+วินาที)
+function cdTick(target,remMs){
+  const sec=Math.ceil(remMs/1000);
+  if(sec>=1&&sec<=5){const key=target+'_'+sec;if(_lastTickKey!==key){_lastTickKey=key;tickBeep();}}
+}
 // เตือนให้บันทึกอุณหภูมิทุกๆ ช่วงเวลา (นับจากการบันทึกครั้งล่าสุด หรือเริ่มต้ม)
 function showRemind(on){const b=document.getElementById('remindBox');if(!b)return;if(on){const iv=state.interval||3;b.style.display='block';b.innerHTML='⏰ ถึงเวลาบันทึกอุณหภูมิแล้ว (ทุก '+iv+' นาที) — กดปุ่มอุณหภูมิด้านบนเพื่อบันทึกค่ะ';}else{b.style.display='none';}}
 function checkReminder(){
@@ -851,10 +864,12 @@ function renderStatus(c,rt){
   if(remRead!=null&&remRead<remHold){
     show('heat',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('🌡 บันทึกอุณหภูมิครั้งถัดไป ในอีก')
       +'<span class="big">'+_mmss(remRead)+'</span>'+smHold+sbar);
+    cdTick(last.t+Math.ceil((now-last.t)/(state.interval*60000))*(state.interval*60000),remRead);
   }else{
     show('heat',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('⏹ จบการให้ความร้อน — จะครบเกณฑ์ในอีก')
       +'<span class="big">'+_mmss(remHold)+'</span>'
       +'<span class="sm">ครบ '+c.time+' นาที เวลา '+hms(end)+' · ห้ามต่ำกว่า '+c.temp+' °C</span>'+sbar);
+    cdTick(end,remHold);
   }
 }
 /* เส้นทาง 5 ขั้น */
