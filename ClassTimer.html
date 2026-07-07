@@ -17,7 +17,7 @@
   :root{
     --bg:#F4ECE0; --card:#FBF6EC; --ink:#2B1F15; --muted:#8C7A66; --muted-soft:#BFB09B;
     --line:#E5D9C4; --line-soft:#EFE5D2; --accent:#6B8E4E; --accent-deep:#4F6B3A;
-    --gold:#C9A227; --gold-deep:#9A7A1F; --rose:#A85B47;
+    --rest:#3E73A6; --rest-deep:#2D5474; --rose:#A85B47;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{-webkit-font-smoothing:antialiased}
@@ -53,7 +53,7 @@
   #timerView{display:none}
   .tcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 4px 24px -16px rgba(43,31,21,.15);transition:background .5s ease,border-color .5s ease}
   .tcard.p-blend{background:#F7F8EC;border-color:#cfe0bf}
-  .tcard.p-rest{background:#FBF4DE;border-color:#E8D391}
+  .tcard.p-rest{background:#F0F5FA;border-color:#b9d3e6}
   .tcard.p-done{background:#F7F8EC;border-color:#cfe0bf}
   .tcard.warn5{border-color:#e0b8ab}
   .tname{font-family:'Fraunces',serif;font-size:26px;margin-bottom:2px}
@@ -61,14 +61,14 @@
 
   .phase-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 20px;border-radius:100px;font-size:16px;font-weight:700;margin-bottom:4px}
   .phase-chip.blend{background:#EFF3E7;color:var(--accent-deep);border:1px solid #cfe0bf}
-  .phase-chip.rest{background:#FAF3DC;color:var(--gold-deep);border:1px solid #E8D391}
+  .phase-chip.rest{background:#EAF1F7;color:var(--rest-deep);border:1px solid #b9d3e6}
   .phase-chip.idle{background:var(--line-soft);color:var(--muted);border:1px solid var(--line)}
   .phase-chip.done{background:#EFF3E7;color:var(--accent-deep);border:1px solid #cfe0bf}
   .round-dots{font-size:12.5px;color:var(--muted);margin-top:8px}
   .round-dots .d{font-size:14px;margin:0 2px}
   .round-dots .d.done{color:var(--accent-deep)}
   .round-dots .d.cur{color:var(--accent)}
-  .p-rest .round-dots .d.cur{color:var(--gold)}
+  .p-rest .round-dots .d.cur{color:var(--rest)}
   .round-dots .d.up{color:var(--muted-soft)}
 
   /* วงแหวนนับถอยหลัง */
@@ -77,44 +77,44 @@
   .ring-bg{fill:none;stroke:var(--line-soft);stroke-width:10}
   .ring-fg{fill:none;stroke:var(--muted-soft);stroke-width:10;stroke-linecap:round;stroke-dasharray:578;stroke-dashoffset:0;transition:stroke-dashoffset .22s linear,stroke .4s ease}
   .p-blend .ring-fg{stroke:var(--accent)}
-  .p-rest .ring-fg{stroke:var(--gold)}
+  .p-rest .ring-fg{stroke:var(--rest)}
   .p-done .ring-fg{stroke:var(--accent-deep)}
   .warn5 .ring-fg{stroke:var(--rose)}
   .ringcenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
   .bigtime{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(56px,17vw,84px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--muted-soft);transition:color .4s ease}
   .p-blend .bigtime{color:var(--accent-deep)}
-  .p-rest .bigtime{color:var(--gold-deep)}
+  .p-rest .bigtime{color:var(--rest-deep)}
   .p-done .bigtime{color:var(--accent-deep)}
   .warn5 .bigtime{color:var(--rose);animation:beat .9s ease-in-out infinite}
   @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
   .bigunit{font-size:12.5px;color:var(--muted)}
   .endat{display:inline-block;font-size:12.5px;font-weight:600;color:var(--accent-deep);background:#EFF3E7;border:1px solid #cfe0bf;border-radius:100px;padding:5px 14px;margin:10px 0 14px;transition:all .4s ease}
-  .p-rest .endat{background:#FAF3DC;color:var(--gold-deep);border-color:#E8D391}
+  .p-rest .endat{background:#EAF1F7;color:var(--rest-deep);border-color:#b9d3e6}
 
   /* ไทม์ไลน์ปั่น-พัก แถวเดียว: กว้างตามสัดส่วนเวลา */
   .tl{display:flex;gap:4px;align-items:center;margin:2px 2px 5px}
   .tl-seg{height:14px;border-radius:100px;background:#F0EBDF;outline:1px solid var(--line);outline-offset:-1px;overflow:hidden}
-  .tl-seg.rest{background:#F6EEDB;outline-color:#E8D391}
+  .tl-seg.rest{background:#E3ECF4;outline-color:#b9d3e6}
   .tl-seg .fl{height:100%;width:0;border-radius:100px;transition:width .25s linear}
   .tl-seg.blend .fl{background:var(--accent)}
-  .tl-seg.rest .fl{background:var(--gold)}
+  .tl-seg.rest .fl{background:var(--rest)}
   .tl-seg.cur{outline:2px solid var(--accent);outline-offset:-2px}
-  .tl-seg.rest.cur{outline-color:var(--gold)}
+  .tl-seg.rest.cur{outline-color:var(--rest)}
   .tl-rounds{display:flex;gap:4px;font-size:11.5px;color:var(--muted);margin-bottom:18px}
   .tl-rounds .tlr{text-align:center}
   .tl-rounds .tlr.cur{color:var(--accent-deep);font-weight:700}
-  .p-rest .tl-rounds .tlr.cur{color:var(--gold-deep)}
+  .p-rest .tl-rounds .tlr.cur{color:var(--rest-deep)}
 
   .tbtns{display:flex;flex-direction:column;gap:9px}
   .subbtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
   .btn.small{font-size:13px;padding:8px 18px;color:var(--muted)}
-  .p-rest .btn.main{background:var(--gold);border-color:var(--gold)}
-  .p-rest .btn.main:hover{background:var(--gold-deep);border-color:var(--gold-deep)}
+  .p-rest .btn.main{background:var(--rest);border-color:var(--rest)}
+  .p-rest .btn.main:hover{background:var(--rest-deep);border-color:var(--rest-deep)}
   .btn{font-family:'Sarabun',sans-serif;font-weight:600;font-size:15px;border-radius:100px;cursor:pointer;padding:13px 30px;transition:all .2s;border:1px solid var(--line);background:var(--card);color:var(--ink)}
   .btn.main{background:var(--accent);border-color:var(--accent);color:#fff;font-size:16px;padding:13px 44px}
   .btn.main:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
-  .btn.main.pause{background:var(--gold);border-color:var(--gold)}
-  .btn.main.pause:hover{background:var(--gold-deep);border-color:var(--gold-deep)}
+  .btn.main.pause{background:var(--rest);border-color:var(--rest)}
+  .btn.main.pause:hover{background:var(--rest-deep);border-color:var(--rest-deep)}
   .btn.ghost:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
   footer{text-align:center;margin-top:32px;color:var(--muted);font-size:12.5px;line-height:1.8}
@@ -175,7 +175,7 @@
     </div>
 
     <footer>
-      <p class="note">แถบสีเขียว = ช่วงปั่น · แถบสีเหลือง = ช่วงพัก · 5 วินาทีสุดท้ายมีเสียงติ๊กทุกวินาที และครบช่วงมีเสียงเตือน 3 ครั้ง</p>
+      <p class="note">แถบสีเขียว = ช่วงปั่น · แถบสีฟ้า = ช่วงพัก · 5 วินาทีสุดท้ายมีเสียงติ๊กทุกวินาที และครบช่วงมีเสียงเตือน 3 ครั้ง</p>
       <p class="brand">Miss Icecream</p>
     </footer>
 
