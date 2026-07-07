@@ -51,7 +51,11 @@
 
   /* ===== หน้าจับเวลา ===== */
   #timerView{display:none}
-  .tcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 4px 24px -16px rgba(43,31,21,.15)}
+  .tcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 4px 24px -16px rgba(43,31,21,.15);transition:background .5s ease,border-color .5s ease}
+  .tcard.p-blend{background:#F7F8EC;border-color:#cfe0bf}
+  .tcard.p-rest{background:#FBF4DE;border-color:#E8D391}
+  .tcard.p-done{background:#F7F8EC;border-color:#cfe0bf}
+  .tcard.warn5{border-color:#e0b8ab}
   .tname{font-family:'Fraunces',serif;font-size:26px;margin-bottom:2px}
   .tspec{font-size:13px;color:var(--muted);margin-bottom:16px}
 
@@ -60,27 +64,52 @@
   .phase-chip.rest{background:#FAF3DC;color:var(--gold-deep);border:1px solid #E8D391}
   .phase-chip.idle{background:var(--line-soft);color:var(--muted);border:1px solid var(--line)}
   .phase-chip.done{background:#EFF3E7;color:var(--accent-deep);border:1px solid #cfe0bf}
-  .round-lbl{font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:2px}
+  .round-dots{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .round-dots .d{font-size:14px;margin:0 2px}
+  .round-dots .d.done{color:var(--accent-deep)}
+  .round-dots .d.cur{color:var(--accent)}
+  .p-rest .round-dots .d.cur{color:var(--gold)}
+  .round-dots .d.up{color:var(--muted-soft)}
 
-  .bigtime{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(88px,26vw,150px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin:2px 0 0}
-  .bigtime.blend{color:var(--accent-deep)}
-  .bigtime.rest{color:var(--gold-deep)}
-  .bigtime.idle{color:var(--muted-soft)}
-  .bigunit{font-size:13px;color:var(--muted);margin-bottom:12px}
-  .endat{font-size:13px;font-weight:600;color:var(--accent-deep);min-height:18px;margin-bottom:16px}
+  /* วงแหวนนับถอยหลัง */
+  .ringwrap{position:relative;width:min(230px,64vw);margin:14px auto 4px}
+  .ringwrap svg{width:100%;height:auto;display:block;transform:rotate(-90deg)}
+  .ring-bg{fill:none;stroke:var(--line-soft);stroke-width:10}
+  .ring-fg{fill:none;stroke:var(--muted-soft);stroke-width:10;stroke-linecap:round;stroke-dasharray:578;stroke-dashoffset:0;transition:stroke-dashoffset .22s linear,stroke .4s ease}
+  .p-blend .ring-fg{stroke:var(--accent)}
+  .p-rest .ring-fg{stroke:var(--gold)}
+  .p-done .ring-fg{stroke:var(--accent-deep)}
+  .warn5 .ring-fg{stroke:var(--rose)}
+  .ringcenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .bigtime{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(56px,17vw,84px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--muted-soft);transition:color .4s ease}
+  .p-blend .bigtime{color:var(--accent-deep)}
+  .p-rest .bigtime{color:var(--gold-deep)}
+  .p-done .bigtime{color:var(--accent-deep)}
+  .warn5 .bigtime{color:var(--rose);animation:beat .9s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .bigunit{font-size:12.5px;color:var(--muted)}
+  .endat{display:inline-block;font-size:12.5px;font-weight:600;color:var(--accent-deep);background:#EFF3E7;border:1px solid #cfe0bf;border-radius:100px;padding:5px 14px;margin:10px 0 14px;transition:all .4s ease}
+  .p-rest .endat{background:#FAF3DC;color:var(--gold-deep);border-color:#E8D391}
 
-  /* แถบ progress ของทุกช่วง เรียงตามลำดับ */
-  .segs{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
-  .segrow{display:grid;grid-template-columns:118px 1fr;align-items:center;gap:10px}
-  .seglbl{font-size:12px;font-weight:600;color:var(--muted);text-align:right;white-space:nowrap}
-  .segrow.active .seglbl{color:var(--ink)}
-  .segbar{height:12px;background:var(--line-soft);border-radius:100px;overflow:hidden}
-  .segbar .fill{height:100%;width:0%;border-radius:100px;transition:width .25s linear}
-  .segbar .fill.blend{background:var(--accent)}
-  .segbar .fill.rest{background:var(--gold)}
-  .segrow.active .segbar{box-shadow:0 0 0 2px rgba(107,142,78,.25)}
+  /* ไทม์ไลน์ปั่น-พัก แถวเดียว: กว้างตามสัดส่วนเวลา */
+  .tl{display:flex;gap:4px;align-items:center;margin:2px 2px 5px}
+  .tl-seg{height:14px;border-radius:100px;background:#F0EBDF;outline:1px solid var(--line);outline-offset:-1px;overflow:hidden}
+  .tl-seg.rest{background:#F6EEDB;outline-color:#E8D391}
+  .tl-seg .fl{height:100%;width:0;border-radius:100px;transition:width .25s linear}
+  .tl-seg.blend .fl{background:var(--accent)}
+  .tl-seg.rest .fl{background:var(--gold)}
+  .tl-seg.cur{outline:2px solid var(--accent);outline-offset:-2px}
+  .tl-seg.rest.cur{outline-color:var(--gold)}
+  .tl-rounds{display:flex;gap:4px;font-size:11.5px;color:var(--muted);margin-bottom:18px}
+  .tl-rounds .tlr{text-align:center}
+  .tl-rounds .tlr.cur{color:var(--accent-deep);font-weight:700}
+  .p-rest .tl-rounds .tlr.cur{color:var(--gold-deep)}
 
-  .tbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .tbtns{display:flex;flex-direction:column;gap:9px}
+  .subbtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .btn.small{font-size:13px;padding:8px 18px;color:var(--muted)}
+  .p-rest .btn.main{background:var(--gold);border-color:var(--gold)}
+  .p-rest .btn.main:hover{background:var(--gold-deep);border-color:var(--gold-deep)}
   .btn{font-family:'Sarabun',sans-serif;font-weight:600;font-size:15px;border-radius:100px;cursor:pointer;padding:13px 30px;transition:all .2s;border:1px solid var(--line);background:var(--card);color:var(--ink)}
   .btn.main{background:var(--accent);border-color:var(--accent);color:#fff;font-size:16px;padding:13px 44px}
   .btn.main:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
@@ -94,8 +123,7 @@
 
   @media(max-width:480px){
     body{padding:26px 12px 38px}
-    .segrow{grid-template-columns:96px 1fr}
-    .seglbl{font-size:11px}
+    .tl-seg{height:12px}
   }
 </style>
 </head>
@@ -118,19 +146,30 @@
 
     <!-- หน้าจับเวลา -->
     <div id="timerView">
-      <div class="tcard">
+      <div class="tcard" id="tcard">
         <div class="tname" id="tName"></div>
         <div class="tspec" id="tSpec"></div>
         <div><span class="phase-chip idle" id="phaseChip">พร้อมเริ่ม</span></div>
-        <div class="round-lbl" id="roundLbl">&nbsp;</div>
-        <div class="bigtime idle" id="bigTime">30</div>
-        <div class="bigunit">วินาที</div>
-        <div class="endat" id="endAt">&nbsp;</div>
-        <div class="segs" id="segList"></div>
+        <div class="round-dots" id="roundDots">&nbsp;</div>
+        <div class="ringwrap">
+          <svg viewBox="0 0 210 210" aria-hidden="true">
+            <circle class="ring-bg" cx="105" cy="105" r="92"/>
+            <circle class="ring-fg" id="ringFg" cx="105" cy="105" r="92"/>
+          </svg>
+          <div class="ringcenter">
+            <div class="bigtime" id="bigTime">30</div>
+            <div class="bigunit">วินาที</div>
+          </div>
+        </div>
+        <div><span class="endat" id="endAt">&nbsp;</span></div>
+        <div class="tl" id="segList"></div>
+        <div class="tl-rounds" id="tlRounds"></div>
         <div class="tbtns">
           <button class="btn main" id="btnGo" onclick="toggleRun()">▶ เริ่ม</button>
-          <button class="btn ghost" onclick="resetTimer()">⟲ เริ่มใหม่</button>
-          <button class="btn ghost" onclick="backToMenu()">← เลือกเบสอื่น</button>
+          <div class="subbtns">
+            <button class="btn ghost small" onclick="resetTimer()">⟲ เริ่มใหม่</button>
+            <button class="btn ghost small" onclick="backToMenu()">← เลือกเบสอื่น</button>
+          </div>
         </div>
       </div>
     </div>
@@ -243,9 +282,12 @@
   }
 
   const tName=document.getElementById('tName'),tSpec=document.getElementById('tSpec'),
-        phaseChip=document.getElementById('phaseChip'),roundLbl=document.getElementById('roundLbl'),
+        phaseChip=document.getElementById('phaseChip'),roundDots=document.getElementById('roundDots'),
         bigTime=document.getElementById('bigTime'),endAt=document.getElementById('endAt'),
-        segList=document.getElementById('segList'),btnGo=document.getElementById('btnGo');
+        segList=document.getElementById('segList'),btnGo=document.getElementById('btnGo'),
+        tcard=document.getElementById('tcard'),ringFg=document.getElementById('ringFg'),
+        tlRounds=document.getElementById('tlRounds');
+  const RING_C=578; // เส้นรอบวงแหวน (2πr, r=92)
 
   function clock(ms){const d=new Date(ms);return [d.getHours(),d.getMinutes(),d.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':')}
 
@@ -271,10 +313,12 @@
   }
 
   function buildSegRows(){
+    // ไทม์ไลน์แคปซูลแถวเดียว — ความกว้างตามสัดส่วนเวลา (ปั่น 30 วิสั้น พัก 60 วิยาว)
     segList.innerHTML=segs.map((s,i)=>
-      '<div class="segrow" id="segrow_'+i+'">'
-      +'<span class="seglbl">รอบ '+s.round+' · '+(s.type==='blend'?'🌀 ปั่น':'☕ พัก')+' '+s.dur+' วิ</span>'
-      +'<div class="segbar"><div class="fill '+s.type+'" id="segfill_'+i+'"></div></div></div>'
+      '<div class="tl-seg '+s.type+'" id="tlseg_'+i+'" style="flex:'+s.dur+'"><div class="fl" id="tlfl_'+i+'"></div></div>'
+    ).join('');
+    tlRounds.innerHTML=Array.from({length:sel.rounds},(_,k)=>
+      '<span class="tlr" id="tlr_'+(k+1)+'" style="flex:'+(sel.blend+sel.rest)+'">รอบ '+(k+1)+'</span>'
     ).join('');
   }
 
@@ -291,42 +335,67 @@
     return t;
   }
 
+  function phaseOf(){
+    if(done)return 'done';
+    if(!running&&segIdx===0&&segs.length&&segRemaining===segs[0].dur)return 'idle';
+    return segs[segIdx]?segs[segIdx].type:'idle';
+  }
   function render(){
-    const s=segs[segIdx];
-    if(done){
-      phaseChip.className='phase-chip done';phaseChip.textContent='✓ เสร็จแล้ว';
-      roundLbl.innerHTML='&nbsp;';
-      bigTime.className='bigtime blend';bigTime.textContent='0';
-      endAt.innerHTML='&nbsp;';
-      btnGo.textContent='▶ เริ่มอีกครั้ง';btnGo.className='btn main';
-    }else if(!running&&segIdx===0&&segRemaining===segs[0].dur){
-      phaseChip.className='phase-chip idle';phaseChip.textContent='พร้อมเริ่ม';
-      roundLbl.textContent='ทั้งหมด '+sel.rounds+' รอบ';
-      bigTime.className='bigtime idle';bigTime.textContent=Math.ceil(segRemaining);
-      endAt.innerHTML='&nbsp;';
-      btnGo.textContent='▶ เริ่ม';btnGo.className='btn main';
-    }else{
-      phaseChip.className='phase-chip '+s.type;
-      phaseChip.textContent=s.type==='blend'?'🌀 ปั่น':'☕ พัก';
-      roundLbl.textContent='รอบที่ '+s.round+' / '+sel.rounds;
-      bigTime.className='bigtime '+s.type;
-      bigTime.textContent=Math.ceil(curRemaining());
-      if(running){endAt.textContent='⏰ เสร็จทั้งหมดเวลา '+clock(Date.now()+totalRemaining()*1000);}
-      else{endAt.textContent='⏸ พักจับเวลาไว้';}
-      btnGo.textContent=running?'⏸ หยุด':'▶ เริ่มต่อ';
-      btnGo.className='btn main'+(running?' pause':'');
+    if(!segs.length)return;
+    const ph=phaseOf();
+    const rem=curRemaining();
+    const warn5=running&&!done&&rem<=5.4&&rem>0;
+    // สีทั้งการ์ดเปลี่ยนตามช่วง: ปั่น=เขียว พัก=ทอง 5 วิสุดท้าย=แดงอิฐ
+    tcard.className='tcard p-'+ph+(warn5?' warn5':'');
+    if(ph==='done'){phaseChip.className='phase-chip done';phaseChip.textContent='✓ เสร็จแล้ว';}
+    else if(ph==='idle'){phaseChip.className='phase-chip idle';phaseChip.textContent='พร้อมเริ่ม';}
+    else{phaseChip.className='phase-chip '+ph;phaseChip.textContent=ph==='blend'?'🌀 ปั่น':'☕ พัก';}
+    // จุดบอกรอบ ● ◐ ○
+    const curR=done?sel.rounds+1:(segs[segIdx]?segs[segIdx].round:1);
+    let dots='';
+    for(let r=1;r<=sel.rounds;r++){
+      if(r<curR)dots+='<span class="d done">●</span>';
+      else if(r===curR&&ph!=='idle')dots+='<span class="d cur">◐</span>';
+      else dots+='<span class="d up">○</span>';
     }
-    // แถบ progress: ช่วงที่ผ่านแล้ว = เต็ม · ช่วงปัจจุบัน = เดินหน้า · ช่วงถัดไป = ว่าง
+    let tail;
+    if(done)tail='ครบ '+sel.rounds+' รอบ';
+    else if(ph==='idle')tail='ทั้งหมด '+sel.rounds+' รอบ';
+    else tail='รอบที่ '+segs[segIdx].round+' / '+sel.rounds;
+    roundDots.innerHTML=dots+' <span style="margin-left:6px">'+tail+'</span>';
+    // ตัวเลข + วงแหวน (วงแหวน = สัดส่วนเวลาที่เหลือของช่วงปัจจุบัน)
+    const dur=segs[segIdx]?segs[segIdx].dur:1;
+    let frac;
+    if(ph==='done'){bigTime.textContent='✓';frac=1;}
+    else if(ph==='idle'){bigTime.textContent=Math.ceil(segRemaining);frac=1;}
+    else{bigTime.textContent=Math.ceil(rem);frac=Math.max(0,Math.min(1,rem/dur));}
+    if(ringFg)ringFg.style.strokeDashoffset=String(Math.round(RING_C*(1-frac)*10)/10);
+    // ป้ายเวลาเสร็จทั้งหมด
+    if(done){endAt.style.visibility='visible';endAt.textContent='🎉 ครบทุกช่วงแล้ว';}
+    else if(ph==='idle'){endAt.style.visibility='hidden';endAt.textContent='—';}
+    else if(running){endAt.style.visibility='visible';endAt.textContent='⏰ เสร็จทั้งหมดเวลา '+clock(Date.now()+totalRemaining()*1000);}
+    else{endAt.style.visibility='visible';endAt.textContent='⏸ พักจับเวลาไว้';}
+    // ปุ่มหลัก (สีตามช่วงผ่านคลาสการ์ด)
+    btnGo.className='btn main';
+    if(done)btnGo.textContent='▶ เริ่มอีกครั้ง';
+    else if(running)btnGo.textContent='⏸ หยุด';
+    else if(ph==='idle')btnGo.textContent='▶ เริ่ม';
+    else btnGo.textContent='▶ เริ่มต่อ';
+    // ไทม์ไลน์: ผ่านแล้ว=เต็ม ปัจจุบัน=กำลังเติม ถัดไป=โปร่ง
     segs.forEach((sg,i)=>{
-      const fill=document.getElementById('segfill_'+i),row=document.getElementById('segrow_'+i);
-      if(!fill)return;
+      const el=document.getElementById('tlseg_'+i),fl=document.getElementById('tlfl_'+i);
+      if(!el||!fl)return;
       let pct;
       if(done||i<segIdx)pct=100;
-      else if(i===segIdx)pct=(sg.dur-curRemaining())/sg.dur*100;
+      else if(i===segIdx&&ph!=='idle')pct=(sg.dur-Math.max(0,Math.min(sg.dur,rem)))/sg.dur*100;
       else pct=0;
-      fill.style.width=Math.max(0,Math.min(100,pct))+'%';
-      row.classList.toggle('active',!done&&i===segIdx&&(running||curRemaining()<sg.dur));
+      fl.style.width=Math.max(0,Math.min(100,pct))+'%';
+      el.classList.toggle('cur',!done&&i===segIdx&&ph!=='idle');
     });
+    for(let r=1;r<=sel.rounds;r++){
+      const l=document.getElementById('tlr_'+r);
+      if(l)l.classList.toggle('cur',!done&&ph!=='idle'&&r===curR);
+    }
   }
 
   function sync(){
