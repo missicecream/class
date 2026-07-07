@@ -73,7 +73,8 @@
   .evres .val{font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--ink)}
   .evres .val small{font-size:13px;color:var(--muted);font-weight:400}
   .evres .val.bad{color:var(--rose)}
-  .evres .tim{color:var(--muted);font-size:12.5px;margin-left:8px;font-family:'Fraunces',serif}
+  .evres .tim{color:var(--muted);font-size:21px;font-weight:600;margin-left:12px;font-family:'Fraunces',serif}
+  .evres .tim small{font-size:13px;font-weight:400}
   .evres .acts{display:inline-flex;gap:10px;margin-left:10px}
   .evres .ok{font-family:'Fraunces',serif;color:var(--accent-deep)}
   .evres .sch{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:100px;background:#EAF1F7;color:var(--blue);font-size:12px}
@@ -110,6 +111,7 @@
   body.cap .evres{margin-top:0}
   body.cap .evres .val{font-size:14px;color:#000}
   body.cap .evres .val small,body.cap .evres .tim{color:#000}
+  body.cap .evres .tim{font-size:14px}
   body.cap .evres .sch{background:none;padding:0;color:#000}
   body.cap{background:#fff!important;background-image:none!important}
   body.cap .block{background:#fff!important;border:1px solid #ccc!important;box-shadow:none!important}
@@ -138,6 +140,7 @@
   body.printmode .evbody{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
   body.printmode .evres{margin-top:0}
   body.printmode .evres .val{font-size:14px}
+  body.printmode .evres .tim{font-size:14px}
   body.printmode .evres .sch{background:none;padding:0;color:#333}
   body.printmode #pmbar{display:flex;position:sticky;top:0;z-index:50;gap:10px;align-items:center;flex-wrap:wrap;
     background:#fff;border:1px solid #ccc;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#333}
@@ -473,8 +476,9 @@ function updateUI(){
     const unit=ev.unit||'°C';
     const warned=(ev.warnBelow!=null&&d.temp<ev.warnBelow)||(ev.warnAbove!=null&&d.temp>ev.warnAbove);
     let html='<span class="val'+(warned?' bad':'')+'">'+d.temp+'<small> '+unit+'</small></span>'
+      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editVal(\''+ev.k+'\')">'+(unit==='g'?'✎ แก้น้ำหนัก':'✎ แก้อุณหภูมิ')+'</button></span>'
       +'<span class="tim">🕐 '+hms(d.t)+'</span>'
-      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editTime(\''+ev.k+'\')">✎ แก้เวลา</button><button class="clr" style="color:var(--blue)" onclick="editVal(\''+ev.k+'\')">'+(unit==='g'?'✎ แก้น้ำหนัก':'✎ แก้อุณหภูมิ')+'</button><button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button></span>';
+      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editTime(\''+ev.k+'\')">✎ แก้เวลา</button><button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button></span>';
     if(ev.schedule){html+='<br><span class="sch">⏱ ครบ '+ev.schedule+' นาที เวลา '+hm(d.t+ev.schedule*60000)+'</span>';}
     if(warned){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
     r.className='evres';r.innerHTML=html;
