@@ -476,9 +476,9 @@ function updateUI(){
     const unit=ev.unit||'°C';
     const warned=(ev.warnBelow!=null&&d.temp<ev.warnBelow)||(ev.warnAbove!=null&&d.temp>ev.warnAbove);
     let html='<span class="val'+(warned?' bad':'')+'">'+d.temp+'<small> '+unit+'</small></span>'
-      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editVal(\''+ev.k+'\')">'+(unit==='g'?'✎ แก้น้ำหนัก':'✎ แก้อุณหภูมิ')+'</button></span>'
-      +'<span class="tim">🕐 '+hms(d.t)+'</span>'
-      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editTime(\''+ev.k+'\')">✎ แก้เวลา</button><button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button></span>';
+      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editVal(\''+ev.k+'\')">✎ แก้</button></span>'
+      +'<span class="tim">'+hms(d.t)+'</span>'
+      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editTime(\''+ev.k+'\')">✎ แก้</button><button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button></span>';
     if(ev.schedule){html+='<br><span class="sch">⏱ ครบ '+ev.schedule+' นาที เวลา '+hm(d.t+ev.schedule*60000)+'</span>';}
     if(warned){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
     r.className='evres';r.innerHTML=html;
