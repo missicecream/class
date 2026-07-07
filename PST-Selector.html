@@ -227,29 +227,60 @@
   }
   .timer-open-btn:hover { background: var(--accent); transform: translateY(-1px); }
   .pst-cta-sub { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin: 9px auto 0; max-width: 440px; }
-  .pst-timer {
-    margin: 16px auto 4px; max-width: 420px; background: var(--card);
-    border: 2px solid var(--accent); border-radius: 20px; padding: 24px 22px; text-align: center;
-  }
-  .pst-timer.rest { border-color: #3E73A6; }
-  .pst-timer.done { border-color: var(--accent-deep); background: #EFF3E7; }
-  .pt-label { font-family: 'Sarabun', sans-serif; font-size: 15px; color: var(--ink); margin-bottom: 4px; }
-  .pt-time { font-family: 'Fraunces', serif; font-size: 70px; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; margin: 4px 0; }
-  .pst-timer.rest .pt-time { color: #3E73A6; }
-  .pst-timer.done .pt-time { color: var(--accent-deep); }
-  .pt-endat { font-size: 13px; font-weight: 600; color: var(--accent-deep); min-height: 18px; margin-bottom: 14px; }
-  .pt-progress { height: 6px; background: var(--line-soft); border-radius: 100px; overflow: hidden; margin-bottom: 18px; }
-  .pt-bar { height: 100%; width: 100%; background: var(--accent); border-radius: 100px; transition: width 0.4s linear; }
-  .pst-timer.rest .pt-bar { background: #3E73A6; }
-  .pt-controls { display: flex; gap: 9px; justify-content: center; flex-wrap: wrap; }
-  .pt-btn {
-    padding: 10px 18px; border: 1px solid var(--line); background: var(--card); color: var(--ink);
-    font-family: 'Sarabun', sans-serif; font-size: 13px; font-weight: 600; border-radius: 100px; cursor: pointer; transition: all .2s;
-  }
-  .pt-btn:hover { border-color: var(--accent); }
-  .pt-btn.pt-start { background: var(--accent); color: #fff; border: none; }
-  .pt-btn.pt-start.paused { background: var(--accent-deep); }
-  .pt-hint { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 14px auto 0; max-width: 380px; }
+  .pst-timer{margin:16px auto 4px;max-width:430px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px 20px;text-align:center;transition:background .5s ease,border-color .5s ease}
+  .pst-timer.spin{background:#F7F8EC;border-color:#cfe0bf}
+  .pst-timer.rest{background:#F0F5FA;border-color:#b9d3e6}
+  .pst-timer.done{background:#F7F8EC;border-color:#cfe0bf}
+  .pst-timer.warn5{border-color:#e0b8ab}
+  .pt-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:100px;font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif}
+  .pt-chip.spin{background:#EFF3E7;color:var(--accent-deep);border:1px solid #cfe0bf}
+  .pt-chip.rest{background:#EAF1F7;color:#2D5474;border:1px solid #b9d3e6}
+  .pt-chip.idle{background:var(--line-soft);color:var(--muted);border:1px solid var(--line)}
+  .pt-chip.done{background:#EFF3E7;color:var(--accent-deep);border:1px solid #cfe0bf}
+  .pt-dots{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .pt-dots .d{font-size:14px;margin:0 2px}
+  .pt-dots .d.done{color:var(--accent-deep)}
+  .pt-dots .d.cur{color:var(--accent)}
+  .pst-timer.rest .pt-dots .d.cur{color:#3E73A6}
+  .pt-dots .d.up{color:var(--muted-soft)}
+  .pt-ringwrap{position:relative;width:min(200px,58vw);margin:12px auto 2px}
+  .pt-ringwrap svg{width:100%;height:auto;display:block;transform:rotate(-90deg)}
+  .pt-ring-bg{fill:none;stroke:var(--line-soft);stroke-width:10}
+  .pt-ring-fg{fill:none;stroke:var(--muted-soft);stroke-width:10;stroke-linecap:round;stroke-dasharray:578;stroke-dashoffset:0;transition:stroke-dashoffset .22s linear,stroke .4s ease}
+  .pst-timer.spin .pt-ring-fg{stroke:var(--accent)}
+  .pst-timer.rest .pt-ring-fg{stroke:#3E73A6}
+  .pst-timer.done .pt-ring-fg{stroke:var(--accent-deep)}
+  .pst-timer.warn5 .pt-ring-fg{stroke:#A85B47}
+  .pt-ringcenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .pt-time{font-family:'Fraunces',serif;font-size:clamp(46px,14vw,68px);line-height:1;color:var(--muted-soft);font-variant-numeric:tabular-nums;transition:color .4s ease}
+  .pst-timer.spin .pt-time{color:var(--accent-deep)}
+  .pst-timer.rest .pt-time{color:#2D5474}
+  .pst-timer.done .pt-time{color:var(--accent-deep)}
+  .pst-timer.warn5 .pt-time{color:#A85B47;animation:ptbeat .9s ease-in-out infinite}
+  @keyframes ptbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .pt-unit{font-size:12px;color:var(--muted)}
+  .pt-endat{display:inline-block;font-size:12.5px;font-weight:600;color:var(--accent-deep);background:#EFF3E7;border:1px solid #cfe0bf;border-radius:100px;padding:4px 13px;margin:9px 0 12px;transition:all .4s ease}
+  .pst-timer.rest .pt-endat{background:#EAF1F7;color:#2D5474;border-color:#b9d3e6}
+  .pt-tl{display:flex;gap:4px;align-items:center;margin:2px 2px 4px}
+  .pt-seg{height:12px;border-radius:100px;background:#F0EBDF;outline:1px solid var(--line);outline-offset:-1px;overflow:hidden}
+  .pt-seg.rest{background:#E3ECF4;outline-color:#b9d3e6}
+  .pt-seg .fl{height:100%;width:0;border-radius:100px;transition:width .25s linear}
+  .pt-seg.spin .fl{background:var(--accent)}
+  .pt-seg.rest .fl{background:#3E73A6}
+  .pt-seg.cur{outline:2px solid var(--accent);outline-offset:-2px}
+  .pt-seg.rest.cur{outline-color:#3E73A6}
+  .pt-tlr{display:flex;gap:4px;font-size:11px;color:var(--muted);margin-bottom:14px}
+  .pt-tlr span{text-align:center}
+  .pt-tlr span.cur{color:var(--accent-deep);font-weight:700}
+  .pst-timer.rest .pt-tlr span.cur{color:#2D5474}
+  .pt-controls{display:flex;flex-direction:column;gap:8px}
+  .pt-btn{padding:9px 16px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-family:'Sarabun',sans-serif;font-size:12.5px;font-weight:600;border-radius:100px;cursor:pointer;transition:all .2s}
+  .pt-btn:hover{border-color:var(--accent);color:var(--ink)}
+  .pt-btn.pt-start{background:var(--accent);color:#fff;border:none;font-size:15px;padding:12px;border-radius:100px}
+  .pt-btn.pt-start:hover{background:var(--accent-deep)}
+  .pst-timer.rest .pt-btn.pt-start{background:#3E73A6}
+  .pt-sub{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .pt-hint{font-size:12px;color:var(--muted);line-height:1.5;margin:12px auto 0;max-width:400px}
 </style>
 </head>
 <body>
@@ -352,15 +383,22 @@
         <p class="pst-cta-sub" id="ptCtaSub"></p>
       </div>
       <div class="pst-timer" id="ptPanel" style="display:none">
-        <div class="pt-label">&nbsp;</div>
-        <div class="pt-time">0:00</div>
-        <div class="pt-endat">&nbsp;</div>
-        <div class="pt-progress"><div class="pt-bar"></div></div>
+        <div><span class="pt-chip idle" id="ptChip">พร้อมเริ่ม</span></div>
+        <div class="pt-dots" id="ptDots">&nbsp;</div>
+        <div class="pt-ringwrap">
+          <svg viewBox="0 0 210 210" aria-hidden="true"><circle class="pt-ring-bg" cx="105" cy="105" r="92"/><circle class="pt-ring-fg" id="ptRing" cx="105" cy="105" r="92"/></svg>
+          <div class="pt-ringcenter"><div class="pt-time" id="ptTime">0</div><div class="pt-unit">วินาที</div></div>
+        </div>
+        <div><span class="pt-endat" id="ptEnd">&nbsp;</span></div>
+        <div class="pt-tl" id="ptTl"></div>
+        <div class="pt-tlr" id="ptTlR"></div>
         <div class="pt-controls">
-          <button class="pt-btn pt-start" onclick="ptToggle()">เริ่ม</button>
-          <button class="pt-btn" onclick="ptSkip()">ช่วงนี้เสร็จแล้ว ▸</button>
-          <button class="pt-btn" onclick="ptReset()">เริ่มรอบ 1 ใหม่</button>
-          <button class="pt-btn" onclick="ptClose()">ปิด</button>
+          <button class="pt-btn pt-start" onclick="ptToggle()">▶ เริ่ม</button>
+          <div class="pt-sub">
+            <button class="pt-btn" onclick="ptSkip()">ช่วงนี้เสร็จแล้ว ▸</button>
+            <button class="pt-btn" onclick="ptReset()">⟲ เริ่มรอบ 1 ใหม่</button>
+            <button class="pt-btn" onclick="ptClose()">✕ ปิด</button>
+          </div>
         </div>
         <p class="pt-hint">ถ้าเครื่องปั่นตั้งเวลาช่วงปั่นเองได้ พอเครื่องปั่นเสร็จให้กด “ช่วงนี้เสร็จแล้ว” เพื่อข้ามไปจับเวลาช่วงพักต่อทันทีค่ะ</p>
       </div>
@@ -479,7 +517,7 @@
     const ctaSub = document.getElementById('ptCtaSub');
     if (ctaSub) ctaSub.textContent = 'ไล่จับเวลาทีละช่วง: ปั่น ' + curS + ' วินาที → พัก ' + curRest + ' วินาที ครบ ' + curR + ' รอบ · มีเสียงเตือนเมื่อจบแต่ละช่วง และบอกเวลานาฬิกาที่แต่ละช่วงจะครบ';
     const ptC = document.getElementById('ptCta'); if (ptC) ptC.style.display = 'block';
-    const ptP = document.getElementById('ptPanel'); if (ptP) { ptP.style.display = 'none'; ptP.classList.remove('rest','done'); }
+    const ptP = document.getElementById('ptPanel'); if (ptP) { ptP.style.display = 'none'; ptP.className = 'pst-timer'; }
 
     // badges
     const badges = document.getElementById('badges');
@@ -542,6 +580,7 @@
     ptUnlock();
     const cta = document.getElementById('ptCta'); if (cta) cta.style.display = 'none';
     const panel = document.getElementById('ptPanel'); if (panel) panel.style.display = 'block';
+    ptBuildTl();
     ptPaint();
     if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -588,29 +627,67 @@
   }
   function ptClose() {
     clearInterval(PT.iv); PT.iv = null; PT.running = false; PT.idx = 0; PT.endTime = null; PT.remaining = null;
-    const panel = document.getElementById('ptPanel'); if (panel) { panel.style.display = 'none'; panel.classList.remove('rest', 'done'); }
+    const panel = document.getElementById('ptPanel'); if (panel) { panel.style.display = 'none'; panel.className = 'pst-timer'; }
     const cta = document.getElementById('ptCta'); if (cta) cta.style.display = 'block';
+  }
+  function ptBuildTl() {
+    const tl = document.getElementById('ptTl'), tlr = document.getElementById('ptTlR');
+    if (!tl || !PT.phases.length) return;
+    const rounds = PT.phases[PT.phases.length - 1].round;
+    tl.innerHTML = PT.phases.map((p, i) => '<div class="pt-seg ' + p.kind + '" id="ptseg_' + i + '" style="flex:' + p.dur + '"><div class="fl" id="ptfl_' + i + '"></div></div>').join('');
+    const per = {}; PT.phases.forEach(p => { per[p.round] = (per[p.round] || 0) + p.dur; });
+    tlr.innerHTML = Array.from({ length: rounds }, (_, k) => '<span id="ptr_' + (k + 1) + '" style="flex:' + per[k + 1] + '">รอบ ' + (k + 1) + '</span>').join('');
   }
   function ptPaint() {
     const panel = document.getElementById('ptPanel'); if (!panel) return;
-    const lbl = panel.querySelector('.pt-label'), tm = panel.querySelector('.pt-time'), end = panel.querySelector('.pt-endat'), bar = panel.querySelector('.pt-bar'), btn = panel.querySelector('.pt-start');
+    const chip = document.getElementById('ptChip'), tm = document.getElementById('ptTime'), end = document.getElementById('ptEnd'),
+          ring = document.getElementById('ptRing'), btn = panel.querySelector('.pt-start'), dots = document.getElementById('ptDots');
     const total = PT.phases.length, rounds = total ? PT.phases[total - 1].round : 0;
-    if (!total || PT.idx >= total) {
-      panel.classList.remove('rest'); panel.classList.add('done');
-      if (lbl) lbl.innerHTML = '<b>ครบทุกรอบแล้ว 🎉</b>';
-      if (tm) tm.textContent = '0:00'; if (end) end.innerHTML = '&nbsp;'; if (bar) bar.style.width = '0%';
-      if (btn) { btn.textContent = 'เริ่มรอบ 1 ใหม่'; btn.classList.add('paused'); }
-      return;
+    const doneAll = !total || PT.idx >= total;
+    const ph = doneAll ? null : PT.phases[PT.idx];
+    const rem = (PT.running && PT.endTime != null) ? Math.max(0, Math.round((PT.endTime - Date.now()) / 1000)) : (PT.remaining != null ? PT.remaining : (ph ? ph.dur : 0));
+    const idle = !doneAll && !PT.running && PT.idx === 0 && rem === PT.phases[0].dur;
+    const mode = doneAll ? 'done' : (idle ? 'idle' : ph.kind);
+    const warn5 = PT.running && !doneAll && rem <= 5 && rem > 0;
+    panel.className = 'pst-timer' + (mode === 'spin' || mode === 'rest' || mode === 'done' ? ' ' + mode : '') + (warn5 ? ' warn5' : '');
+    if (mode === 'done') { chip.className = 'pt-chip done'; chip.textContent = '✓ ครบทุกรอบแล้ว 🎉'; }
+    else if (mode === 'idle') { chip.className = 'pt-chip idle'; chip.textContent = 'พร้อมเริ่ม'; }
+    else { chip.className = 'pt-chip ' + ph.kind; chip.textContent = ph.kind === 'spin' ? '🌀 ปั่น' : '😴 พัก'; }
+    const curRound = doneAll ? rounds + 1 : ph.round;
+    let dstr = '';
+    for (let r = 1; r <= rounds; r++) {
+      if (r < curRound) dstr += '<span class="d done">●</span>';
+      else if (r === curRound && mode !== 'idle') dstr += '<span class="d cur">◐</span>';
+      else dstr += '<span class="d up">○</span>';
     }
-    panel.classList.remove('done');
-    const ph = PT.phases[PT.idx];
-    panel.classList.toggle('rest', ph.kind === 'rest');
-    const rem = (PT.running && PT.endTime != null) ? Math.max(0, Math.round((PT.endTime - Date.now()) / 1000)) : (PT.remaining != null ? PT.remaining : ph.dur);
-    if (lbl) lbl.innerHTML = 'รอบ ' + ph.round + '/' + rounds + ' · <b>' + (ph.kind === 'spin' ? '🌀 กำลังปั่น' : '😴 กำลังพัก') + '</b>';
-    if (tm) tm.textContent = ptFmt(rem);
-    if (bar) bar.style.width = Math.max(0, Math.min(100, rem / ph.dur * 100)) + '%';
-    if (end) end.innerHTML = (PT.running && PT.endTime != null) ? ('⏰ ช่วงนี้ครบเวลา ' + ptClock(PT.endTime)) : '&nbsp;';
-    if (btn) { btn.textContent = PT.running ? 'หยุดพัก' : 'เริ่ม'; btn.classList.toggle('paused', !PT.running); }
+    const tail = doneAll ? ('ครบ ' + rounds + ' รอบ') : (mode === 'idle' ? ('ทั้งหมด ' + rounds + ' รอบ') : ('รอบที่ ' + ph.round + ' / ' + rounds));
+    dots.innerHTML = dstr + ' <span style="margin-left:6px">' + tail + '</span>';
+    let frac;
+    if (mode === 'done') { tm.textContent = '✓'; frac = 1; }
+    else { tm.textContent = rem; frac = ph ? Math.max(0, Math.min(1, rem / ph.dur)) : 1; }
+    if (ring) ring.style.strokeDashoffset = String(Math.round(578 * (1 - frac) * 10) / 10);
+    if (mode === 'done') { end.style.visibility = 'visible'; end.textContent = '🎉 เสร็จเรียบร้อย'; }
+    else if (mode === 'idle') { end.style.visibility = 'hidden'; end.textContent = '—'; }
+    else if (PT.running && PT.endTime != null) { end.style.visibility = 'visible'; end.textContent = '⏰ ช่วงนี้ครบเวลา ' + ptClock(PT.endTime); }
+    else { end.style.visibility = 'visible'; end.textContent = '⏸ พักจับเวลาไว้'; }
+    if (mode === 'done') btn.textContent = '▶ เริ่มรอบ 1 ใหม่';
+    else if (PT.running) btn.textContent = '⏸ หยุด';
+    else if (mode === 'idle') btn.textContent = '▶ เริ่ม';
+    else btn.textContent = '▶ เริ่มต่อ';
+    PT.phases.forEach((p, i) => {
+      const el = document.getElementById('ptseg_' + i), fl = document.getElementById('ptfl_' + i);
+      if (!el || !fl) return;
+      let pct;
+      if (doneAll || i < PT.idx) pct = 100;
+      else if (i === PT.idx && mode !== 'idle') pct = (p.dur - Math.max(0, Math.min(p.dur, rem))) / p.dur * 100;
+      else pct = 0;
+      fl.style.width = Math.max(0, Math.min(100, pct)) + '%';
+      el.classList.toggle('cur', !doneAll && i === PT.idx && mode !== 'idle');
+    });
+    for (let r = 1; r <= rounds; r++) {
+      const l = document.getElementById('ptr_' + r);
+      if (l) l.classList.toggle('cur', !doneAll && mode !== 'idle' && r === curRound);
+    }
   }
   document.addEventListener('visibilitychange', () => { if (!document.hidden) ptResync(); });
   window.addEventListener('focus', ptResync);
