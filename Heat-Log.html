@@ -85,8 +85,10 @@
 
   /* แถบสถานะสด */
   .statusbar{margin:0 0 12px;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;text-align:center;line-height:1.55;background:#fff;border:1px solid var(--line);color:var(--muted)}
-  .statusbar .big{font-family:'Fraunces',serif;font-size:30px;font-weight:400;display:block;margin:2px 0 4px;font-variant-numeric:tabular-nums}
+  .statusbar .big{font-family:'Fraunces',serif;font-size:34px;font-weight:400;display:block;margin:2px 0 4px;font-variant-numeric:tabular-nums}
   .statusbar .sm{display:block;font-weight:400;font-size:12.5px;margin-top:3px}
+  .statusbar .ph{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.02em;padding:3px 12px;border-radius:100px;background:rgba(255,255,255,.65);border:1px solid rgba(0,0,0,.05)}
+  .statusbar .nx{display:block;font-size:15px;font-weight:700;margin-top:7px}
   .statusbar.heat{background:#FBF1E7;border-color:#E6C9A8;color:#8A5A2B}
   .statusbar.hold{background:#EAF1F7;border-color:#b9d3e6;color:#2D5474}
   .statusbar.hold .big{color:var(--blue)}
@@ -112,6 +114,25 @@
   .prog .pbar i{display:block;height:100%;width:0%;background:var(--accent);border-radius:6px;transition:width .25s}
   td.temp-ok{color:var(--accent-deep);font-weight:600}
   .btn.waiting{opacity:.45}
+  /* โทนสีบล็อก: ให้ความร้อน = ส้มอิฐ · ลดความร้อน = ฟ้าหม่น (สีช่วยกันบันทึกผิดที่) */
+  #heatBlock .block-t{color:#C77F3A}
+  #heatBlock .block-t .n{background:#C77F3A}
+  #heatBlock .prog .pbar i{background:#C77F3A}
+  #heatBlock .quick .qb{border-color:#C77F3A;background:#FBF1E7;color:#8A5A2B}
+  #heatBlock .quick .qb:hover{background:#C77F3A;color:#fff}
+  #heatBlock .quick .sub-b{background:#C77F3A}
+  #coolBlock .block-t{color:var(--blue)}
+  #coolBlock .block-t .n{background:var(--blue)}
+  #coolBlock .prog .pbar i{background:var(--blue)}
+  #coolBlock .btn.done{background:#2D5474}
+  .step.heat.done .dot{background:#C77F3A;border-color:#C77F3A}
+  .step.heat.done{color:#8A5A2B}
+  .step.heat.cur .dot{border-color:#C77F3A;color:#C77F3A;box-shadow:0 0 0 4px rgba(199,127,58,.16)}
+  .step.heat.cur{color:#8A5A2B}
+  .step.cool.done .dot{background:var(--blue);border-color:var(--blue)}
+  .step.cool.done{color:#2D5474}
+  .step.cool.cur .dot{border-color:var(--blue);color:var(--blue);box-shadow:0 0 0 4px rgba(62,115,166,.14)}
+  .step.cool.cur{color:#2D5474}
   .cool-lock{background:#F1ECE3;border:1px dashed var(--muted-soft);border-radius:10px;padding:9px 13px;font-size:12.5px;color:var(--muted);margin-bottom:12px}
   #coolBlock.locked{opacity:.6}
   #coolBlock.locked .btn,#coolBlock.locked input{pointer-events:none}
@@ -291,14 +312,14 @@
   </div>
 
   <!-- 3. บันทึกการต้ม -->
-  <div class="block logging-only">
+  <div class="block logging-only" id="heatBlock">
     <div class="block-t"><span class="n">3</span> บันทึกการให้ความร้อน <span class="prog" id="heatProg"><b>0/3</b><span class="pbar"><i></i></span></span></div>
 
     <div class="stepper" id="stepperBox"></div>
     <div class="statusbar" id="statusBar" style="display:none"></div>
 
     <div style="font-size:13px;font-weight:600;color:var(--muted)">🌡 บันทึกอุณหภูมิเป็นระยะ <span style="font-weight:400;color:var(--muted-soft)">(ค่าแรกที่บันทึก = เริ่มต้ม)</span></div>
-    <div style="font-size:12px;color:var(--muted);line-height:1.55;margin:3px 0 8px">กดปุ่มอุณหภูมิที่ <b>ต่ำกว่าแต่ใกล้ค่าที่อ่านได้มากที่สุด</b> (เช่น อ่านได้ 70.7 °C → กด 70.5) หรือพิมพ์ค่าที่อ่านได้เองในช่อง “ระบุ °C” · ระบบลงเวลาให้อัตโนมัติ และเริ่มจับเวลา LTLT ให้เองเมื่อถึงเกณฑ์</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.55;margin:3px 0 8px">กดปุ่มอุณหภูมิที่ <b>ต่ำกว่าแต่ใกล้ค่าที่อ่านได้มากที่สุด</b> (เช่น อ่านได้ 70.7 °C → กด 70.5) หรือพิมพ์ค่าที่อ่านได้เองในช่อง “ระบุ °C” · ระบบลงเวลาให้อัตโนมัติ และเริ่มจับเวลาให้เองเมื่ออุณหภูมิที่บันทึกถึงเกณฑ์</div>
     <div class="quick" id="quickRow">
       <button class="qb" id="qb0" onclick="quickTemp(0)" disabled>–</button>
       <button class="qb" id="qb1" onclick="quickTemp(1)" disabled>–</button>
@@ -310,7 +331,6 @@
       <button class="sub-b" onclick="quickTempManual()">＋ บันทึก</button>
     </div>
 
-    <div class="nextread" id="nextReadBox" style="display:none"></div>
     <div class="remind" id="remindBox" style="display:none"></div>
 
     <button class="btn big stop" id="btnEndHold" style="margin-top:22px" onclick="confirmEndHold()">⏹ จบการให้ความร้อน — หยุดจับเวลา</button>
@@ -710,7 +730,6 @@ function updateUI(){
 
   // เวลาที่ถึงเกณฑ์ — ตรวจจับอัตโนมัติจากค่าที่บันทึก (ค่าแรกที่ ≥ เกณฑ์)
   const rt=getReachTime(c);
-  renderNextRead();
   renderStatus(c,rt);
   renderStepper(c,rt);
 
@@ -777,62 +796,63 @@ function checkReminder(){
   if(state.remindKey!==last){state.remindKey=last;state.remindCount=0;}
   if(slot>state.remindCount){state.remindCount=slot;save();cdBeep();showRemind(true);}
 }
-// บรรทัดเล็ก: นับถอยหลังถึงกำหนดบันทึกอุณหภูมิครั้งถัดไป
-function renderNextRead(){
-  const box=document.getElementById('nextReadBox');if(!box)return;
-  const rt=getReachTime(crit());
-  if(state.endHold||!state.readings.length||!rt||state.interval===0){box.style.display='none';return;}  // ปิดเตือน / เริ่มนับเฉพาะหลังถึงเกณฑ์
-  const last=state.readings[state.readings.length-1].t;
-  const iv=(state.interval||3)*60000;
-  let rem=iv-((Date.now()-last)%iv);if(rem===iv&&Date.now()===last)rem=iv;
-  const s=Math.ceil(rem/1000),mm=Math.floor(s/60),ss=s%60;
-  box.style.display='block';
-  box.innerHTML='⏱ ครบกำหนดบันทึกอุณหภูมิครั้งถัดไปในอีก <b>'+mm+':'+String(ss).padStart(2,'0')+'</b> นาที';
-}
-/* แถบสถานะสด — รวมสถานะทุกช่วงไว้จุดเดียว */
+/* แถบสถานะสด — นาฬิกาเดียว: นับถอยหลังถึง action ถัดไป */
+function _mmss(ms){const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 function renderStatus(c,rt){
   const box=document.getElementById('statusBar');if(!box)return;
   if(c===undefined)c=crit();
   if(rt===undefined)rt=getReachTime(c);
   const show=(cls,html)=>{box.style.display='block';box.className='statusbar'+(cls?' '+cls:'');box.innerHTML=html;};
+  const ph=t=>'<span class="ph">'+t+'</span>';
+  const nx=t=>'<span class="nx">ถัดไป · '+t+'</span>';
   if(!state.program){box.style.display='none';return;}
   const last=state.readings.length?state.readings[state.readings.length-1]:null;
   // เสร็จสิ้นทั้งหมด
-  if(state.reachCool){show('ok','✓ เสร็จสิ้น — ถึง ≤4 °C เวลา '+hms(state.reachCool));return;}
+  if(state.reachCool){show('ok',ph('✓ เสร็จสิ้น')+nx('ไม่มีแล้วค่ะ — ถึง ≤4 °C เวลา '+hms(state.reachCool)));return;}
   // ช่วงลดความร้อน
   if(state.endHold){
-    if(state.startCool)show('hold','❄ กำลังลดความร้อน — เริ่มเมื่อ '+hms(state.startCool)+'<span class="sm">ถึง ≤4 °C แล้วกดปุ่มในข้อ 4 ค่ะ</span>');
-    else show('','⏹ จบให้ความร้อนแล้ว เวลา '+hms(state.endHold)+'<span class="sm">ต่อด้วย “เริ่มลดความร้อน” ในข้อ 4 ค่ะ</span>');
+    if(state.startCool)show('hold',ph('❄ กำลังลดความร้อน — เริ่ม '+hms(state.startCool))+nx('พออุณหภูมิถึง ≤4 °C กด “ถึง ≤4 °C” ในข้อ 4'));
+    else show('',ph('⏹ จบให้ความร้อนแล้ว '+hms(state.endHold))+nx('กด “เริ่มลดความร้อน” ในข้อ 4 เมื่อเริ่มแช่เย็น'));
     return;
   }
   // คัสตาร์ด (ไม่จับเวลา)
   if(c.noTimer){
-    if(!last){show('','พร้อมเริ่ม — บันทึกอุณหภูมิค่าแรกเมื่อเริ่มต้ม');return;}
+    if(!last){show('',ph('พร้อมเริ่ม')+nx('บันทึกอุณหภูมิค่าแรกเมื่อเริ่มต้ม'));return;}
     const mx=Math.max(...state.readings.map(r=>r.temp));
-    if(mx>85)show('heat','⚠ เกินเพดาน 85 °C — รีบยกลงจากเตา<span class="sm">สูงสุดที่บันทึก '+mx+' °C</span>');
-    else if(mx>=82)show('ok','✓ ถึงเป้า 82 °C แล้ว — สังเกตเนื้อเคลือบหลังช้อน (nappe) แล้วยกลง<span class="sm">สูงสุดที่บันทึก '+mx+' °C · เพดาน 85 °C</span>');
-    else show('heat','🔥 กำลังทำคัสตาร์ด — เป้า 82 °C (เพดาน 85 °C)<span class="sm">สูงสุดที่บันทึก '+mx+' °C</span>');
+    if(mx>85)show('heat',ph('⚠ เกินเพดาน 85 °C')+nx('รีบยกลงจากเตา แล้วกด “จบการให้ความร้อน”')+'<span class="sm">สูงสุดที่บันทึก '+mx+' °C</span>');
+    else if(mx>=82)show('ok',ph('✓ ถึงเป้า 82 °C แล้ว')+nx('สังเกตเนื้อเคลือบหลังช้อน (nappe) ยกลง แล้วกด “จบการให้ความร้อน”')+'<span class="sm">สูงสุดที่บันทึก '+mx+' °C · เพดาน 85 °C</span>');
+    else show('heat',ph('🔥 กำลังทำคัสตาร์ด')+nx('บันทึกอุณหภูมิต่อจนถึงเป้า 82 °C (เพดาน 85 °C)')+'<span class="sm">สูงสุดที่บันทึก '+mx+' °C</span>');
     return;
   }
   // ยังไม่เริ่ม / กำลังไล่อุณหภูมิ
   if(!rt){
-    if(!last){show('','พร้อมเริ่ม — บันทึกอุณหภูมิค่าแรกเมื่อเริ่มต้ม (ค่าแรก = เริ่มต้ม)');return;}
-    show('heat','🔥 กำลังให้ความร้อน — ยังไม่ถึงเกณฑ์ ≥ '+c.temp+' °C<span class="sm">ค่าล่าสุด '+last.temp+' °C เวลา '+hms(last.t)+' · เริ่มต้ม '+hms(state.readings[0].t)+'</span>');
+    if(!last){show('',ph('พร้อมเริ่ม')+nx('บันทึกอุณหภูมิค่าแรกเมื่อเริ่มต้ม (ค่าแรก = เริ่มต้ม)'));return;}
+    show('heat',ph('🔥 กำลังให้ความร้อน')+nx('บันทึกอุณหภูมิเป็นระยะ จนถึงเกณฑ์ ≥ '+c.temp+' °C')+'<span class="sm">ค่าล่าสุด '+last.temp+' °C เวลา '+hms(last.t)+' · เริ่มต้ม '+hms(state.readings[0].t)+'</span>');
     return;
   }
-  // ถึงเกณฑ์แล้ว — จับเวลา
+  // ถึงเกณฑ์แล้ว — จับเวลา: นับถอยหลังถึง action ถัดไป (บันทึกผล หรือ จบให้ความร้อน)
   if(isNaN(c.time)){box.style.display='none';return;}
-  const end=rt+c.time*60000, remMs=end-Date.now();
-  const frac=Math.max(0,Math.min(1,(Date.now()-rt)/(c.time*60000)));
-  if(remMs>0){
-    const s=Math.ceil(remMs/1000),mm=Math.floor(s/60),ss=s%60;
-    show('hold','⏳ กำลังจับเวลา — เหลืออีก<span class="big">'+mm+':'+String(ss).padStart(2,'0')+'</span>จะครบ '+c.time+' นาที เวลา '+hms(end)
-      +'<span class="sm">เริ่มจับเวลา '+hms(rt)+' · ห้ามต่ำกว่า '+c.temp+' °C ระหว่างนี้</span>'
-      +'<span class="sbar"><i style="width:'+(frac*100).toFixed(1)+'%"></i></span>');
-  }else{
-    show('ok','✓ ครบเวลาขั้นต่ำแล้ว ('+c.time+' นาที) เมื่อ<span class="big">'+hms(end)+'</span>คงอุณหภูมิต่อได้ตามต้องการ แล้วกด “จบการให้ความร้อน”'
-      +'<span class="sbar"><i style="width:100%"></i></span>');
+  const now=Date.now();
+  const end=rt+c.time*60000, remHold=end-now;
+  const frac=Math.max(0,Math.min(1,(now-rt)/(c.time*60000)));
+  const sbar='<span class="sbar"><i style="width:'+(frac*100).toFixed(1)+'%"></i></span>';
+  const smHold='<span class="sm">คงอุณหภูมิแล้ว '+_mmss(now-rt)+' / '+c.time+':00 นาที · ครบ '+hms(end)+' · ห้ามต่ำกว่า '+c.temp+' °C</span>';
+  if(remHold<=0){
+    show('ok',ph('✓ ครบเวลาขั้นต่ำแล้ว ('+c.time+' นาที เมื่อ '+hms(end)+')')+nx('⏹ กด “จบการให้ความร้อน” ได้เลย')
+      +'<span class="sm">คงอุณหภูมิต่อได้ตามต้องการค่ะ</span><span class="sbar"><i style="width:100%"></i></span>');
     if(_cdLastBeepEnd!==end){_cdLastBeepEnd=end;cdBeep();}
+    return;
+  }
+  // เวลาถึงกำหนดบันทึกครั้งถัดไป
+  let remRead=null;
+  if(state.interval&&last){const iv=state.interval*60000;remRead=iv-((now-last.t)%iv);}
+  if(remRead!=null&&remRead<remHold){
+    show('hold',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('🌡 บันทึกอุณหภูมิครั้งถัดไป ในอีก')
+      +'<span class="big">'+_mmss(remRead)+'</span>'+smHold+sbar);
+  }else{
+    show('hold',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('⏹ จบการให้ความร้อน — จะครบเกณฑ์ในอีก')
+      +'<span class="big">'+_mmss(remHold)+'</span>'
+      +'<span class="sm">ครบ '+c.time+' นาที เวลา '+hms(end)+' · ห้ามต่ำกว่า '+c.temp+' °C</span>'+sbar);
   }
 }
 /* เส้นทาง 5 ขั้น */
@@ -851,7 +871,7 @@ function renderStepper(c,rt){
     {lbl:'ถึง ≤4 °C',t:state.reachCool}
   ];
   let cur=steps.findIndex(s=>!s.t);
-  box.innerHTML=steps.map((s,i)=>'<div class="step'+(s.t?' done':(i===cur?' cur':''))+'"><div class="dot">'+(s.t?'✓':(i+1))+'</div>'+s.lbl+'<span class="tm">'+(s.t?hm(s.t):'&nbsp;')+'</span></div>').join('');
+  box.innerHTML=steps.map((s,i)=>'<div class="step '+(i<3?'heat':'cool')+(s.t?' done':(i===cur?' cur':''))+'"><div class="dot">'+(s.t?'✓':(i+1))+'</div>'+s.lbl+'<span class="tm">'+(s.t?hm(s.t):'&nbsp;')+'</span></div>').join('');
   // progress หัวบล็อก 3 (3 ขั้นแรก) และบล็อก 4 (2 ขั้นหลัง)
   const n3=steps.slice(0,3).filter(s=>s.t).length, n4=steps.slice(3).filter(s=>s.t).length;
   const p3=document.getElementById('heatProg'),p4=document.getElementById('coolProg');
@@ -976,9 +996,9 @@ function buildChart(c){
 (function(){
   if(!state.date)state.date=thaiDate(Date.now());
   refreshBatchSel();syncInputs();updateUI();
-  setInterval(()=>{renderNextRead();renderStatus();checkReminder();},1000);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderNextRead();renderStatus();checkReminder();}});
-  window.addEventListener('focus',()=>{renderNextRead();renderStatus();checkReminder();});
+  setInterval(()=>{renderStatus();checkReminder();},1000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderStatus();checkReminder();}});
+  window.addEventListener('focus',()=>{renderStatus();checkReminder();});
 })();
 </script>
 <script>
