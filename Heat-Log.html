@@ -85,16 +85,18 @@
 
   /* แถบสถานะสด */
   .statusbar{margin:0 0 12px;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;text-align:center;line-height:1.55;background:#fff;border:1px solid var(--line);color:var(--muted)}
-  .statusbar .big{font-family:'Fraunces',serif;font-size:34px;font-weight:400;display:block;margin:2px 0 4px;font-variant-numeric:tabular-nums}
+  .statusbar .big{font-family:'Fraunces',serif;font-size:clamp(44px,15vw,64px);line-height:1.08;font-weight:400;display:block;margin:2px 0 2px;font-variant-numeric:tabular-nums}
   .statusbar .sm{display:block;font-weight:400;font-size:12.5px;margin-top:3px}
   .statusbar .ph{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.02em;padding:3px 12px;border-radius:100px;background:rgba(255,255,255,.65);border:1px solid rgba(0,0,0,.05)}
   .statusbar .nx{display:block;font-size:15px;font-weight:700;margin-top:7px}
   .statusbar.heat{background:#FBF1E7;border-color:#E6C9A8;color:#8A5A2B}
+  .statusbar.heat .big{color:#C77F3A}
+  .statusbar.heat .sbar i{background:#C77F3A}
   .statusbar.hold{background:#EAF1F7;border-color:#b9d3e6;color:#2D5474}
   .statusbar.hold .big{color:var(--blue)}
   .statusbar.ok{background:#EFF3E7;border-color:#cfe0bf;color:var(--accent-deep)}
   .statusbar.ok .big{color:var(--accent-deep)}
-  .sbar{margin-top:9px;height:8px;border-radius:8px;background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.07);overflow:hidden}
+  .sbar{display:block;margin-top:9px;height:8px;border-radius:8px;background:rgba(255,255,255,.75);border:1px solid rgba(0,0,0,.07);overflow:hidden}
   .sbar i{display:block;height:100%;width:0%;background:var(--blue);border-radius:8px;transition:width .4s}
   .statusbar.ok .sbar i{background:var(--accent)}
   /* เส้นทาง 5 ขั้น */
@@ -847,10 +849,10 @@ function renderStatus(c,rt){
   let remRead=null;
   if(state.interval&&last){const iv=state.interval*60000;remRead=iv-((now-last.t)%iv);}
   if(remRead!=null&&remRead<remHold){
-    show('hold',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('🌡 บันทึกอุณหภูมิครั้งถัดไป ในอีก')
+    show('heat',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('🌡 บันทึกอุณหภูมิครั้งถัดไป ในอีก')
       +'<span class="big">'+_mmss(remRead)+'</span>'+smHold+sbar);
   }else{
-    show('hold',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('⏹ จบการให้ความร้อน — จะครบเกณฑ์ในอีก')
+    show('heat',ph('⏳ กำลังจับเวลาคงอุณหภูมิ')+nx('⏹ จบการให้ความร้อน — จะครบเกณฑ์ในอีก')
       +'<span class="big">'+_mmss(remHold)+'</span>'
       +'<span class="sm">ครบ '+c.time+' นาที เวลา '+hms(end)+' · ห้ามต่ำกว่า '+c.temp+' °C</span>'+sbar);
   }
