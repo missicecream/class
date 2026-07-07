@@ -22,6 +22,10 @@
   .sheet{max-width:760px;margin:0 auto}
   .back-link{display:inline-flex;gap:7px;margin-bottom:18px;padding:8px 18px;background:var(--card);border:1px solid var(--line);border-radius:100px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
   .back-link:hover{color:var(--ink);border-color:var(--accent)}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .sound-toggle{display:inline-flex;align-items:center;gap:7px;margin-bottom:18px;padding:8px 16px;background:var(--card);border:1px solid var(--line);border-radius:100px;color:var(--muted);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .22s}
+  .sound-toggle:hover{color:var(--ink);border-color:var(--accent)}
+  .sound-toggle.off{color:var(--muted-soft)}
 
   header{text-align:center;margin-bottom:20px}
   .eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:500}
@@ -193,7 +197,7 @@
   .bbtn.new{background:var(--accent-deep);color:#fff;border:none}
   .bbtn.del{color:var(--rose)}
 
-  body.cap .back-link,body.cap .actions,body.cap .note,body.cap .logging-only,body.cap .batchbar,body.cap .del,body.cap .ed-t,body.cap .guide-link,body.cap #progPicker,body.cap .prog-hint,body.cap #customWrap,body.cap .stepper,body.cap .statusbar,body.cap .prog{display:none!important}
+  body.cap .back-link,body.cap .actions,body.cap .note,body.cap .logging-only,body.cap .batchbar,body.cap .del,body.cap .ed-t,body.cap .guide-link,body.cap #progPicker,body.cap .prog-hint,body.cap #customWrap,body.cap .stepper,body.cap .statusbar,body.cap .prog,body.cap .sound-toggle{display:none!important}
   body.cap #noteBlock.empty-note{display:none!important}
   body.cap .fld textarea{background:none!important;border:1px solid #ccc!important}
   body.cap .rep-head{display:block!important}
@@ -253,7 +257,7 @@
     .summary .verdict,.summary.pass .verdict,.summary.fail .verdict,.summary.wait .verdict{color:#000!important}
     .ev .val,.ev .val.no,.pst-metrics .big{color:#000!important}
     .chip{background:#eee!important;color:#000!important}
-    .batchbar,.remind,.nextread,.btn-undo,.cool-lock,#progPicker,.prog-hint,#customWrap,.stepper,.statusbar,.prog{display:none!important}
+    .batchbar,.remind,.nextread,.btn-undo,.cool-lock,#progPicker,.prog-hint,#customWrap,.stepper,.statusbar,.prog,.sound-toggle{display:none!important}
     .chartwrap{border:1px solid #ccc;background:#fff!important}
     .chartwrap svg rect{display:none}
   }
@@ -261,7 +265,10 @@
 </head>
 <body>
 <div class="sheet">
-  <a class="back-link" href="index.html">← กลับหน้าหลัก</a>
+  <div class="topbar">
+    <a class="back-link" href="index.html">← กลับหน้าหลัก</a>
+    <button class="sound-toggle" id="soundToggle" type="button">🔔 เสียง: เปิด</button>
+  </div>
 
   <header>
     <div class="eyebrow">Miss Icecream · Lab Tools</div>
@@ -778,7 +785,12 @@ function getReachTime(c,reads){
 }
 // นับถอยหลังแบบอิงนาฬิกาจริง — ไม่รีเซ็ตเมื่อปิดจอ/ปิดหน้า
 let _cdAudio=null,_cdLastBeepEnd=null;
+// เสียงเปิด/ปิด (จำค่าไว้ประจำเครื่อง) + ปลดล็อกเสียงตั้งแต่แตะแรก (สำคัญบนมือถือ)
+const SND_KEY='heatlog_sound_v1';
+let soundOn=true;try{soundOn=localStorage.getItem(SND_KEY)!=='off';}catch(e){}
+function unlockAudio(){try{if(!_cdAudio)_cdAudio=new (window.AudioContext||window.webkitAudioContext)();if(_cdAudio.state==='suspended')_cdAudio.resume();}catch(e){}}
 function cdBeep(){
+  if(!soundOn)return;
   try{if(!_cdAudio)_cdAudio=new (window.AudioContext||window.webkitAudioContext)();if(_cdAudio.state==='suspended')_cdAudio.resume();
     const t0=_cdAudio.currentTime;for(let i=0;i<3;i++){const st=t0+i*0.3;const o=_cdAudio.createOscillator(),g=_cdAudio.createGain();o.connect(g);g.connect(_cdAudio.destination);o.type='square';o.frequency.value=880;g.gain.setValueAtTime(0.0001,st);g.gain.exponentialRampToValueAtTime(0.5,st+0.02);g.gain.exponentialRampToValueAtTime(0.0001,st+0.25);o.start(st);o.stop(st+0.27);}
   }catch(e){}
@@ -787,6 +799,7 @@ function cdBeep(){
 // เสียงติ๊กสั้นสำหรับนับถอยหลัง 5-4-3-2-1
 let _lastTickKey=null;
 function tickBeep(){
+  if(!soundOn)return;
   try{if(!_cdAudio)_cdAudio=new (window.AudioContext||window.webkitAudioContext)();if(_cdAudio.state==='suspended')_cdAudio.resume();
     const t0=_cdAudio.currentTime;const o=_cdAudio.createOscillator(),g=_cdAudio.createGain();o.connect(g);g.connect(_cdAudio.destination);o.type='square';o.frequency.value=660;g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(0.4,t0+0.015);g.gain.exponentialRampToValueAtTime(0.0001,t0+0.12);o.start(t0);o.stop(t0+0.14);
   }catch(e){}
@@ -1016,6 +1029,13 @@ function buildChart(c){
   setInterval(()=>{renderStatus();checkReminder();},1000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderStatus();checkReminder();}});
   window.addEventListener('focus',()=>{renderStatus();checkReminder();});
+  // เสียง: ปุ่มเปิด/ปิด + ปลดล็อก AudioContext จากการแตะครั้งแรกๆ
+  const st=document.getElementById('soundToggle');
+  function paintSound(){if(!st)return;st.textContent=soundOn?'🔔 เสียง: เปิด':'🔕 เสียง: ปิด';st.classList.toggle('off',!soundOn);}
+  if(st)st.addEventListener('click',()=>{soundOn=!soundOn;try{localStorage.setItem(SND_KEY,soundOn?'on':'off')}catch(e){};if(soundOn)unlockAudio();paintSound();});
+  paintSound();
+  document.addEventListener('pointerdown',unlockAudio);
+  document.addEventListener('touchstart',unlockAudio,{passive:true});
 })();
 </script>
 <script>
