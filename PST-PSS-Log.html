@@ -47,22 +47,42 @@
   .et-in{font-family:'Fraunces',serif;font-size:14px;padding:6px 9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
   .et-in:focus{border-color:var(--accent);outline:none}
 
-  .evrow{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+  .evrow{display:grid;grid-template-columns:34px 1fr;gap:0 12px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
   .evrow:last-child{border-bottom:none}
-  .evlbl{font-size:13.5px;font-weight:600;margin-bottom:7px}
+  .stepcol{display:flex;justify-content:center;padding-top:2px}
+  .stepnum{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:#fff;color:var(--muted-soft);font-family:'Fraunces',serif;font-size:14px;display:flex;align-items:center;justify-content:center;transition:background .18s,border-color .18s,color .18s,box-shadow .18s}
+  .evrow.logged .stepnum{background:var(--accent);border-color:var(--accent);color:#fff}
+  #pstEvents .evrow.logged .stepnum{background:#C77F3A;border-color:#C77F3A}
+  #pssEvents .evrow.logged .stepnum{background:var(--blue);border-color:var(--blue)}
+  .evrow.next .stepnum{border-color:var(--accent-deep);color:var(--accent-deep);box-shadow:0 0 0 4px rgba(107,142,78,.14)}
+  #pstEvents .evrow.next .stepnum{border-color:#C77F3A;color:#C77F3A;box-shadow:0 0 0 4px rgba(199,127,58,.16)}
+  #pssEvents .evrow.next .stepnum{border-color:var(--blue);color:var(--blue);box-shadow:0 0 0 4px rgba(62,115,166,.14)}
+  .evlbl{font-size:13.5px;font-weight:600;margin-bottom:7px;padding-top:5px}
+  .evrow.logged .evlbl{margin-bottom:2px;padding-top:0}
   .evlbl .opt{font-weight:400;color:var(--muted-soft);font-size:12px}
   .evin{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .evin input{width:96px;font-size:14px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-family:'Fraunces',serif;text-align:center}
-  .evin input:focus{border-color:var(--accent);background:#fff;outline:none}
-  .qb{padding:9px 14px;border-radius:9px;border:1px solid var(--accent);background:#EFF3E7;color:var(--accent-deep);font-weight:700;font-size:14px;cursor:pointer;font-family:'Fraunces',serif}
+  .evrow.logged .evin{display:none}
+  .evin input{width:96px;font-size:15px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;font-family:'Fraunces',serif;text-align:center;background:#fff}
+  .evin input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px rgba(107,142,78,.12)}
+  .qb{padding:9px 14px;border-radius:10px;border:1px solid var(--accent);background:#EFF3E7;color:var(--accent-deep);font-weight:700;font-size:14px;cursor:pointer;font-family:'Fraunces',serif}
   .qb:hover{background:var(--accent);color:#fff}
-  .sub-b{padding:9px 16px;border-radius:9px;border:none;background:var(--ink);color:var(--bg);font-weight:600;cursor:pointer;font-size:13px;font-family:'Sarabun',sans-serif}
+  .sub-b{padding:9px 16px;border-radius:10px;border:none;background:var(--ink);color:var(--bg);font-weight:600;cursor:pointer;font-size:13px;font-family:'Sarabun',sans-serif}
   .clr{border:none;background:none;color:var(--rose);cursor:pointer;font-size:12px;font-family:'Sarabun',sans-serif}
-  .evres{margin-top:7px;font-size:13px}
-  .evres.empty{color:var(--muted-soft);font-style:italic;font-family:'Fraunces',serif}
+  .evres{margin-top:4px;font-size:13px}
+  .evres.empty{display:none}
+  .evres .val{font-family:'Fraunces',serif;font-size:21px;font-weight:600;color:var(--ink)}
+  .evres .val small{font-size:13px;color:var(--muted);font-weight:400}
+  .evres .val.bad{color:var(--rose)}
+  .evres .tim{color:var(--muted);font-size:12.5px;margin-left:8px;font-family:'Fraunces',serif}
+  .evres .acts{display:inline-flex;gap:10px;margin-left:10px}
   .evres .ok{font-family:'Fraunces',serif;color:var(--accent-deep)}
-  .evres .sch{color:var(--blue)}
-  .evres .warn{display:block;margin-top:3px;color:var(--rose);font-size:12.5px}
+  .evres .sch{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:100px;background:#EAF1F7;color:var(--blue);font-size:12px}
+  .evres .warn{display:block;margin-top:4px;color:var(--rose);font-size:12.5px}
+  .prog{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:0;text-transform:none}
+  .prog .pbar{width:70px;height:6px;border-radius:6px;background:var(--line-soft);overflow:hidden}
+  .prog .pbar i{display:block;height:100%;width:0%;background:var(--accent);border-radius:6px;transition:width .25s}
+  .block-t.pst .prog .pbar i{background:#C77F3A}
+  .block-t.pss .prog .pbar i{background:var(--blue)}
 
   .chartwrap{margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
   .chartwrap svg{width:100%;height:auto;display:block}
@@ -84,6 +104,12 @@
   body.cap .back-link,body.cap .actions,body.cap .note,body.cap .evin,body.cap .batchbar,body.cap .clr{display:none!important}
   body.cap .rep-head{display:block!important}
   body.cap .evrow.empty-print,body.cap .block.empty-print{display:none!important}
+  body.cap .stepcol,body.cap .prog{display:none!important}
+  body.cap .evrow{display:block}
+  body.cap .evbody{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  body.cap .evres{margin-top:0}
+  body.cap .evres .val{font-size:14px;color:#000}
+  body.cap .evres .val small,body.cap .evres .tim{color:#000}
   body.cap{background:#fff!important;background-image:none!important}
   body.cap .block{background:#fff!important;border:1px solid #ccc!important;box-shadow:none!important}
   body.cap .block-t,body.cap .block-t.pst,body.cap .block-t.pss{color:#000!important}
@@ -106,6 +132,11 @@
   body.printmode .chartwrap{border:1px solid #ccc!important}
   body.printmode .chartwrap svg rect{display:none!important}
   body.printmode .block.empty-print,body.printmode .evrow.empty-print{display:none!important}
+  body.printmode .stepcol,body.printmode .prog{display:none!important}
+  body.printmode .evrow{display:block}
+  body.printmode .evbody{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  body.printmode .evres{margin-top:0}
+  body.printmode .evres .val{font-size:14px}
   body.printmode #pmbar{display:flex;position:sticky;top:0;z-index:50;gap:10px;align-items:center;flex-wrap:wrap;
     background:#fff;border:1px solid #ccc;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#333}
   #pmbar .msg{flex:1;min-width:160px}
@@ -128,11 +159,16 @@
     .fld textarea{border:1px solid #ccc;border-radius:4px;padding:3px 6px;background:none;font-size:11px;min-height:0}
     .fld label{font-size:9.5px}
     .evin{display:none}
-    .evrow{padding:3px 0;display:flex;justify-content:space-between;align-items:baseline;gap:10px;break-inside:avoid;page-break-inside:avoid}
+    .evrow{padding:3px 0;display:block;break-inside:avoid;page-break-inside:avoid}
+    .stepcol,.prog{display:none!important}
+    .evbody{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
     .fld{break-inside:avoid;page-break-inside:avoid}
     .evrow.empty-print{display:none}
-    .evlbl{margin-bottom:0;font-size:10.5px;font-weight:600}
+    .evlbl{margin-bottom:0;font-size:10.5px;font-weight:600;padding-top:0}
     .evres{margin-top:0;font-size:10.5px;text-align:right;white-space:nowrap}
+    .evres .val{font-size:10.5px;font-weight:700;color:#000}
+    .evres .val small,.evres .tim{font-size:9.5px;color:#000;margin-left:4px}
+    .evres .sch{padding:0;background:none;color:#000;font-size:9.5px}
     .evres .warn{display:inline;color:#000;font-size:9.5px}
     .chartwrap{border:1px solid #ccc;padding:3px}
     footer{margin-top:6px}
@@ -187,13 +223,13 @@
 
   <!-- PST -->
   <div class="block" id="pstBlock">
-    <div class="block-t pst"><span class="tag">PST</span> Paula’s Spin Technique</div>
+    <div class="block-t pst"><span class="tag">PST</span> Paula’s Spin Technique <span class="prog" id="pstProg"><b>0/2</b><span class="pbar"><i></i></span></span></div>
     <div id="pstEvents"></div>
   </div>
 
   <!-- PSS -->
   <div class="block" id="pssBlock">
-    <div class="block-t pss"><span class="tag">PSS</span> Paula’s Smart Setting</div>
+    <div class="block-t pss"><span class="tag">PSS</span> Paula’s Smart Setting <span class="prog" id="pssProg"><b>0/9</b><span class="pbar"><i></i></span></span></div>
     <div id="pssEvents"></div>
   </div>
 
@@ -340,13 +376,15 @@ function setRecorder(v){
   save();
 }
 
-function rowHTML(ev){
-  const unit=ev.unit||'°C';
+function rowHTML(ev,i){
+  const unit=ev.unit||'°C', num=i+1;
   let q='';if(ev.quick)q=ev.quick.map(v=>'<button class="qb" onclick="quickLog(\''+ev.k+'\','+v+')">'+v+' °C</button>').join('');
   return '<div class="evrow" id="row_'+ev.k+'">'
+    +'<div class="stepcol"><div class="stepnum" id="sn_'+ev.k+'" data-n="'+num+'">'+num+'</div></div>'
+    +'<div class="evbody">'
     +'<div class="evlbl">'+ev.label+(ev.optional?' <span class="opt">(ถ้ามี)</span>':'')+'</div>'
     +'<div class="evin">'+q+'<input id="in_'+ev.k+'" type="number" step="0.1" placeholder="'+unit+'"><button class="sub-b" onclick="logEvent(\''+ev.k+'\')">＋ บันทึก</button></div>'
-    +'<div class="evres empty" id="res_'+ev.k+'">ยังไม่บันทึก</div></div>';
+    +'<div class="evres empty" id="res_'+ev.k+'">ยังไม่บันทึก</div></div></div>';
 }
 function logEvent(k){
   const el=document.getElementById('in_'+k);const v=parseFloat(el.value);
@@ -425,16 +463,28 @@ function syncInputs(){
 function evMeta(k){return ALL.find(e=>e.k===k)}
 function updateUI(){
   ALL.forEach(ev=>{
-    const r=document.getElementById('res_'+ev.k), row=document.getElementById('row_'+ev.k);
+    const r=document.getElementById('res_'+ev.k), row=document.getElementById('row_'+ev.k), sn=document.getElementById('sn_'+ev.k);
     const d=state.events[ev.k];
-    if(!d){r.className='evres empty';r.textContent='ยังไม่บันทึก';row.classList.remove('logged');row.classList.add('empty-print');return;}
+    if(!d){r.className='evres empty';r.textContent='ยังไม่บันทึก';row.classList.remove('logged');row.classList.add('empty-print');if(sn)sn.textContent=sn.dataset.n;return;}
     row.classList.add('logged');row.classList.remove('empty-print');
+    if(sn)sn.textContent='✓';
     const unit=ev.unit||'°C';
-    let html='<span class="ok">✓ '+hms(d.t)+'</span> <button class="clr" style="color:var(--blue)" onclick="editTime(\''+ev.k+'\')">✎ แก้เวลา</button> <span class="ok">· '+d.temp+' '+unit+'</span> <button class="clr" style="color:var(--blue)" onclick="editVal(\''+ev.k+'\')">'+(unit==='g'?'✎ แก้น้ำหนัก':'✎ แก้อุณหภูมิ')+'</button> <button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button>';
-    if(ev.schedule){html+=' <span class="sch">· ครบ '+ev.schedule+' นาที เวลา '+hm(d.t+ev.schedule*60000)+'</span>';}
-    if(ev.warnBelow!=null && d.temp<ev.warnBelow){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
-    if(ev.warnAbove!=null && d.temp>ev.warnAbove){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
+    const warned=(ev.warnBelow!=null&&d.temp<ev.warnBelow)||(ev.warnAbove!=null&&d.temp>ev.warnAbove);
+    let html='<span class="val'+(warned?' bad':'')+'">'+d.temp+'<small> '+unit+'</small></span>'
+      +'<span class="tim">🕐 '+hms(d.t)+'</span>'
+      +'<span class="acts"><button class="clr" style="color:var(--blue)" onclick="editTime(\''+ev.k+'\')">✎ แก้เวลา</button><button class="clr" style="color:var(--blue)" onclick="editVal(\''+ev.k+'\')">'+(unit==='g'?'✎ แก้น้ำหนัก':'✎ แก้อุณหภูมิ')+'</button><button class="clr" onclick="clearEv(\''+ev.k+'\')">ลบ</button></span>';
+    if(ev.schedule){html+='<br><span class="sch">⏱ ครบ '+ev.schedule+' นาที เวลา '+hm(d.t+ev.schedule*60000)+'</span>';}
+    if(warned){html+='<span class="warn">⚠ '+ev.warn+'</span>';}
     r.className='evres';r.innerHTML=html;
+  });
+  // ขั้นถัดไป + progress ของแต่ละบล็อก
+  [[PST_EVENTS,'pstProg'],[PSS_EVENTS,'pssProg']].forEach(pair=>{
+    const list=pair[0], progId=pair[1];
+    const next=list.find(ev=>!state.events[ev.k]&&!ev.optional);
+    list.forEach(ev=>{const row=document.getElementById('row_'+ev.k);if(row)row.classList.toggle('next',!!next&&ev.k===next.k);});
+    const n=list.filter(e=>state.events[e.k]).length;
+    const p=document.getElementById(progId);
+    if(p){p.querySelector('b').textContent=(n===list.length)?'ครบ ✓':(n+'/'+list.length);p.querySelector('.pbar i').style.width=(n/list.length*100)+'%';}
   });
   // hide empty sections in print
   const pstHas=PST_EVENTS.some(e=>state.events[e.k]);
@@ -493,8 +543,8 @@ function buildChart(){
 }
 
 (function(){
-  document.getElementById('pstEvents').innerHTML=PST_EVENTS.map(rowHTML).join('');
-  document.getElementById('pssEvents').innerHTML=PSS_EVENTS.map(rowHTML).join('');
+  document.getElementById('pstEvents').innerHTML=PST_EVENTS.map((e,i)=>rowHTML(e,i)).join('');
+  document.getElementById('pssEvents').innerHTML=PSS_EVENTS.map((e,i)=>rowHTML(e,i)).join('');
   if(!state.date)state.date=thaiDate(Date.now());
   refreshBatchSel();syncInputs();updateUI();
 })();
