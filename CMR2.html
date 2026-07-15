@@ -179,7 +179,7 @@
 
   <section class="block" id="overrun">
     <h2 class="block-title"><span class="tag">%</span> การวัด %Overrun</h2>
-    <p class="hint" style="margin:-5px 0 12px">เทมิกซ์ลงถ้วยใบเดิม · เคาะ 3–5 ครั้ง · ปาดเรียบ · ชั่ง 2 ครั้ง หากต่างกันเกิน 3 g ให้ทำใหม่</p>
+    <p class="hint" style="margin:-5px 0 12px">ชั่งถ้วยเปล่า แล้วชั่งไอศกรีมพร้อมถ้วย 2 ครั้ง · ระบบจะหักน้ำหนักถ้วยและเลือกน้ำหนักไอศกรีมให้อัตโนมัติ: ต่างกันเกิน 5 g ใช้ค่าที่มากกว่า มิฉะนั้นใช้ค่าเฉลี่ย</p>
     <div class="table-wrap"><table id="orTable"></table></div>
   </section>
 
@@ -305,10 +305,12 @@ function buildProcess(){
 }
 function buildOR(){
   let h=tableHead()+'<tbody>';
-  h+=row('มิกซ์ ครั้งที่ 1','mix1',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('มิกซ์ ครั้งที่ 2','mix2',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('ไอศกรีมหลังปั่น','icecream',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('%OR <small>(ค่าเฉลี่ยมิกซ์ − ไอศกรีม) ÷ ไอศกรีม ×100</small>','result',(id)=>`<div class="feedback" id="or_${id}" style="font-size:15px;padding:7px 2px">—</div>`);
+  h+=row('มิกซ์','mix',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('ถ้วยเปล่าก่อนใส่ไอศกรีม','emptyCup',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('ไอศกรีมและถ้วย ครั้งที่ 1','iceCup1',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('ไอศกรีมและถ้วย ครั้งที่ 2','iceCup2',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('น้ำหนักไอศกรีมหลังปั่น <small>หักน้ำหนักถ้วยแล้ว</small>','icecreamNet',(id)=>`<div class="feedback" id="iceNet_${id}" style="font-size:15px;padding:7px 2px">—</div><div class="feedback" id="iceNetNote_${id}"></div>`);
+  h+=row('%OR <small>(มิกซ์ − ไอศกรีม) ÷ ไอศกรีม ×100</small>','result',(id)=>`<div class="feedback" id="or_${id}" style="font-size:15px;padding:7px 2px">—</div>`);
   h+='</tbody>';document.getElementById('orTable').innerHTML=h;
 }
 function buildChurn(){
@@ -358,9 +360,9 @@ function validateTank(id){
   feedback(base+'postPst',post==null?'':post>=55?'✓ ≥55°C':'ต่ำกว่า 55°C · บันทึก deviation',post>=55?'good':post==null?'':'bad');
   feedback(base+'preChurn',pc==null?'':pc<=5?'✓ พร้อมปั่น':'คนต่อจนถึง ≤5°C',pc<=5?'good':pc==null?'':'bad');
   if(setting!=null){if(id==='A')feedback(base+'setting',`Control · ${setting.toFixed(1)} นาที`,setting<=20?'good':'bad');else feedback(base+'setting',Math.abs(setting-90)<=.1?'✓ ครบ 90 นาที':setting<90?`ขาด ${(90-setting).toFixed(1)} นาที`:`เกิน ${(setting-90).toFixed(1)} นาที`,Math.abs(setting-90)<=.1?'good':'bad')}else feedback(base+'setting','');
-  const mix1=numberAt(`tanks.${id}.or.mix1`),mix2=numberAt(`tanks.${id}.or.mix2`),ice=numberAt(`tanks.${id}.or.icecream`),out=document.getElementById(`or_${id}`);
-  let diff=null;if(mix1!=null&&mix2!=null){diff=Math.abs(mix1-mix2);const msg=diff<=3?`✓ ต่าง ${diff.toFixed(1)} g`:`⚠ ต่าง ${diff.toFixed(1)} g · ทำใหม่`;feedback(`tanks.${id}.or.mix2`,msg,diff<=3?'good':'bad')}else feedback(`tanks.${id}.or.mix2`,'');
-  if(mix1!=null&&mix2!=null&&ice>0){const avg=(mix1+mix2)/2,or=(avg-ice)/ice*100;out.textContent=`${or.toFixed(1)} %`;out.className=`feedback ${diff<=3?'good':'bad'}`}else{out.textContent='—';out.className='feedback'}
+  const mix=numberAt(`tanks.${id}.or.mix`),cup=numberAt(`tanks.${id}.or.emptyCup`),gross1=numberAt(`tanks.${id}.or.iceCup1`),gross2=numberAt(`tanks.${id}.or.iceCup2`),netOut=document.getElementById(`iceNet_${id}`),netNote=document.getElementById(`iceNetNote_${id}`),out=document.getElementById(`or_${id}`);
+  let chosenIce=null;if(cup!=null&&gross1!=null&&gross2!=null){const net1=gross1-cup,net2=gross2-cup;if(net1>0&&net2>0){const diff=Math.abs(net1-net2),useHigher=diff>5;chosenIce=useHigher?Math.max(net1,net2):(net1+net2)/2;netOut.textContent=`${chosenIce.toFixed(1)} g`;netOut.className='feedback good';netNote.textContent=`ครั้งที่ 1 ${net1.toFixed(1)} g · ครั้งที่ 2 ${net2.toFixed(1)} g · ต่าง ${diff.toFixed(1)} g → ${useHigher?'ใช้ค่าที่มากกว่า':'ใช้ค่าเฉลี่ย'}`;netNote.className=`feedback ${useHigher?'bad':'good'}`;state.tanks[id].or.icecreamNet=Number(chosenIce.toFixed(1));state.tanks[id].or.icecreamMethod=useHigher?'higher':'average'}else{netOut.textContent='ตรวจน้ำหนัก';netOut.className='feedback bad';netNote.textContent='น้ำหนักไอศกรีมพร้อมถ้วยต้องมากกว่าน้ำหนักถ้วยเปล่า';netNote.className='feedback bad';state.tanks[id].or.icecreamNet='';state.tanks[id].or.icecreamMethod=''}}else{netOut.textContent='—';netOut.className='feedback';netNote.textContent='';netNote.className='feedback';state.tanks[id].or.icecreamNet='';state.tanks[id].or.icecreamMethod=''}
+  if(mix!=null&&chosenIce>0){const or=(mix-chosenIce)/chosenIce*100;out.textContent=`${or.toFixed(1)} %`;out.className='feedback good'}else{out.textContent='—';out.className='feedback'}
 }
 function validateAll(){IDS.forEach(validateTank)}
 function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.'))validateAll()}
