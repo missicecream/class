@@ -1,0 +1,417 @@
+<!--
+  Copyright © 2026 Miss Icecream Co., Ltd. / พรหล้า ขาวเธียร (Paula Kaothien)
+  All Rights Reserved.
+  สงวนลิขสิทธิ์ — ห้ามคัดลอก ดัดแปลง หรือนำตัวเครื่องมือ/โค้ดไปใช้
+  เชิงพาณิชย์โดยไม่ได้รับอนุญาต · www.missicecream.com
+-->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CM LabEx R2 · Process Round</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&amp;family=Sarabun:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4ECE0;--card:#FBF6EC;--ink:#2B1F15;--muted:#806F5C;--soft:#B7A58F;
+    --line:#E3D5C0;--line-soft:#EEE3D2;--green:#5F7F46;--green-deep:#466134;
+    --amber:#B9792E;--rose:#A45143;--blue:#3E73A6;--cream:#FFFDF8;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Sarabun',sans-serif;padding:30px 18px 54px;
+    background-image:radial-gradient(circle at 8% 2%,rgba(214,228,192,.55),transparent 33%),radial-gradient(circle at 94% 98%,rgba(189,112,91,.10),transparent 36%);
+    -webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  button,input,select,textarea{font:inherit}
+  button{touch-action:manipulation}
+  .sheet{max-width:1180px;margin:0 auto}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+  .back{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:var(--card);border:1px solid var(--line);border-radius:999px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600}
+  .save-state{font-size:12px;color:var(--muted)}
+  header{text-align:center;margin:8px auto 24px;max-width:780px}
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px}
+  h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(31px,5vw,50px);line-height:1.05;margin:0}
+  h1 em{font-style:italic;color:var(--green-deep)}
+  .lead{color:var(--muted);font-size:14px;line-height:1.65;margin:10px auto 0}
+  .question{margin:14px auto 0;padding:10px 16px;border-radius:12px;background:#EAF0DE;color:var(--green-deep);font-weight:700;display:inline-block}
+
+  .block{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin-bottom:16px;box-shadow:0 5px 24px -20px rgba(43,31,21,.35)}
+  .block-title{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:14px;font-weight:700;color:var(--green-deep)}
+  .tag{display:inline-flex;min-width:27px;height:27px;padding:0 8px;align-items:center;justify-content:center;border-radius:999px;background:var(--green);color:#fff;font-family:'Fraunces',serif;font-size:13px}
+  .muted{color:var(--muted)}
+  .hint{font-size:12px;color:var(--muted);line-height:1.55}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label{font-size:12px;color:var(--muted);font-weight:600}
+  .field input,.field select,.field textarea,.cell input,.cell select,.cell textarea{
+    width:100%;border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:9px;padding:9px 10px;outline:none;min-height:40px}
+  .field textarea,.cell textarea{resize:vertical;min-height:68px;line-height:1.55}
+  input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(95,127,70,.11)}
+
+  .protocol{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .tank-card{border:1px solid var(--line);background:var(--cream);border-radius:13px;padding:13px;position:relative;overflow:hidden}
+  .tank-card.star{border-color:#C2A35B;background:#FFF9E8}
+  .tank-card h3{font-family:'Fraunces',serif;font-size:23px;font-weight:600;margin:0 0 4px}
+  .tank-card .recipe{font-size:12px;font-weight:700;color:var(--green-deep)}
+  .tank-card p{font-size:12px;line-height:1.5;color:var(--muted);margin:6px 0 0}
+  .tank-card b{color:var(--ink)}
+  .pill{display:inline-flex;margin-top:8px;border-radius:999px;padding:3px 9px;background:#ECE6DA;color:var(--muted);font-size:11px;font-weight:700}
+  .star .pill{background:#F0DFA8;color:#765B18}
+  details{border-top:1px solid var(--line-soft);margin-top:14px;padding-top:10px}
+  summary{cursor:pointer;color:var(--green-deep);font-weight:700;font-size:13px}
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:12px}
+  .rule{font-size:12.5px;line-height:1.55;color:var(--muted)}
+  .rule b{color:var(--ink)}
+
+  .section-nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;position:sticky;top:8px;z-index:10;padding:8px;border:1px solid var(--line);background:rgba(251,246,236,.94);backdrop-filter:blur(8px);border-radius:14px}
+  .section-nav a{color:var(--muted);font-size:12px;font-weight:600;text-decoration:none;padding:6px 10px;border-radius:999px}
+  .section-nav a:hover{background:#EAF0DE;color:var(--green-deep)}
+
+  .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:var(--cream)}
+  table{width:100%;border-collapse:collapse;min-width:890px;table-layout:fixed}
+  th,td{border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:8px;vertical-align:top}
+  tr:last-child td{border-bottom:0} th:last-child,td:last-child{border-right:0}
+  thead th{position:sticky;top:0;background:#EEE8DC;z-index:2;text-align:center;font-family:'Fraunces',serif;font-size:16px}
+  thead th:first-child{font-family:'Sarabun',sans-serif;font-size:12px;text-align:left;width:245px}
+  .row-label{width:245px;background:#FAF4E9;font-size:12.5px;line-height:1.45;font-weight:600;color:var(--ink)}
+  .row-label small{display:block;color:var(--muted);font-weight:400;margin-top:2px}
+  .group-row td{background:#E8E1D4;color:var(--green-deep);font-weight:700;font-size:12px;letter-spacing:.04em;padding:7px 10px}
+  .cell input,.cell select,.cell textarea{font-size:13px;background:#fff;padding:7px 8px;min-height:36px}
+  .cell textarea{min-height:58px}
+  .cell.na{background:#F0ECE4;color:var(--soft);text-align:center;vertical-align:middle;font-size:13px}
+  .measure{display:flex;align-items:center;gap:5px}
+  .measure input{min-width:0}
+  .unit{font-size:11px;color:var(--muted);white-space:nowrap}
+  .feedback{font-size:11px;line-height:1.35;margin-top:4px;min-height:15px;color:var(--muted)}
+  .feedback.bad{color:var(--rose);font-weight:600}.feedback.good{color:var(--green-deep);font-weight:600}
+
+  .timers{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+  .timer{border:1px solid var(--line);border-radius:13px;background:var(--cream);padding:12px;text-align:center}
+  .timer.running{border-color:var(--amber);background:#FFF8E8}
+  .timer.done{border-color:var(--green);background:#F2F6EA}
+  .timer-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700}
+  .clock{font-family:'Fraunces',serif;font-size:28px;font-variant-numeric:tabular-nums;margin:8px 0 9px}
+  .timer-actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+  .mini{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;cursor:pointer}
+  .mini.start{background:var(--green-deep);border-color:var(--green-deep);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}.mini.clear{color:var(--rose)}
+  .timer-note{min-height:30px;margin-top:6px;font-size:10.5px;line-height:1.35;color:var(--muted)}
+
+  .toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .btn{border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:999px;padding:10px 17px;font-weight:700;font-size:13px;cursor:pointer}
+  .btn:hover{border-color:var(--green)}
+  .btn.primary{background:var(--green-deep);border-color:var(--green-deep);color:#fff}
+  .btn.danger{color:var(--rose)}
+  .toolbar .hint{margin-left:auto}
+  .order-result{margin-top:12px;display:flex;gap:7px;flex-wrap:wrap}
+  .order-chip{width:42px;height:42px;border-radius:50%;background:var(--green-deep);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:18px;position:relative}
+  .order-chip small{position:absolute;top:-5px;right:-4px;background:#fff;border:1px solid var(--line);color:var(--muted);width:18px;height:18px;border-radius:50%;font:700 10px 'Sarabun',sans-serif;display:flex;align-items:center;justify-content:center}
+
+  .rank-grid{display:grid;grid-template-columns:185px repeat(5,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:780px}
+  .rank-grid>div{padding:8px;border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+  .rank-grid>div:nth-child(6n){border-right:0}
+  .rank-grid .head{background:#EEE8DC;text-align:center;font-weight:700;font-size:12px}
+  .rank-grid .label{background:#FAF4E9;font-size:12px;font-weight:600}
+  .rank-grid input,.rank-grid select{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px;background:#fff;font-size:12px}
+  .special{border:1px solid #D9C17E;background:#FFF9E8;border-radius:13px;padding:14px}
+  .special-title{font-weight:700;color:#72591A;margin-bottom:10px}
+  .radios{display:grid;gap:7px}
+  .radio{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45}
+  .radio input{margin-top:3px}
+
+  .report-head{display:none;text-align:center;margin-bottom:12px}
+  footer{text-align:center;color:var(--soft);font-size:11px;line-height:1.7;margin-top:24px}
+
+  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.protocol,.timers{grid-template-columns:repeat(2,1fr)}.timer:last-child,.tank-card:last-child{grid-column:span 2}.rules{grid-template-columns:1fr}.section-nav{position:static}}
+  @media(max-width:560px){body{padding:22px 10px 42px}.block{padding:13px;border-radius:14px}.grid,.protocol,.timers{grid-template-columns:1fr}.timer:last-child,.tank-card:last-child{grid-column:auto}.topbar{align-items:flex-start}.save-state{text-align:right}.toolbar .hint{width:100%;margin-left:0}.question{font-size:13px}}
+  @media print{
+    @page{size:A4 landscape;margin:8mm}
+    body{background:#fff;background-image:none;padding:0;font-size:10px}
+    .sheet{max-width:none}.topbar,header,.section-nav,.toolbar,.timer-actions,.save-state,footer,.no-print{display:none!important}
+    .report-head{display:block}.block{background:#fff;border:1px solid #bbb;box-shadow:none;border-radius:5px;padding:8px;margin-bottom:7px;break-inside:avoid}
+    .block-title{font-size:11px;margin-bottom:6px}.tag{background:none;color:#000;border:1px solid #888;height:20px;min-width:20px}
+    .protocol{grid-template-columns:repeat(5,1fr)}.tank-card{padding:7px;border-radius:4px}.tank-card h3{font-size:15px}.tank-card p,.tank-card .recipe,.pill{font-size:8.5px}
+    details{display:none}.timers{grid-template-columns:repeat(5,1fr)}.timer{padding:6px;border-radius:4px}.clock{font-size:18px;margin:3px}.timer-note{font-size:8px;min-height:0}
+    .table-wrap{overflow:visible;border-radius:3px}.table-wrap table{min-width:0}.row-label,thead th:first-child{width:180px}th,td{padding:4px}.cell input,.cell select,.cell textarea{border:none;padding:1px;background:none;font-size:9px;min-height:0}.cell textarea{height:30px}.feedback{font-size:8px;min-height:0}
+    .rank-grid{min-width:0;grid-template-columns:130px repeat(5,1fr)}.rank-grid>div{padding:3px}.rank-grid input,.rank-grid select{border:none;padding:1px;font-size:8.5px}.special{padding:8px}.radio{font-size:9px}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="topbar">
+    <a class="back" href="index.html">← กลับหน้าหลัก</a>
+    <div class="save-state" id="saveState">บันทึกอัตโนมัติบนเครื่องนี้</div>
+  </div>
+
+  <header>
+    <div class="eyebrow">02CM Dairy · LabEx R2 · Process Round</div>
+    <h1>CM <em>Process Round</em></h1>
+    <p class="lead">เบสกะทิ · ตามหาสาเหตุ “เย็นลิ้น + เนื้อเปียก + น้ำซึมที่ผิว”<br>CMDL11 × 3 ถัง และ CM2020 × 2 ถัง</p>
+    <div class="question">ครีมต้องเจอความร้อน 70°C และผ่าน PST หรือไม่?</div>
+  </header>
+  <div class="report-head"><b>02CM LabEx R2 · Process Round</b><br><span>Miss Icecream · CMDL11 (A–C) + CM2020 (D–E)</span></div>
+
+  <section class="block" id="info">
+    <h2 class="block-title"><span class="tag">i</span> ข้อมูลการทดลอง</h2>
+    <div class="grid">
+      <div class="field"><label for="testDate">วันที่ทดลอง</label><input id="testDate" type="date" data-path="meta.date"></div>
+      <div class="field"><label for="team">ทีมงาน</label><input id="team" type="text" placeholder="ชื่อทีม / ผู้บันทึก" data-path="meta.team"></div>
+      <div class="field"><label for="machine">เครื่องปั่น</label><input id="machine" type="text" placeholder="รุ่น / หมายเลขเครื่อง" data-path="meta.machine"></div>
+      <div class="field"><label for="coconutLot">กะทิล็อต / วันที่คั้น</label><input id="coconutLot" type="text" placeholder="กะทิคั้นวันเดียวกันทุกถัง" data-path="meta.coconutLot"></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title"><span class="tag">5</span> แผนทดลอง 5 ถัง</h2>
+    <div class="protocol" id="protocolCards"></div>
+    <details>
+      <summary>เปิดดูเกณฑ์สำคัญและวิธีทำเย็น</summary>
+      <div class="rules">
+        <div class="rule"><b>ก่อนเริ่ม PST ≥58°C</b><br>ถ้าไม่ถึง ให้กลับขึ้นเตาอุ่นถึง 70°C ใหม่ ห้าม PST</div>
+        <div class="rule"><b>ก่อนปั่น ≤5°C</b><br>ถ้ายังไม่ถึง ให้คนต่อจนถึงเกณฑ์</div>
+        <div class="rule"><b>Active cooling</b><br>ถาดสเตนเลสกว้าง · มิกซ์ลึก &lt;1 ซม. · คน 15 วินาทีทุก 2 นาที</div>
+        <div class="rule"><b>Passive setting</b><br>เริ่มที่ 15°C · เปลี่ยนน้ำแข็งก่อนเริ่ม · ห้ามใส่เกลือในอ่าง</div>
+        <div class="rule"><b>PST เหมือนกันทุกถัง</b><br>30 วินาที / พัก 60 วินาที × 3 รอบ</div>
+        <div class="rule"><b>ครีมเย็น</b><br>ถัง A/B/D: ครีม 6°C แช่ ≥8 ชม. · ถัง C/E: ครีมเข้าแต่แรก</div>
+      </div>
+    </details>
+  </section>
+
+  <nav class="section-nav" aria-label="ส่วนต่างๆ ของแบบบันทึก">
+    <a href="#setting">Setting</a><a href="#process">Process</a><a href="#overrun">%OR</a><a href="#churning">การปั่น</a><a href="#texture">เนื้อ</a><a href="#tasting">การชิม</a><a href="#notes">สรุป</a>
+  </nav>
+
+  <section class="block" id="setting">
+    <h2 class="block-title"><span class="tag">⏱</span> ตัวจับเวลา Setting <span class="muted">· จบ PST → เทลงปั่น</span></h2>
+    <div class="timers" id="timerCards"></div>
+    <p class="hint" style="margin:10px 0 0">เวลาจะเดินต่อแม้ปิดหน้าจอ เมื่อกด “เทลงปั่น” ระบบจะบันทึกนาทีจริงลงตารางอัตโนมัติ</p>
+  </section>
+
+  <section class="block no-print" id="randomize">
+    <h2 class="block-title"><span class="tag">↝</span> สุ่มลำดับการปั่น</h2>
+    <div class="toolbar"><button class="btn primary" type="button" id="randomBtn">สุ่ม A–E</button><button class="btn" type="button" id="copyOrderBtn">คัดลอกลงตาราง</button><span class="hint">ลด bias จากเครื่องที่เย็นลงเรื่อยๆ ระหว่างวัน</span></div>
+    <div class="order-result" id="orderResult" aria-live="polite"></div>
+  </section>
+
+  <section class="block" id="process">
+    <h2 class="block-title"><span class="tag">1</span> การต้ม · ทำเย็น · ก่อนปั่น</h2>
+    <div class="table-wrap"><table id="processTable"></table></div>
+  </section>
+
+  <section class="block" id="overrun">
+    <h2 class="block-title"><span class="tag">%</span> การวัด %Overrun</h2>
+    <p class="hint" style="margin:-5px 0 12px">เทมิกซ์ลงถ้วยใบเดิม · เคาะ 3–5 ครั้ง · ปาดเรียบ · ชั่ง 2 ครั้ง หากต่างกันเกิน 3 g ให้ทำใหม่</p>
+    <div class="table-wrap"><table id="orTable"></table></div>
+  </section>
+
+  <section class="block" id="churning">
+    <h2 class="block-title"><span class="tag">2</span> การปั่น</h2>
+    <div class="table-wrap"><table id="churnTable"></table></div>
+  </section>
+
+  <section class="block" id="texture">
+    <h2 class="block-title"><span class="tag">★</span> เนื้อตอนดึงออก <span class="muted">· ตัวชี้วัดสำคัญที่สุด</span></h2>
+    <div class="table-wrap"><table id="textureTable"></table></div>
+    <details>
+      <summary>วิธีแปลผลลักษณะเนื้อ</summary>
+      <div class="rules">
+        <div class="rule"><b style="color:var(--green-deep)">แห้ง · ตั้งตัวได้ · ไม่ไหลย้อย</b><br>โครงไขมันเกิดแล้ว — สำเร็จ</div>
+        <div class="rule"><b style="color:var(--rose)">มันเงา · เปียก · มีน้ำซึม</b><br>ไขมันยังเหลว โครงไม่เกิด</div>
+        <div class="rule"><b style="color:var(--rose)">มีเม็ดเนยเล็กๆ</b><br>ไขมันจับกันมากเกินไป</div>
+      </div>
+    </details>
+  </section>
+
+  <section class="block" id="tasting">
+    <h2 class="block-title"><span class="tag">3</span> การชิม Blind</h2>
+    <p class="hint" style="margin:-5px 0 12px">ใช้รหัสสุ่ม 3 หลัก · แข็งตัวอุณหภูมิ/เวลาเท่ากัน · เสิร์ฟ −14 ถึง −16°C · ล้างปากด้วยน้ำทุกครั้ง</p>
+    <div class="table-wrap"><table id="blindTable"></table></div>
+    <h3 style="font-size:13px;margin:16px 0 9px">เรียงจากน้อย → มาก <span class="muted">(ใส่ตัวอักษรถังตามลำดับ)</span></h3>
+    <div class="table-wrap" style="border:0"><div class="rank-grid" id="rankGrid"></div></div>
+    <h3 style="font-size:13px;margin:16px 0 9px">แล้วค่อยให้คะแนน</h3>
+    <div class="table-wrap"><table id="scoreTable"></table></div>
+    <div class="special" style="margin-top:14px">
+      <div class="special-title">คำถามพิเศษสำหรับถัง E — “อันนี้ใกล้เคียงกับ CM2020 ที่จำได้ไหม?”</div>
+      <div class="radios">
+        <label class="radio"><input type="radio" name="eRecall" value="ใช่ กลับมาแล้ว" data-path="special.eRecall"> <span><b>ใช่ กลับมาแล้ว</b> → ปิดคดี กระบวนการคือตัวการ</span></label>
+        <label class="radio"><input type="radio" name="eRecall" value="ใกล้เคียง แต่ยังไม่เป๊ะ" data-path="special.eRecall"> <span><b>ใกล้เคียง แต่ยังไม่เป๊ะ</b> → กระบวนการช่วยได้มาก แต่ยังมีอย่างอื่น</span></label>
+        <label class="radio"><input type="radio" name="eRecall" value="ยังไม่ใช่เลย" data-path="special.eRecall"> <span><b>ยังไม่ใช่เลย</b> → มีอย่างอื่นเปลี่ยนไป เช่น CY หรือกะทิคนละล็อต</span></label>
+      </div>
+      <div class="field" style="margin-top:10px"><label for="eRecallNote">ระบุเพิ่ม</label><textarea id="eRecallNote" data-path="special.eRecallNote" placeholder="สิ่งที่เหมือน / ต่างจากความจำ"></textarea></div>
+    </div>
+  </section>
+
+  <section class="block" id="notes">
+    <h2 class="block-title"><span class="tag">✓</span> สรุปผลและเหตุการณ์ผิดปกติ</h2>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="field"><label for="conclusion">ข้อสรุป B↔C และ D↔E</label><textarea id="conclusion" data-path="summary.conclusion" placeholder="C ดีกว่า B และ E ดีกว่า D หรือไม่? หลักฐานชี้ไปทางใด"></textarea></div>
+      <div class="field"><label for="deviations">Deviation / สิ่งที่พลาด</label><textarea id="deviations" data-path="summary.deviations" placeholder="จดทุกเหตุการณ์ที่อาจกระทบผลทดลอง"></textarea></div>
+    </div>
+  </section>
+
+  <div class="toolbar" style="justify-content:center;margin-top:18px">
+    <button class="btn primary" type="button" id="printBtn">พิมพ์ / บันทึก PDF</button>
+    <button class="btn" type="button" id="exportBtn">ดาวน์โหลดข้อมูล JSON</button>
+    <label class="btn" for="importFile" style="cursor:pointer">นำเข้าข้อมูล<input id="importFile" type="file" accept="application/json" hidden></label>
+    <button class="btn danger" type="button" id="resetBtn">ล้างแบบฟอร์ม</button>
+  </div>
+
+  <footer>Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit">เงื่อนไขการใช้งาน</a><br>02CM LabEx R2 · Process Round · 14 ก.ค. 2026</footer>
+</div>
+
+<script>
+const TANKS = {
+  A:{recipe:'CMDL11',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'~10 นาที',star:false},
+  B:{recipe:'CMDL11',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'90 นาที',star:false},
+  C:{recipe:'CMDL11',cream:'เข้าแต่แรก · ต้ม 70°C + PST',setting:'90 นาที',star:true},
+  D:{recipe:'CM2020',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'90 นาที',star:false},
+  E:{recipe:'CM2020',cream:'เข้าแต่แรก · ต้ม 70°C + PST',setting:'90 นาที',star:true}
+};
+const IDS = Object.keys(TANKS);
+const STORAGE_KEY = 'missicecream_cmr2_v1';
+
+function emptyTank(){return {timer:{start:null,stop:null},process:{},or:{},churn:{},texture:{},blind:{},scores:{}}}
+function localDate(){const d=new Date(),off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
+function freshState(){
+  const tanks={};IDS.forEach(id=>tanks[id]=emptyTank());
+  return {version:1,meta:{date:localDate(),team:'',machine:'',coconutLot:''},tanks,order:[],ranks:{},special:{eRecall:'',eRecallNote:''},summary:{conclusion:'',deviations:''},updatedAt:Date.now()};
+}
+function normalize(raw){
+  const base=freshState(), s=(raw&&typeof raw==='object')?raw:{};
+  base.meta=Object.assign(base.meta,s.meta||{});base.order=Array.isArray(s.order)?s.order.filter(x=>IDS.includes(x)):[];
+  base.ranks=Object.assign({},s.ranks||{});base.special=Object.assign(base.special,s.special||{});base.summary=Object.assign(base.summary,s.summary||{});
+  IDS.forEach(id=>{const t=(s.tanks&&s.tanks[id])||{};base.tanks[id]={timer:Object.assign({},base.tanks[id].timer,t.timer||{}),process:Object.assign({},t.process||{}),or:Object.assign({},t.or||{}),churn:Object.assign({},t.churn||{}),texture:Object.assign({},t.texture||{}),blind:Object.assign({},t.blind||{}),scores:Object.assign({},t.scores||{})}});
+  return base;
+}
+let state;
+try{state=normalize(JSON.parse(localStorage.getItem(STORAGE_KEY)||'null'))}catch(e){state=freshState()}
+
+function getPath(path){return path.split('.').reduce((o,k)=>o==null?undefined:o[k],state)}
+function setPath(path,value){const keys=path.split('.');let o=state;keys.slice(0,-1).forEach(k=>{if(!o[k]||typeof o[k]!=='object')o[k]={};o=o[k]});o[keys.at(-1)]=value;save()}
+let saveFlash;
+function save(){state.updatedAt=Date.now();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));const el=document.getElementById('saveState');el.textContent='บันทึกแล้ว';clearTimeout(saveFlash);saveFlash=setTimeout(()=>el.textContent='บันทึกอัตโนมัติบนเครื่องนี้',1200)}
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+function bindInput(el){
+  const path=el.dataset.path;if(!path)return;
+  if(el.type==='radio'){el.checked=getPath(path)===el.value}else if(el.type==='checkbox'){el.checked=!!getPath(path)}else{el.value=getPath(path)??''}
+  const evt=(el.tagName==='SELECT'||el.type==='radio'||el.type==='checkbox'||el.type==='date')?'change':'input';
+  el.addEventListener(evt,()=>{let v=(el.type==='radio'||el.type==='checkbox')?(el.type==='checkbox'?el.checked:el.value):el.value;if(el.type==='number')v=el.value===''?'':Number(el.value);setPath(path,v);afterFieldChange(path)});
+}
+function bindAll(){document.querySelectorAll('[data-path]').forEach(bindInput)}
+
+function protocolCards(){document.getElementById('protocolCards').innerHTML=IDS.map(id=>{const t=TANKS[id];return `<article class="tank-card ${t.star?'star':''}"><h3>${id}${t.star?' ★':''}</h3><div class="recipe">${t.recipe}</div><p>${t.cream}</p><span class="pill">Setting ${t.setting}</span></article>`}).join('')}
+function tableHead(){return `<thead><tr><th>รายการ</th>${IDS.map(id=>`<th>${id}${TANKS[id].star?' ★':''}<br><small style="font:500 10px Sarabun;color:var(--muted)">${TANKS[id].recipe}</small></th>`).join('')}</tr></thead>`}
+function group(label){return `<tr class="group-row"><td colspan="6">${label}</td></tr>`}
+function measure(path,unit,attrs=''){return `<div class="measure"><input type="number" step="0.1" inputmode="decimal" data-path="${path}" ${attrs}><span class="unit">${unit}</span></div><div class="feedback" data-feedback="${path}"></div>`}
+function textInput(path,placeholder=''){return `<input type="text" data-path="${path}" placeholder="${placeholder}">`}
+function selectInput(path,options){return `<select data-path="${path}"><option value="">— เลือก —</option>${options.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>`}
+function textarea(path,placeholder=''){return `<textarea data-path="${path}" placeholder="${placeholder}"></textarea>`}
+function row(label,key,make,na=[]){return `<tr><td class="row-label">${label}</td>${IDS.map(id=>na.includes(id)?'<td class="cell na">—</td>':`<td class="cell">${make(id,key)}</td>`).join('')}</tr>`}
+
+function buildProcess(){
+  let h=tableHead()+'<tbody>'+group('การต้ม');
+  h+=row('อุณหภูมิตอนยกลงจากเตา <small>เป้าหมาย 70°C</small>','stove',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
+  h+=row('★ อุณหภูมิในโถก่อน PST <small>ต้อง ≥58°C</small>','prePst',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
+  h+=row('อุณหภูมิจบ PST <small>บันทึกไว้ · คาดหวัง ≥55°C</small>','postPst',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
+  h+=group('ทำเย็น');
+  h+=row('เวลาที่ใช้ลงถึง 15°C','to15',(id,k)=>measure(`tanks.${id}.process.${k}`,'นาที'),['A']);
+  h+=row('อุณหภูมิหลัง passive setting','postPassive',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'),['A']);
+  h+=row('ต้องคนเพิ่มไหม / กี่นาที','extraCool',(id,k)=>textInput(`tanks.${id}.process.${k}`,'เช่น ไม่ต้อง / 4 นาที'),['A']);
+  h+=row('อุณหภูมิตอนเติมครีม <small>เฉพาะ A, B, D</small>','creamTemp',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'),['C','E']);
+  h+=group('ก่อนปั่น');
+  h+=row('⏱ Setting รวมจริง','setting',(id,k)=>measure(`tanks.${id}.process.${k}`,'นาที'));
+  h+=row('อุณหภูมิมิกซ์ก่อนปั่น <small>ต้อง ≤5°C</small>','preChurn',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
+  h+=row('★ ความหนืดมิกซ์','viscosity',(id,k)=>selectInput(`tanks.${id}.process.${k}`,['ใส','ข้น','ข้นมาก']));
+  h+='</tbody>';document.getElementById('processTable').innerHTML=h;
+}
+function buildOR(){
+  let h=tableHead()+'<tbody>';
+  h+=row('มิกซ์ ครั้งที่ 1','mix1',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('มิกซ์ ครั้งที่ 2','mix2',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('ไอศกรีมหลังปั่น','icecream',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('%OR <small>(ค่าเฉลี่ยมิกซ์ − ไอศกรีม) ÷ ไอศกรีม ×100</small>','result',(id)=>`<div class="feedback" id="or_${id}" style="font-size:15px;padding:7px 2px">—</div>`);
+  h+='</tbody>';document.getElementById('orTable').innerHTML=h;
+}
+function buildChurn(){
+  let h=tableHead()+'<tbody>';
+  h+=row('★ ลำดับที่ปั่น <small>ต้องสุ่ม</small>','order',(id,k)=>`<input type="number" min="1" max="5" inputmode="numeric" data-path="tanks.${id}.churn.${k}">`);
+  h+=row('อุณหภูมิเริ่มปั่น','startTemp',(id,k)=>measure(`tanks.${id}.churn.${k}`,'°C'));
+  h+=row('★ เวลาปั่น','duration',(id,k)=>textInput(`tanks.${id}.churn.${k}`,'นาที:วินาที'));
+  h+=row('★★ Draw temp <small>อุณหภูมิตอนเครื่องหยุด</small>','drawTemp',(id,k)=>measure(`tanks.${id}.churn.${k}`,'°C'));
+  h+='</tbody>';document.getElementById('churnTable').innerHTML=h;
+}
+function buildTexture(){
+  let h=tableHead()+'<tbody>';
+  h+=row('ลักษณะเนื้อตอนดึงออก','drawTexture',(id,k)=>selectInput(`tanks.${id}.texture.${k}`,['แห้ง–ตั้งตัวได้','มันเงา–เปียก','มีน้ำซึม','มันเงา–เปียก + มีน้ำซึม']));
+  h+=row('มีเม็ดเนย (buttery) ไหม','buttery',(id,k)=>selectInput(`tanks.${id}.texture.${k}`,['ไม่มี','มีเล็กน้อย','มีชัดเจน']));
+  h+=row('สิ่งผิดปกติอื่นๆ','abnormal',(id,k)=>textarea(`tanks.${id}.texture.${k}`,'บันทึกสิ่งที่เห็น'));
+  h+='</tbody>';document.getElementById('textureTable').innerHTML=h;
+}
+function buildBlind(){
+  let h=tableHead()+'<tbody>';
+  h+=row('รหัส Blind 3 หลัก','code',(id,k)=>`<input type="text" maxlength="3" inputmode="numeric" pattern="[0-9]{3}" data-path="tanks.${id}.blind.${k}" placeholder="000"><div class="feedback" data-feedback="tanks.${id}.blind.${k}"></div>`);
+  h+=row('อุณหภูมิเสิร์ฟ <small>เป้าหมาย −14 ถึง −16°C</small>','serveTemp',(id,k)=>measure(`tanks.${id}.blind.${k}`,'°C'));
+  h+='</tbody>';document.getElementById('blindTable').innerHTML=h;
+}
+const RANKS=['เย็นลิ้น','ความข้น/แน่น','เกล็ดน้ำแข็ง','ตักยาก'];
+function buildRanks(){
+  let h='<div class="head">Dimension</div>'+[1,2,3,4,5].map(n=>`<div class="head">${n}${n===1?' · น้อยสุด':n===5?' · มากสุด':''}</div>`).join('');
+  RANKS.forEach((label,ri)=>{h+=`<div class="label">${label}${ri<2?' ★★':''}</div>`;for(let i=0;i<5;i++)h+=`<div>${selectInput(`ranks.r${ri}.p${i}`,IDS)}</div>`});
+  document.getElementById('rankGrid').innerHTML=h;
+}
+const SCORE_ROWS=[
+  ['ความข้น/แน่น','density','−3 ถึง +3',range(-3,3)],['ความเย็นลิ้น','cold','0–3',range(0,3)],['เกล็ดน้ำแข็ง','ice','0–3',range(0,3)],
+  ['หนืดแปลกๆ / เหนียวยืด','gummy','0–3',range(0,3)],['ความหวานโดยรวม','sweet','−3 ถึง +3',range(-3,3)],['กลิ่นครีม/กลิ่นต้ม','cooked','0–3',range(0,3)],
+  ['กลิ่นกะทิ','coconut','0–3',range(0,3)],['Overall liking','liking','0–10',range(0,10)],['Off-flavor / อื่นๆ','off','',null]
+];
+function range(a,b){return Array.from({length:b-a+1},(_,i)=>String(a+i))}
+function buildScores(){let h=tableHead()+'<tbody>';SCORE_ROWS.forEach(([label,key,scale,opts])=>{h+=row(`${label}${scale?` <small>${scale}</small>`:''}`,key,(id)=>opts?selectInput(`tanks.${id}.scores.${key}`,opts):textarea(`tanks.${id}.scores.${key}`,'บันทึก'))});h+='</tbody>';document.getElementById('scoreTable').innerHTML=h}
+
+function timerCards(){document.getElementById('timerCards').innerHTML=IDS.map(id=>`<article class="timer" id="timer_${id}"><div class="timer-head"><span>ถัง ${id}</span><span>${TANKS[id].setting}</span></div><div class="clock" id="clock_${id}">00:00:00</div><div class="timer-actions"><button type="button" class="mini start" data-action="start" data-tank="${id}">จบ PST · เริ่ม</button><button type="button" class="mini stop" data-action="stop" data-tank="${id}">เทลงปั่น</button><button type="button" class="mini clear" data-action="clear" data-tank="${id}">ล้าง</button></div><div class="timer-note" id="timerNote_${id}"></div></article>`).join('')}
+function elapsedMs(id){const t=state.tanks[id].timer;if(!t.start)return 0;return (t.stop||Date.now())-t.start}
+function fmtClock(ms){let s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),ss=s%60;return [h,m,ss].map(n=>String(n).padStart(2,'0')).join(':')}
+function updateTimers(){IDS.forEach(id=>{const t=state.tanks[id].timer,el=document.getElementById(`timer_${id}`),ms=elapsedMs(id),mins=ms/60000;document.getElementById(`clock_${id}`).textContent=fmtClock(ms);el.classList.toggle('running',!!t.start&&!t.stop);el.classList.toggle('done',!!t.stop);let note='ยังไม่เริ่ม';if(t.start&&!t.stop)note=`เริ่ม ${new Date(t.start).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}`;if(t.stop)note=`บันทึก ${mins.toFixed(1)} นาที`;if(id!=='A'&&t.start&&!t.stop){const remain=Math.max(0,90-mins);note=mins<90?`เหลือ ${Math.ceil(remain)} นาที ถึงเป้าหมาย`:`ครบ 90 นาทีแล้ว · พร้อมเทลงปั่น`}document.getElementById(`timerNote_${id}`).textContent=note})}
+function timerAction(action,id){const t=state.tanks[id].timer;if(action==='start'){if(t.start&&!t.stop&&!confirm(`เริ่มเวลาถัง ${id} ใหม่?`))return;t.start=Date.now();t.stop=null}else if(action==='stop'){if(!t.start){alert('กด “จบ PST · เริ่ม” ก่อนค่ะ');return}t.stop=Date.now();state.tanks[id].process.setting=Number((elapsedMs(id)/60000).toFixed(1));const inp=document.querySelector(`[data-path="tanks.${id}.process.setting"]`);if(inp)inp.value=state.tanks[id].process.setting}else if(action==='clear'){if((t.start||t.stop)&&!confirm(`ล้างเวลา Setting ถัง ${id}?`))return;t.start=null;t.stop=null;state.tanks[id].process.setting='';const inp=document.querySelector(`[data-path="tanks.${id}.process.setting"]`);if(inp)inp.value=''}save();updateTimers();validateAll()}
+
+function randomOrder(){state.order=[...IDS].sort(()=>Math.random()-.5);save();renderOrder()}
+function renderOrder(){const el=document.getElementById('orderResult');el.innerHTML=state.order.length?state.order.map((id,i)=>`<span class="order-chip">${id}<small>${i+1}</small></span>`).join(''):'<span class="hint">ยังไม่ได้สุ่มลำดับ</span>'}
+function copyOrder(){if(state.order.length!==5){alert('กดสุ่มลำดับก่อนค่ะ');return}state.order.forEach((id,i)=>{state.tanks[id].churn.order=i+1;const el=document.querySelector(`[data-path="tanks.${id}.churn.order"]`);if(el)el.value=i+1});save()}
+
+function numberAt(path){const v=getPath(path);return v===''||v==null?null:Number(v)}
+function feedback(path,msg,kind=''){const el=document.querySelector(`[data-feedback="${path}"]`);if(el){el.textContent=msg;el.className=`feedback ${kind}`}}
+function validateTank(id){
+  const base=`tanks.${id}.process.`;
+  const stove=numberAt(base+'stove'),pre=numberAt(base+'prePst'),post=numberAt(base+'postPst'),pc=numberAt(base+'preChurn'),setting=numberAt(base+'setting');
+  feedback(base+'stove',stove==null?'':stove===70?'✓ ตรงเป้า':stove<70?'ต่ำกว่า 70°C':'สูงกว่า 70°C',stove===70?'good':stove==null?'':'bad');
+  feedback(base+'prePst',pre==null?'':pre>=58?'✓ ผ่านเกณฑ์':'ห้าม PST · อุ่นถึง 70°C ใหม่',pre>=58?'good':pre==null?'':'bad');
+  feedback(base+'postPst',post==null?'':post>=55?'✓ ≥55°C':'ต่ำกว่า 55°C · บันทึก deviation',post>=55?'good':post==null?'':'bad');
+  feedback(base+'preChurn',pc==null?'':pc<=5?'✓ พร้อมปั่น':'คนต่อจนถึง ≤5°C',pc<=5?'good':pc==null?'':'bad');
+  if(setting!=null){if(id==='A')feedback(base+'setting',`Control · ${setting.toFixed(1)} นาที`,setting<=20?'good':'bad');else feedback(base+'setting',Math.abs(setting-90)<=.1?'✓ ครบ 90 นาที':setting<90?`ขาด ${(90-setting).toFixed(1)} นาที`:`เกิน ${(setting-90).toFixed(1)} นาที`,Math.abs(setting-90)<=.1?'good':'bad')}else feedback(base+'setting','');
+  const mix1=numberAt(`tanks.${id}.or.mix1`),mix2=numberAt(`tanks.${id}.or.mix2`),ice=numberAt(`tanks.${id}.or.icecream`),out=document.getElementById(`or_${id}`);
+  let diff=null;if(mix1!=null&&mix2!=null){diff=Math.abs(mix1-mix2);const msg=diff<=3?`✓ ต่าง ${diff.toFixed(1)} g`:`⚠ ต่าง ${diff.toFixed(1)} g · ทำใหม่`;feedback(`tanks.${id}.or.mix2`,msg,diff<=3?'good':'bad')}else feedback(`tanks.${id}.or.mix2`,'');
+  if(mix1!=null&&mix2!=null&&ice>0){const avg=(mix1+mix2)/2,or=(avg-ice)/ice*100;out.textContent=`${or.toFixed(1)} %`;out.className=`feedback ${diff<=3?'good':'bad'}`}else{out.textContent='—';out.className='feedback'}
+  const code=String(getPath(`tanks.${id}.blind.code`)||''),validCode=/^\d{3}$/.test(code),duplicate=validCode&&IDS.some(other=>other!==id&&String(getPath(`tanks.${other}.blind.code`)||'')===code);const codeInput=document.querySelector(`[data-path="tanks.${id}.blind.code"]`);if(codeInput)codeInput.setCustomValidity(code&&(!validCode||duplicate)?'รหัสต้องเป็นตัวเลข 3 หลักและไม่ซ้ำกัน':'');feedback(`tanks.${id}.blind.code`,!code?'':!validCode?'กรอกตัวเลข 3 หลัก':duplicate?'รหัสซ้ำกับถังอื่น':'✓ รหัสพร้อมใช้',validCode&&!duplicate?'good':'bad');
+}
+function validateAll(){IDS.forEach(validateTank)}
+function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.')||path.includes('.blind.'))validateAll()}
+
+function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CMR2-${state.meta.date||'data'}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importJSON(file){const reader=new FileReader();reader.onload=()=>{try{state=normalize(JSON.parse(reader.result));save();renderAll();alert('นำเข้าข้อมูลเรียบร้อยค่ะ')}catch(e){alert('ไฟล์ข้อมูลไม่ถูกต้อง')}};reader.readAsText(file)}
+function resetAll(){if(!confirm('ล้างข้อมูล CMR2 ทั้งหมดบนเครื่องนี้? การล้างย้อนกลับไม่ได้'))return;state=freshState();save();renderAll()}
+function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});renderOrder();updateTimers();validateAll()}
+
+protocolCards();timerCards();buildProcess();buildOR();buildChurn();buildTexture();buildBlind();buildRanks();buildScores();bindAll();renderAll();
+document.getElementById('randomBtn').addEventListener('click',randomOrder);
+document.getElementById('copyOrderBtn').addEventListener('click',copyOrder);
+document.getElementById('timerCards').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b)timerAction(b.dataset.action,b.dataset.tank)});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+document.getElementById('exportBtn').addEventListener('click',exportJSON);
+document.getElementById('importFile').addEventListener('change',e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value='' });
+document.getElementById('resetBtn').addEventListener('click',resetAll);
+setInterval(updateTimers,1000);
+</script>
+</body>
+</html>
