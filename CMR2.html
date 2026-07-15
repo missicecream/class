@@ -105,6 +105,13 @@
   .toolbar .hint{margin-left:auto}
   .special{border:1px solid #D9C17E;background:#FFF9E8;border-radius:13px;padding:14px}
   .special-title{font-weight:700;color:#72591A;margin-bottom:10px}
+  .decision-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .decision-card{border:1px solid var(--line);background:var(--cream);border-radius:13px;padding:14px}
+  .decision-card h3{margin:0 0 9px;font-size:13px;color:var(--green-deep)}
+  .decision-card .field+.field{margin-top:10px}
+  .pair-check{font-size:12px;line-height:1.55;border-radius:9px;padding:9px 10px;background:#F3EEE5;color:var(--muted)}
+  .pair-check.good{background:#EAF0DE;color:var(--green-deep);font-weight:600}
+  .pair-check.bad{background:#F8E6E1;color:var(--rose);font-weight:600}
   .radios{display:grid;gap:7px}
   .radio{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45}
   .radio input{margin-top:3px}
@@ -113,6 +120,7 @@
   footer{text-align:center;color:var(--soft);font-size:11px;line-height:1.7;margin-top:24px}
 
   @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.protocol{grid-template-columns:repeat(2,1fr)}.tank-card:last-child{grid-column:span 2}.rules{grid-template-columns:1fr}.section-nav{position:static}}
+  @media(max-width:720px){.decision-grid{grid-template-columns:1fr}}
   @media(max-width:560px){body{padding:22px 10px 42px}.block{padding:13px;border-radius:14px}.grid,.protocol{grid-template-columns:1fr}.tank-card:last-child{grid-column:auto}.topbar{align-items:flex-start}.save-state{text-align:right}.toolbar .hint{width:100%;margin-left:0}.question{font-size:13px}}
   @media print{
     @page{size:A4 landscape;margin:8mm}
@@ -169,7 +177,7 @@
   </section>
 
   <nav class="section-nav" aria-label="ส่วนต่างๆ ของแบบบันทึก">
-    <a href="#process">Process</a><a href="#overrun">%OR</a><a href="#churning">การปั่น</a><a href="#texture">เนื้อ</a><a href="#tasting">คะแนนการชิม</a><a href="#notes">สรุป</a>
+    <a href="#process">Process</a><a href="#overrun">%OR</a><a href="#churning">การปั่น</a><a href="#texture">เนื้อ</a><a href="#tasting">คะแนนการชิม</a><a href="#verdict">ผลหลังชิม</a><a href="#notes">สรุป</a>
   </nav>
 
   <section class="block" id="process">
@@ -216,6 +224,35 @@
     </div>
   </section>
 
+  <section class="block" id="verdict">
+    <h2 class="block-title"><span class="tag">4</span> สรุปผลหลังชิม</h2>
+    <p class="hint" style="margin:-5px 0 12px">ระบบตรวจ Draw temp และ %OR ของคู่หลักก่อนสรุป เพื่อช่วยระบุกรณีที่ต้องระวังการเปรียบเทียบ</p>
+    <div class="decision-grid">
+      <div class="decision-card">
+        <h3>H1 · ครีมต้องเข้าแต่แรกไหม?</h3>
+        <div class="pair-check" id="pairCheck_BC">B↔C · รอข้อมูล Draw temp และ %OR</div>
+        <div class="field" style="margin-top:10px"><label for="h1BC">B ↔ C (CMDL11)</label><select id="h1BC" data-path="verdict.h1BC"><option value="">— เลือก —</option><option>C ดีกว่า B</option><option>C ใกล้เคียง B</option><option>เทียบไม่ได้</option></select></div>
+        <div class="pair-check" id="pairCheck_DE" style="margin-top:12px">D↔E · รอข้อมูล Draw temp และ %OR</div>
+        <div class="field" style="margin-top:10px"><label for="h1DE">D ↔ E (CM2020)</label><select id="h1DE" data-path="verdict.h1DE"><option value="">— เลือก —</option><option>E ดีกว่า D</option><option>E ใกล้เคียง D</option><option>เทียบไม่ได้</option></select></div>
+        <div class="field"><label for="sameDirection">ทั้งสองคู่ชี้ไปทางเดียวกันไหม?</label><select id="sameDirection" data-path="verdict.sameDirection"><option value="">— เลือก —</option><option>ใช่</option><option>ไม่ใช่</option><option>ยังสรุปไม่ได้</option></select></div>
+      </div>
+      <div class="decision-card">
+        <h3>H2 · การบ่ม 45 นาทีช่วยไหม? (A ↔ B)</h3>
+        <div class="field"><label for="h2Aging">ผลการเปรียบเทียบ</label><select id="h2Aging" data-path="verdict.h2Aging"><option value="">— เลือก —</option><option>ช่วย</option><option>ไม่ช่วย</option><option>Confound เกินตีความ</option></select></div>
+        <p class="hint">ถัง A ไม่มีบ่ม 45 นาที · ใช้ผลนี้เป็นข้อบ่งชี้ เพราะอุณหภูมิและเวลารวมอาจต่างกัน</p>
+        <h3 style="margin-top:16px">H4 · กลิ่นต้มจากการต้มครีม</h3>
+        <div class="field"><label for="h4Aroma">ผลด้านกลิ่น</label><select id="h4Aroma" data-path="verdict.h4Aroma"><option value="">— เลือก —</option><option>ไม่มีปัญหา</option><option>รับได้</option><option>เป็นปัญหา</option></select></div>
+      </div>
+    </div>
+    <div class="decision-card" style="margin-top:12px">
+      <h3>H3 · “เย็นลิ้น = 1.5 − 0.5 × ความข้น” ยังตรงไหม?</h3>
+      <p class="hint">ระบบนำคะแนน “ความข้น/แน่น” และ “ความเย็นลิ้น” จากตารางคะแนนการชิมมาคำนวณให้ ไม่ต้องกรอกซ้ำ</p>
+      <div class="table-wrap"><table id="h3Table"></table></div>
+      <div class="field" style="margin-top:10px"><label for="h3Relation">สรุปความสัมพันธ์</label><select id="h3Relation" data-path="verdict.h3Relation"><option value="">— เลือก —</option><option>ตรง — ยืนยันความสัมพันธ์</option><option>ไม่ตรง — ต้องหาตัวทำนายใหม่</option><option>ข้อมูลยังไม่พอ</option></select></div>
+    </div>
+    <div class="field" style="margin-top:12px"><label for="verdictDetails">ระบุผลหลังชิมเพิ่มเติม</label><textarea id="verdictDetails" data-path="verdict.details" placeholder="เหตุผล สิ่งที่สังเกต หรือข้อจำกัดในการตีความ"></textarea></div>
+  </section>
+
   <section class="block" id="notes">
     <h2 class="block-title"><span class="tag">✓</span> สรุปผลและเหตุการณ์ผิดปกติ</h2>
     <div class="grid" style="grid-template-columns:1fr 1fr">
@@ -236,11 +273,11 @@
 
 <script>
 const TANKS = {
-  A:{recipe:'CMDL11',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'~10 นาที',star:false},
-  B:{recipe:'CMDL11',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'90 นาที',star:false},
-  C:{recipe:'CMDL11',cream:'เข้าแต่แรก · ต้ม 70°C + PST',setting:'90 นาที',star:true},
-  D:{recipe:'CM2020',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'90 นาที',star:false},
-  E:{recipe:'CM2020',cream:'เข้าแต่แรก · ต้ม 70°C + PST',setting:'90 นาที',star:true}
+  A:{recipe:'CMDL11',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'ไม่มีบ่ม',star:false},
+  B:{recipe:'CMDL11',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'บ่ม 45 นาที',star:false},
+  C:{recipe:'CMDL11',cream:'เข้าแต่แรก · ต้ม 70°C + PST',setting:'บ่ม 45 นาที',star:true},
+  D:{recipe:'CM2020',cream:'ท้ายสุด · ครีมเย็น 6°C',setting:'บ่ม 45 นาที',star:false},
+  E:{recipe:'CM2020',cream:'เข้าแต่แรก · ต้ม 70°C + PST',setting:'บ่ม 45 นาที',star:true}
 };
 const IDS = Object.keys(TANKS);
 const STORAGE_KEY = 'missicecream_cmr2_v1';
@@ -249,12 +286,12 @@ function emptyTank(){return {timer:{start:null,stop:null},cooling:{start:null,re
 function localDate(){const d=new Date(),off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
 function freshState(){
   const tanks={};IDS.forEach(id=>tanks[id]=emptyTank());
-  return {version:1,meta:{date:localDate(),team:'',machine:'',coconutLot:''},tanks,order:[],ranks:{},special:{eRecall:'',eRecallNote:''},summary:{conclusion:'',deviations:''},updatedAt:Date.now()};
+  return {version:1,meta:{date:localDate(),team:'',machine:'',coconutLot:''},tanks,order:[],ranks:{},special:{eRecall:'',eRecallNote:''},verdict:{h1BC:'',h1DE:'',sameDirection:'',h2Aging:'',h3Relation:'',h4Aroma:'',details:''},summary:{conclusion:'',deviations:''},updatedAt:Date.now()};
 }
 function normalize(raw){
   const base=freshState(), s=(raw&&typeof raw==='object')?raw:{};
   base.meta=Object.assign(base.meta,s.meta||{});base.order=Array.isArray(s.order)?s.order.filter(x=>IDS.includes(x)):[];
-  base.ranks=Object.assign({},s.ranks||{});base.special=Object.assign(base.special,s.special||{});base.summary=Object.assign(base.summary,s.summary||{});
+  base.ranks=Object.assign({},s.ranks||{});base.special=Object.assign(base.special,s.special||{});base.verdict=Object.assign(base.verdict,s.verdict||{});base.summary=Object.assign(base.summary,s.summary||{});
   IDS.forEach(id=>{const t=(s.tanks&&s.tanks[id])||{};base.tanks[id]={timer:Object.assign({},base.tanks[id].timer,t.timer||{}),cooling:Object.assign({},base.tanks[id].cooling,t.cooling||{}),aging:Object.assign({},base.tanks[id].aging,t.aging||{}),churnTimer:Object.assign({},base.tanks[id].churnTimer,t.churnTimer||{}),process:Object.assign({},t.process||{}),or:Object.assign({},t.or||{}),churn:Object.assign({},t.churn||{}),texture:Object.assign({},t.texture||{}),blind:Object.assign({},t.blind||{}),scores:Object.assign({},t.scores||{})}});
   return base;
 }
@@ -275,7 +312,7 @@ function bindInput(el){
 }
 function bindAll(){document.querySelectorAll('[data-path]').forEach(bindInput)}
 
-function protocolCards(){document.getElementById('protocolCards').innerHTML=IDS.map(id=>{const t=TANKS[id];return `<article class="tank-card ${t.star?'star':''}"><h3>${id}${t.star?' ★':''}</h3><div class="recipe">${t.recipe}</div><p>${t.cream}</p><span class="pill">Setting ${t.setting}</span></article>`}).join('')}
+function protocolCards(){document.getElementById('protocolCards').innerHTML=IDS.map(id=>{const t=TANKS[id];return `<article class="tank-card ${t.star?'star':''}"><h3>${id}${t.star?' ★':''}</h3><div class="recipe">${t.recipe}</div><p>${t.cream}</p><span class="pill">${t.setting}</span></article>`}).join('')}
 function tableHead(){return `<thead><tr><th>รายการ</th>${IDS.map(id=>`<th>${id}${TANKS[id].star?' ★':''}<br><small style="font:500 10px Sarabun;color:var(--muted)">${TANKS[id].recipe}</small></th>`).join('')}</tr></thead>`}
 function group(label){return `<tr class="group-row"><td colspan="6">${label}</td></tr>`}
 function measure(path,unit,attrs=''){return `<div class="measure"><input type="number" step="0.1" inputmode="decimal" data-path="${path}" ${attrs}><span class="unit">${unit}</span></div><div class="feedback" data-feedback="${path}"></div>`}
@@ -297,8 +334,8 @@ function buildProcess(){
   h+=row('Active cooling ถึง 15°C <small>กดปุ่มเพื่อบันทึกเวลาและคำนวณนาทีอัตโนมัติ</small>','to15',(id)=>coolingControl(id),['A']);
   h+=row('อุณหภูมิหลัง passive setting <small>30 นาที · ระบบจะแจ้งเวลาที่ให้วัด</small>','postPassive',(id)=>postPassiveMeasure(id),['A']);
   h+=row('อุณหภูมิตอนเติมครีม <small>เฉพาะ A, B, D</small>','creamTemp',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'),['C','E']);
-  h+=group('บ่มสั้น 45 นาที');
-  h+=row('⏱ บ่ม 45 นาที <small>กดเริ่มเพื่อบันทึกเวลาและนับถอยหลัง</small>','setting',(id)=>agingControl(id));
+  h+=group('บ่มสั้น 45 นาที · เฉพาะถัง B–E');
+  h+=row('⏱ บ่ม 45 นาที <small>กดเริ่มเพื่อบันทึกเวลาและนับถอยหลัง</small>','setting',(id)=>agingControl(id),['A']);
   h+=row('อุณหภูมิมิกซ์ก่อนปั่น <small>ต้อง ≤5°C</small>','preChurn',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
   h+=row('★ ความหนืดมิกซ์หลังบ่ม','viscosity',(id,k)=>selectInput(`tanks.${id}.process.${k}`,['ใส','ข้น','ข้นมาก']));
   h+='</tbody>';document.getElementById('processTable').innerHTML=h;
@@ -334,6 +371,7 @@ const SCORE_ROWS=[
 ];
 function range(a,b){return Array.from({length:b-a+1},(_,i)=>String(a+i))}
 function buildScores(){let h=tableHead()+'<tbody>';SCORE_ROWS.forEach(([label,key,scale,opts])=>{h+=row(`${label}${scale?` <small>${scale}</small>`:''}`,key,(id)=>opts?selectInput(`tanks.${id}.scores.${key}`,opts):textarea(`tanks.${id}.scores.${key}`,'บันทึก'))});h+='</tbody>';document.getElementById('scoreTable').innerHTML=h}
+function buildH3Table(){let h=tableHead()+'<tbody>';h+=row('คะแนนความข้น/แน่น','density',(id)=>`<div class="feedback" id="h3Density_${id}" style="font-size:14px;padding:7px 2px">—</div>`);h+=row('ค่าความเย็นลิ้นที่ทำนาย','predicted',(id)=>`<div class="feedback" id="h3Predicted_${id}" style="font-size:14px;padding:7px 2px">—</div>`);h+=row('คะแนนความเย็นลิ้นจริง','actual',(id)=>`<div class="feedback" id="h3Actual_${id}" style="font-size:14px;padding:7px 2px">—</div>`);h+='</tbody>';document.getElementById('h3Table').innerHTML=h}
 
 function fmtClock(ms){let s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),ss=s%60;return [h,m,ss].map(n=>String(n).padStart(2,'0')).join(':')}
 const PASSIVE_SETTING_MS=30*60*1000;
@@ -342,7 +380,7 @@ function formatTime(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-
 function updateCoolingTimers(){IDS.forEach(id=>{if(id==='A')return;const c=state.tanks[id].cooling||{},clock=document.getElementById(`coolingClock_${id}`),note=document.getElementById(`coolingNote_${id}`),target=document.getElementById(`coolingTarget_${id}`),countdown=document.getElementById(`coolingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const elapsed=c.start?(c.reached15||Date.now())-c.start:0;clock.textContent=fmtClock(elapsed);if(!c.start){const old=numberAt(`tanks.${id}.process.to15`);note.textContent=old==null?'ยังไม่เริ่ม':`บันทึกเดิม ${old.toFixed(1)} นาที`;target.textContent='กด “ถึง 15°C” เพื่อเริ่มนับถอยหลัง';countdown.textContent='';countdown.classList.remove('ready');return}if(!c.reached15){note.textContent=`เริ่ม ${formatTime(c.start)} · กำลัง Active cooling`;target.textContent='รอถึง 15°C';countdown.textContent='';countdown.classList.remove('ready');return}const mins=elapsed/60000,measureAt=c.reached15+PASSIVE_SETTING_MS,remain=measureAt-Date.now();note.textContent=`เริ่ม ${formatTime(c.start)} · ถึง 15°C ${formatTime(c.reached15)} · ${mins.toFixed(1)} นาที`;target.textContent=`วัดอุณหภูมิ เวลา ${formatTime(measureAt)}`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`;countdown.classList.remove('ready')}else{countdown.textContent='ครบ 30 นาทีแล้ว · วัดอุณหภูมิ';countdown.classList.add('ready')}})}
 function coolingAction(action,id){const c=state.tanks[id].cooling;if(action==='start'){if((c.start||c.reached15)&&!confirm(`เริ่ม Active cooling ถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;c.start=Date.now();c.reached15=null;state.tanks[id].process.to15=''}else if(action==='reached'){if(!c.start){alert('กด “เริ่ม” Active cooling ก่อนค่ะ');return}if(c.reached15&&!confirm(`บันทึกเวลาถึง 15°C ของถัง ${id} ใหม่?`))return;c.reached15=Date.now();state.tanks[id].process.to15=Number(((c.reached15-c.start)/60000).toFixed(1))}save();updateCoolingTimers();validateAll()}
 
-function updateAgingTimers(){IDS.forEach(id=>{const a=state.tanks[id].aging||{},clock=document.getElementById(`agingClock_${id}`),note=document.getElementById(`agingNote_${id}`),target=document.getElementById(`agingTarget_${id}`),countdown=document.getElementById(`agingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const now=a.stop||Date.now(),elapsed=a.start?Math.max(0,now-a.start):0;clock.textContent=fmtClock(elapsed);countdown.classList.remove('ready');if(!a.start){note.textContent='ยังไม่เริ่ม';target.textContent='กด “เริ่ม” เพื่อเริ่มบ่ม 45 นาที';countdown.textContent='';return}const plannedEnd=a.start+SHORT_AGING_MS,remain=plannedEnd-now;target.textContent=`กำหนดจบ เวลา ${formatTime(plannedEnd)}`;if(!a.stop){note.textContent=`เริ่ม ${formatTime(a.start)} · กำลังบ่ม`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`}else{countdown.textContent='ครบ 45 นาทีแล้ว · กด “จบ”';countdown.classList.add('ready')}return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(a.start)} · จบ ${formatTime(a.stop)} · ${mins.toFixed(1)} นาที`;if(remain>0){countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`}else{countdown.textContent='จบบ่มแล้ว';countdown.classList.add('ready')}})}
+function updateAgingTimers(){IDS.forEach(id=>{if(id==='A')return;const a=state.tanks[id].aging||{},clock=document.getElementById(`agingClock_${id}`),note=document.getElementById(`agingNote_${id}`),target=document.getElementById(`agingTarget_${id}`),countdown=document.getElementById(`agingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const now=a.stop||Date.now(),elapsed=a.start?Math.max(0,now-a.start):0;clock.textContent=fmtClock(elapsed);countdown.classList.remove('ready');if(!a.start){note.textContent='ยังไม่เริ่ม';target.textContent='กด “เริ่ม” เพื่อเริ่มบ่ม 45 นาที';countdown.textContent='';return}const plannedEnd=a.start+SHORT_AGING_MS,remain=plannedEnd-now;target.textContent=`กำหนดจบ เวลา ${formatTime(plannedEnd)}`;if(!a.stop){note.textContent=`เริ่ม ${formatTime(a.start)} · กำลังบ่ม`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`}else{countdown.textContent='ครบ 45 นาทีแล้ว · กด “จบ”';countdown.classList.add('ready')}return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(a.start)} · จบ ${formatTime(a.stop)} · ${mins.toFixed(1)} นาที`;if(remain>0){countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`}else{countdown.textContent='จบบ่มแล้ว';countdown.classList.add('ready')}})}
 function agingAction(action,id){const a=state.tanks[id].aging;if(action==='start'){if((a.start||a.stop)&&!confirm(`เริ่มบ่มถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;a.start=Date.now();a.stop=null;state.tanks[id].process.agingMinutes=''}else if(action==='stop'){if(!a.start){alert('กด “เริ่ม” บ่มก่อนค่ะ');return}if(a.stop&&!confirm(`บันทึกเวลาจบบ่มของถัง ${id} ใหม่?`))return;a.stop=Date.now();state.tanks[id].process.agingMinutes=Number(((a.stop-a.start)/60000).toFixed(1))}save();updateAgingTimers();validateAll()}
 
 function formatDurationValue(ms){let seconds=Math.max(0,Math.floor(ms/1000));const minutes=Math.floor(seconds/60);seconds%=60;return `${minutes}:${String(seconds).padStart(2,'0')}`}
@@ -351,28 +389,30 @@ function updateChurnTimers(){IDS.forEach(id=>{const t=state.tanks[id].churnTimer
 function churnTimerAction(action,id){const t=state.tanks[id].churnTimer,churn=state.tanks[id].churn;if(action==='start'){if((t.start||t.stop||churn.duration)&&!confirm(`เริ่มเวลาปั่นถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;t.start=Date.now();t.stop=null;t.overrideMs=null;churn.duration=''}else if(action==='stop'){if(!t.start){alert('กด “เริ่ม” เวลาปั่นก่อนค่ะ');return}if(t.stop&&!confirm(`บันทึกเวลาจบปั่นของถัง ${id} ใหม่?`))return;t.stop=Date.now();t.overrideMs=null;churn.duration=formatDurationValue(t.stop-t.start)}else if(action==='edit'){if(t.start&&!t.stop){alert('กด “จบ” ก่อนแก้ไขเวลาปั่นค่ะ');return}const current=churn.duration||(t.start&&t.stop?formatDurationValue(t.stop-t.start):'');if(!current){alert('ยังไม่มีเวลาปั่นให้แก้ไขค่ะ');return}const value=prompt('แก้ไขเวลาปั่น\nรูปแบบ นาที:วินาที เช่น 12:30 หรือใส่นาที เช่น 12.5',current);if(value===null)return;const ms=parseDurationValue(value);if(ms==null){alert('รูปแบบเวลาไม่ถูกต้อง กรุณาใช้ นาที:วินาที เช่น 12:30');return}t.overrideMs=ms;churn.duration=formatDurationValue(ms)}save();updateChurnTimers()}
 
 function numberAt(path){const v=getPath(path);return v===''||v==null?null:Number(v)}
+function calculatedOverrun(id){const mix=numberAt(`tanks.${id}.or.mix`),cup=numberAt(`tanks.${id}.or.emptyCup`),gross1=numberAt(`tanks.${id}.or.iceCup1`),gross2=numberAt(`tanks.${id}.or.iceCup2`);if([mix,cup,gross1,gross2].some(v=>v==null))return null;const net1=gross1-cup,net2=gross2-cup;if(net1<=0||net2<=0)return null;const ice=Math.abs(net1-net2)>5?Math.max(net1,net2):(net1+net2)/2;return (mix-ice)/ice*100}
+function updatePairCheck(a,b,elId){const el=document.getElementById(elId);if(!el)return;const drawA=numberAt(`tanks.${a}.churn.drawTemp`),drawB=numberAt(`tanks.${b}.churn.drawTemp`),orA=calculatedOverrun(a),orB=calculatedOverrun(b),parts=[];let bad=false,complete=true;if(drawA==null||drawB==null){parts.push('รอ Draw temp');complete=false}else{const diff=Math.abs(drawA-drawB);if(diff>2){parts.push(`Draw temp ต่าง ${diff.toFixed(1)}°C (>2°C)`);bad=true}else parts.push(`Draw temp ต่าง ${diff.toFixed(1)}°C`)}if(orA==null||orB==null){parts.push('รอ %OR');complete=false}else{const diff=Math.abs(orA-orB);if(diff>5){parts.push(`%OR ต่าง ${diff.toFixed(1)} จุด (>5)`);bad=true}else parts.push(`%OR ต่าง ${diff.toFixed(1)} จุด`)}el.textContent=`${a}↔${b} · ${parts.join(' · ')}`;el.className=`pair-check ${bad?'bad':complete?'good':''}`}
+function updatePostTastingAnalysis(){updatePairCheck('B','C','pairCheck_BC');updatePairCheck('D','E','pairCheck_DE');IDS.forEach(id=>{const density=numberAt(`tanks.${id}.scores.density`),actual=numberAt(`tanks.${id}.scores.cold`),predicted=density==null?null:1.5-.5*density;const d=document.getElementById(`h3Density_${id}`),p=document.getElementById(`h3Predicted_${id}`),a=document.getElementById(`h3Actual_${id}`);if(d)d.textContent=density==null?'—':density.toFixed(1);if(p)p.textContent=predicted==null?'—':predicted.toFixed(1);if(a)a.textContent=actual==null?'—':actual.toFixed(1)})}
 function feedback(path,msg,kind=''){const el=document.querySelector(`[data-feedback="${path}"]`);if(el){el.textContent=msg;el.className=`feedback ${kind}`}}
 function validateTank(id){
   const base=`tanks.${id}.process.`;
-  const stove=numberAt(base+'stove'),pre=numberAt(base+'prePst'),post=numberAt(base+'postPst'),pc=numberAt(base+'preChurn'),setting=numberAt(base+'setting');
+  const stove=numberAt(base+'stove'),pre=numberAt(base+'prePst'),post=numberAt(base+'postPst'),pc=numberAt(base+'preChurn');
   feedback(base+'stove',stove==null?'':stove===70?'✓ ตรงเป้า':stove<70?'ต่ำกว่า 70°C':'สูงกว่า 70°C',stove===70?'good':stove==null?'':'bad');
   feedback(base+'prePst',pre==null?'':pre>=58?'✓ ผ่านเกณฑ์':'ห้าม PST · อุ่นถึง 70°C ใหม่',pre>=58?'good':pre==null?'':'bad');
   feedback(base+'postPst',post==null?'':post>=55?'✓ ≥55°C':'ต่ำกว่า 55°C · บันทึก deviation',post>=55?'good':post==null?'':'bad');
   feedback(base+'preChurn',pc==null?'':pc<=5?'✓ พร้อมปั่น':'คนต่อจนถึง ≤5°C',pc<=5?'good':pc==null?'':'bad');
-  if(setting!=null){if(id==='A')feedback(base+'setting',`Control · ${setting.toFixed(1)} นาที`,setting<=20?'good':'bad');else feedback(base+'setting',Math.abs(setting-90)<=.1?'✓ ครบ 90 นาที':setting<90?`ขาด ${(90-setting).toFixed(1)} นาที`:`เกิน ${(setting-90).toFixed(1)} นาที`,Math.abs(setting-90)<=.1?'good':'bad')}else feedback(base+'setting','');
   const mix=numberAt(`tanks.${id}.or.mix`),cup=numberAt(`tanks.${id}.or.emptyCup`),gross1=numberAt(`tanks.${id}.or.iceCup1`),gross2=numberAt(`tanks.${id}.or.iceCup2`),netOut=document.getElementById(`iceNet_${id}`),netNote=document.getElementById(`iceNetNote_${id}`),out=document.getElementById(`or_${id}`);
   let chosenIce=null;if(cup!=null&&gross1!=null&&gross2!=null){const net1=gross1-cup,net2=gross2-cup;if(net1>0&&net2>0){const diff=Math.abs(net1-net2),useHigher=diff>5;chosenIce=useHigher?Math.max(net1,net2):(net1+net2)/2;netOut.textContent=`${chosenIce.toFixed(1)} g`;netOut.className='feedback good';netNote.textContent=`ครั้งที่ 1 ${net1.toFixed(1)} g · ครั้งที่ 2 ${net2.toFixed(1)} g · ต่าง ${diff.toFixed(1)} g → ${useHigher?'ใช้ค่าที่มากกว่า':'ใช้ค่าเฉลี่ย'}`;netNote.className=`feedback ${useHigher?'bad':'good'}`;state.tanks[id].or.icecreamNet=Number(chosenIce.toFixed(1));state.tanks[id].or.icecreamMethod=useHigher?'higher':'average'}else{netOut.textContent='ตรวจน้ำหนัก';netOut.className='feedback bad';netNote.textContent='น้ำหนักไอศกรีมพร้อมถ้วยต้องมากกว่าน้ำหนักถ้วยเปล่า';netNote.className='feedback bad';state.tanks[id].or.icecreamNet='';state.tanks[id].or.icecreamMethod=''}}else{netOut.textContent='—';netOut.className='feedback';netNote.textContent='';netNote.className='feedback';state.tanks[id].or.icecreamNet='';state.tanks[id].or.icecreamMethod=''}
   if(mix!=null&&chosenIce>0){const or=(mix-chosenIce)/chosenIce*100;out.textContent=`${or.toFixed(1)} %`;out.className='feedback good'}else{out.textContent='—';out.className='feedback'}
 }
 function validateAll(){IDS.forEach(validateTank)}
-function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.'))validateAll()}
+function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.'))validateAll();if(path.includes('.or.')||path.includes('.churn.')||path.includes('.scores.'))updatePostTastingAnalysis()}
 
 function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CMR2-${state.meta.date||'data'}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importJSON(file){const reader=new FileReader();reader.onload=()=>{try{state=normalize(JSON.parse(reader.result));save();renderAll();alert('นำเข้าข้อมูลเรียบร้อยค่ะ')}catch(e){alert('ไฟล์ข้อมูลไม่ถูกต้อง')}};reader.readAsText(file)}
 function resetAll(){if(!confirm('ล้างข้อมูล CMR2 ทั้งหมดบนเครื่องนี้? การล้างย้อนกลับไม่ได้'))return;state=freshState();save();renderAll()}
-function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});updateCoolingTimers();updateAgingTimers();updateChurnTimers();validateAll()}
+function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});updateCoolingTimers();updateAgingTimers();updateChurnTimers();validateAll();updatePostTastingAnalysis()}
 
-protocolCards();buildProcess();buildOR();buildChurn();buildTexture();buildScores();bindAll();renderAll();
+protocolCards();buildProcess();buildOR();buildChurn();buildTexture();buildScores();buildH3Table();bindAll();renderAll();
 document.getElementById('processTable').addEventListener('click',e=>{const coolingButton=e.target.closest('[data-cooling-action]');if(coolingButton){coolingAction(coolingButton.dataset.coolingAction,coolingButton.dataset.tank);return}const agingButton=e.target.closest('[data-aging-action]');if(agingButton)agingAction(agingButton.dataset.agingAction,agingButton.dataset.tank)});
 document.getElementById('churnTable').addEventListener('click',e=>{const button=e.target.closest('[data-churn-action]');if(button)churnTimerAction(button.dataset.churnAction,button.dataset.tank)});
 document.getElementById('printBtn').addEventListener('click',()=>window.print());
