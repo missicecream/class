@@ -97,13 +97,13 @@
   .mini{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;cursor:pointer}
   .mini.start{background:var(--green-deep);border-color:var(--green-deep);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}.mini.clear{color:var(--rose)}
   .timer-note{min-height:30px;margin-top:6px;font-size:10.5px;line-height:1.35;color:var(--muted)}
-  .cooling-control{display:grid;gap:6px;text-align:center}
-  .cooling-clock{font-family:'Fraunces',serif;font-size:19px;font-variant-numeric:tabular-nums;color:var(--green-deep)}
-  .cooling-actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
-  .cooling-note,.cooling-target,.cooling-countdown{font-size:10.5px;line-height:1.35;color:var(--muted)}
-  .cooling-target{margin-top:5px;color:var(--green-deep);font-weight:600}
-  .cooling-countdown{font-family:'Fraunces',serif;font-size:15px;font-variant-numeric:tabular-nums;color:var(--amber)}
-  .cooling-countdown.ready{color:var(--green-deep);font-family:'Sarabun',sans-serif;font-size:11px;font-weight:700}
+  .cooling-control,.aging-control{display:grid;gap:6px;text-align:center}
+  .cooling-clock,.aging-clock{font-family:'Fraunces',serif;font-size:19px;font-variant-numeric:tabular-nums;color:var(--green-deep)}
+  .cooling-actions,.aging-actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+  .cooling-note,.cooling-target,.cooling-countdown,.aging-note,.aging-target,.aging-countdown{font-size:10.5px;line-height:1.35;color:var(--muted)}
+  .cooling-target,.aging-target{margin-top:5px;color:var(--green-deep);font-weight:600}
+  .cooling-countdown,.aging-countdown{font-family:'Fraunces',serif;font-size:15px;font-variant-numeric:tabular-nums;color:var(--amber)}
+  .cooling-countdown.ready,.aging-countdown.ready{color:var(--green-deep);font-family:'Sarabun',sans-serif;font-size:11px;font-weight:700}
 
   .toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
   .btn{border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:999px;padding:10px 17px;font-weight:700;font-size:13px;cursor:pointer}
@@ -135,7 +135,7 @@
   @media print{
     @page{size:A4 landscape;margin:8mm}
     body{background:#fff;background-image:none;padding:0;font-size:10px}
-    .sheet{max-width:none}.topbar,header,.section-nav,.toolbar,.timer-actions,.cooling-actions,.save-state,footer,.no-print{display:none!important}
+    .sheet{max-width:none}.topbar,header,.section-nav,.toolbar,.timer-actions,.cooling-actions,.aging-actions,.save-state,footer,.no-print{display:none!important}
     .report-head{display:block}.block{background:#fff;border:1px solid #bbb;box-shadow:none;border-radius:5px;padding:8px;margin-bottom:7px;break-inside:avoid}
     .block-title{font-size:11px;margin-bottom:6px}.tag{background:none;color:#000;border:1px solid #888;height:20px;min-width:20px}
     .protocol{grid-template-columns:repeat(5,1fr)}.tank-card{padding:7px;border-radius:4px}.tank-card h3{font-size:15px}.tank-card p,.tank-card .recipe,.pill{font-size:8.5px}
@@ -279,7 +279,7 @@ const TANKS = {
 const IDS = Object.keys(TANKS);
 const STORAGE_KEY = 'missicecream_cmr2_v1';
 
-function emptyTank(){return {timer:{start:null,stop:null},cooling:{start:null,reached15:null},process:{},or:{},churn:{},texture:{},blind:{},scores:{}}}
+function emptyTank(){return {timer:{start:null,stop:null},cooling:{start:null,reached15:null},aging:{start:null,stop:null},process:{},or:{},churn:{},texture:{},blind:{},scores:{}}}
 function localDate(){const d=new Date(),off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
 function freshState(){
   const tanks={};IDS.forEach(id=>tanks[id]=emptyTank());
@@ -289,7 +289,7 @@ function normalize(raw){
   const base=freshState(), s=(raw&&typeof raw==='object')?raw:{};
   base.meta=Object.assign(base.meta,s.meta||{});base.order=Array.isArray(s.order)?s.order.filter(x=>IDS.includes(x)):[];
   base.ranks=Object.assign({},s.ranks||{});base.special=Object.assign(base.special,s.special||{});base.summary=Object.assign(base.summary,s.summary||{});
-  IDS.forEach(id=>{const t=(s.tanks&&s.tanks[id])||{};base.tanks[id]={timer:Object.assign({},base.tanks[id].timer,t.timer||{}),cooling:Object.assign({},base.tanks[id].cooling,t.cooling||{}),process:Object.assign({},t.process||{}),or:Object.assign({},t.or||{}),churn:Object.assign({},t.churn||{}),texture:Object.assign({},t.texture||{}),blind:Object.assign({},t.blind||{}),scores:Object.assign({},t.scores||{})}});
+  IDS.forEach(id=>{const t=(s.tanks&&s.tanks[id])||{};base.tanks[id]={timer:Object.assign({},base.tanks[id].timer,t.timer||{}),cooling:Object.assign({},base.tanks[id].cooling,t.cooling||{}),aging:Object.assign({},base.tanks[id].aging,t.aging||{}),process:Object.assign({},t.process||{}),or:Object.assign({},t.or||{}),churn:Object.assign({},t.churn||{}),texture:Object.assign({},t.texture||{}),blind:Object.assign({},t.blind||{}),scores:Object.assign({},t.scores||{})}});
   return base;
 }
 let state;
@@ -319,6 +319,7 @@ function textarea(path,placeholder=''){return `<textarea data-path="${path}" pla
 function row(label,key,make,na=[]){return `<tr><td class="row-label">${label}</td>${IDS.map(id=>na.includes(id)?'<td class="cell na">—</td>':`<td class="cell">${make(id,key)}</td>`).join('')}</tr>`}
 function coolingControl(id){return `<div class="cooling-control" id="cooling_${id}"><div class="cooling-clock" id="coolingClock_${id}">00:00:00</div><div class="cooling-actions"><button type="button" class="mini start" data-cooling-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-cooling-action="reached" data-tank="${id}">ถึง 15°C</button></div><div class="cooling-note" id="coolingNote_${id}">ยังไม่เริ่ม</div></div>`}
 function postPassiveMeasure(id){return `${measure(`tanks.${id}.process.postPassive`,'°C')}<div class="cooling-target" id="coolingTarget_${id}">กด “ถึง 15°C” เพื่อเริ่มนับถอยหลัง</div><div class="cooling-countdown" id="coolingCountdown_${id}"></div>`}
+function agingControl(id){return `<div class="aging-control" id="aging_${id}"><div class="aging-clock" id="agingClock_${id}">00:00:00</div><div class="aging-actions"><button type="button" class="mini start" data-aging-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-aging-action="stop" data-tank="${id}">จบ</button></div><div class="aging-note" id="agingNote_${id}">ยังไม่เริ่ม</div><div class="aging-target" id="agingTarget_${id}">กด “เริ่ม” เพื่อเริ่มบ่ม 45 นาที</div><div class="aging-countdown" id="agingCountdown_${id}"></div></div>`}
 
 function buildProcess(){
   let h=tableHead()+'<tbody>'+group('การต้ม');
@@ -329,10 +330,10 @@ function buildProcess(){
   h+=row('Active cooling ถึง 15°C <small>กดปุ่มเพื่อบันทึกเวลาและคำนวณนาทีอัตโนมัติ</small>','to15',(id)=>coolingControl(id),['A']);
   h+=row('อุณหภูมิหลัง passive setting <small>30 นาที · ระบบจะแจ้งเวลาที่ให้วัด</small>','postPassive',(id)=>postPassiveMeasure(id),['A']);
   h+=row('อุณหภูมิตอนเติมครีม <small>เฉพาะ A, B, D</small>','creamTemp',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'),['C','E']);
-  h+=group('ก่อนปั่น');
-  h+=row('⏱ Setting รวมจริง','setting',(id,k)=>measure(`tanks.${id}.process.${k}`,'นาที'));
+  h+=group('บ่มสั้น 45 นาที');
+  h+=row('⏱ บ่ม 45 นาที <small>กดเริ่มเพื่อบันทึกเวลาและนับถอยหลัง</small>','setting',(id)=>agingControl(id));
   h+=row('อุณหภูมิมิกซ์ก่อนปั่น <small>ต้อง ≤5°C</small>','preChurn',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
-  h+=row('★ ความหนืดมิกซ์','viscosity',(id,k)=>selectInput(`tanks.${id}.process.${k}`,['ใส','ข้น','ข้นมาก']));
+  h+=row('★ ความหนืดมิกซ์หลังบ่ม','viscosity',(id,k)=>selectInput(`tanks.${id}.process.${k}`,['ใส','ข้น','ข้นมาก']));
   h+='</tbody>';document.getElementById('processTable').innerHTML=h;
 }
 function buildOR(){
@@ -385,9 +386,13 @@ function updateTimers(){IDS.forEach(id=>{const t=state.tanks[id].timer,el=docume
 function timerAction(action,id){const t=state.tanks[id].timer;if(action==='start'){if(t.start&&!t.stop&&!confirm(`เริ่มเวลาถัง ${id} ใหม่?`))return;t.start=Date.now();t.stop=null}else if(action==='stop'){if(!t.start){alert('กด “จบ PST · เริ่ม” ก่อนค่ะ');return}t.stop=Date.now();state.tanks[id].process.setting=Number((elapsedMs(id)/60000).toFixed(1));const inp=document.querySelector(`[data-path="tanks.${id}.process.setting"]`);if(inp)inp.value=state.tanks[id].process.setting}else if(action==='clear'){if((t.start||t.stop)&&!confirm(`ล้างเวลา Setting ถัง ${id}?`))return;t.start=null;t.stop=null;state.tanks[id].process.setting='';const inp=document.querySelector(`[data-path="tanks.${id}.process.setting"]`);if(inp)inp.value=''}save();updateTimers();validateAll()}
 
 const PASSIVE_SETTING_MS=30*60*1000;
+const SHORT_AGING_MS=45*60*1000;
 function formatTime(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
 function updateCoolingTimers(){IDS.forEach(id=>{if(id==='A')return;const c=state.tanks[id].cooling||{},clock=document.getElementById(`coolingClock_${id}`),note=document.getElementById(`coolingNote_${id}`),target=document.getElementById(`coolingTarget_${id}`),countdown=document.getElementById(`coolingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const elapsed=c.start?(c.reached15||Date.now())-c.start:0;clock.textContent=fmtClock(elapsed);if(!c.start){const old=numberAt(`tanks.${id}.process.to15`);note.textContent=old==null?'ยังไม่เริ่ม':`บันทึกเดิม ${old.toFixed(1)} นาที`;target.textContent='กด “ถึง 15°C” เพื่อเริ่มนับถอยหลัง';countdown.textContent='';countdown.classList.remove('ready');return}if(!c.reached15){note.textContent=`เริ่ม ${formatTime(c.start)} · กำลัง Active cooling`;target.textContent='รอถึง 15°C';countdown.textContent='';countdown.classList.remove('ready');return}const mins=elapsed/60000,measureAt=c.reached15+PASSIVE_SETTING_MS,remain=measureAt-Date.now();note.textContent=`เริ่ม ${formatTime(c.start)} · ถึง 15°C ${formatTime(c.reached15)} · ${mins.toFixed(1)} นาที`;target.textContent=`วัดอุณหภูมิ เวลา ${formatTime(measureAt)}`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`;countdown.classList.remove('ready')}else{countdown.textContent='ครบ 30 นาทีแล้ว · วัดอุณหภูมิ';countdown.classList.add('ready')}})}
 function coolingAction(action,id){const c=state.tanks[id].cooling;if(action==='start'){if((c.start||c.reached15)&&!confirm(`เริ่ม Active cooling ถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;c.start=Date.now();c.reached15=null;state.tanks[id].process.to15=''}else if(action==='reached'){if(!c.start){alert('กด “เริ่ม” Active cooling ก่อนค่ะ');return}if(c.reached15&&!confirm(`บันทึกเวลาถึง 15°C ของถัง ${id} ใหม่?`))return;c.reached15=Date.now();state.tanks[id].process.to15=Number(((c.reached15-c.start)/60000).toFixed(1))}save();updateCoolingTimers();validateAll()}
+
+function updateAgingTimers(){IDS.forEach(id=>{const a=state.tanks[id].aging||{},clock=document.getElementById(`agingClock_${id}`),note=document.getElementById(`agingNote_${id}`),target=document.getElementById(`agingTarget_${id}`),countdown=document.getElementById(`agingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const now=a.stop||Date.now(),elapsed=a.start?Math.max(0,now-a.start):0;clock.textContent=fmtClock(elapsed);countdown.classList.remove('ready');if(!a.start){note.textContent='ยังไม่เริ่ม';target.textContent='กด “เริ่ม” เพื่อเริ่มบ่ม 45 นาที';countdown.textContent='';return}const plannedEnd=a.start+SHORT_AGING_MS,remain=plannedEnd-now;target.textContent=`กำหนดจบ เวลา ${formatTime(plannedEnd)}`;if(!a.stop){note.textContent=`เริ่ม ${formatTime(a.start)} · กำลังบ่ม`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`}else{countdown.textContent='ครบ 45 นาทีแล้ว · กด “จบ”';countdown.classList.add('ready')}return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(a.start)} · จบ ${formatTime(a.stop)} · ${mins.toFixed(1)} นาที`;if(remain>0){countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`}else{countdown.textContent='จบบ่มแล้ว';countdown.classList.add('ready')}})}
+function agingAction(action,id){const a=state.tanks[id].aging;if(action==='start'){if((a.start||a.stop)&&!confirm(`เริ่มบ่มถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;a.start=Date.now();a.stop=null;state.tanks[id].process.agingMinutes=''}else if(action==='stop'){if(!a.start){alert('กด “เริ่ม” บ่มก่อนค่ะ');return}if(a.stop&&!confirm(`บันทึกเวลาจบบ่มของถัง ${id} ใหม่?`))return;a.stop=Date.now();state.tanks[id].process.agingMinutes=Number(((a.stop-a.start)/60000).toFixed(1))}save();updateAgingTimers();validateAll()}
 
 function randomOrder(){state.order=[...IDS].sort(()=>Math.random()-.5);save();renderOrder()}
 function renderOrder(){const el=document.getElementById('orderResult');el.innerHTML=state.order.length?state.order.map((id,i)=>`<span class="order-chip">${id}<small>${i+1}</small></span>`).join(''):'<span class="hint">ยังไม่ได้สุ่มลำดับ</span>'}
@@ -414,18 +419,18 @@ function afterFieldChange(path){if(path.includes('.process.')||path.includes('.o
 function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CMR2-${state.meta.date||'data'}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importJSON(file){const reader=new FileReader();reader.onload=()=>{try{state=normalize(JSON.parse(reader.result));save();renderAll();alert('นำเข้าข้อมูลเรียบร้อยค่ะ')}catch(e){alert('ไฟล์ข้อมูลไม่ถูกต้อง')}};reader.readAsText(file)}
 function resetAll(){if(!confirm('ล้างข้อมูล CMR2 ทั้งหมดบนเครื่องนี้? การล้างย้อนกลับไม่ได้'))return;state=freshState();save();renderAll()}
-function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});renderOrder();updateTimers();updateCoolingTimers();validateAll()}
+function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});renderOrder();updateTimers();updateCoolingTimers();updateAgingTimers();validateAll()}
 
 protocolCards();timerCards();buildProcess();buildOR();buildChurn();buildTexture();buildBlind();buildRanks();buildScores();bindAll();renderAll();
 document.getElementById('randomBtn').addEventListener('click',randomOrder);
 document.getElementById('copyOrderBtn').addEventListener('click',copyOrder);
 document.getElementById('timerCards').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b)timerAction(b.dataset.action,b.dataset.tank)});
-document.getElementById('processTable').addEventListener('click',e=>{const b=e.target.closest('[data-cooling-action]');if(b)coolingAction(b.dataset.coolingAction,b.dataset.tank)});
+document.getElementById('processTable').addEventListener('click',e=>{const coolingButton=e.target.closest('[data-cooling-action]');if(coolingButton){coolingAction(coolingButton.dataset.coolingAction,coolingButton.dataset.tank);return}const agingButton=e.target.closest('[data-aging-action]');if(agingButton)agingAction(agingButton.dataset.agingAction,agingButton.dataset.tank)});
 document.getElementById('printBtn').addEventListener('click',()=>window.print());
 document.getElementById('exportBtn').addEventListener('click',exportJSON);
 document.getElementById('importFile').addEventListener('change',e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value='' });
 document.getElementById('resetBtn').addEventListener('click',resetAll);
-setInterval(()=>{updateTimers();updateCoolingTimers()},1000);
+setInterval(()=>{updateTimers();updateCoolingTimers();updateAgingTimers()},1000);
 </script>
 </body>
 </html>
