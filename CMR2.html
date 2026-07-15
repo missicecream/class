@@ -87,16 +87,8 @@
   .feedback{font-size:11px;line-height:1.35;margin-top:4px;min-height:15px;color:var(--muted)}
   .feedback.bad{color:var(--rose);font-weight:600}.feedback.good{color:var(--green-deep);font-weight:600}
 
-  .timers{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
-  .timer{border:1px solid var(--line);border-radius:13px;background:var(--cream);padding:12px;text-align:center}
-  .timer.running{border-color:var(--amber);background:#FFF8E8}
-  .timer.done{border-color:var(--green);background:#F2F6EA}
-  .timer-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700}
-  .clock{font-family:'Fraunces',serif;font-size:28px;font-variant-numeric:tabular-nums;margin:8px 0 9px}
-  .timer-actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
   .mini{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;cursor:pointer}
   .mini.start{background:var(--green-deep);border-color:var(--green-deep);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}.mini.clear{color:var(--rose)}
-  .timer-note{min-height:30px;margin-top:6px;font-size:10.5px;line-height:1.35;color:var(--muted)}
   .cooling-control,.aging-control{display:grid;gap:6px;text-align:center}
   .cooling-clock,.aging-clock{font-family:'Fraunces',serif;font-size:19px;font-variant-numeric:tabular-nums;color:var(--green-deep)}
   .cooling-actions,.aging-actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
@@ -111,16 +103,6 @@
   .btn.primary{background:var(--green-deep);border-color:var(--green-deep);color:#fff}
   .btn.danger{color:var(--rose)}
   .toolbar .hint{margin-left:auto}
-  .order-result{margin-top:12px;display:flex;gap:7px;flex-wrap:wrap}
-  .order-chip{width:42px;height:42px;border-radius:50%;background:var(--green-deep);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:18px;position:relative}
-  .order-chip small{position:absolute;top:-5px;right:-4px;background:#fff;border:1px solid var(--line);color:var(--muted);width:18px;height:18px;border-radius:50%;font:700 10px 'Sarabun',sans-serif;display:flex;align-items:center;justify-content:center}
-
-  .rank-grid{display:grid;grid-template-columns:185px repeat(5,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:780px}
-  .rank-grid>div{padding:8px;border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
-  .rank-grid>div:nth-child(6n){border-right:0}
-  .rank-grid .head{background:#EEE8DC;text-align:center;font-weight:700;font-size:12px}
-  .rank-grid .label{background:#FAF4E9;font-size:12px;font-weight:600}
-  .rank-grid input,.rank-grid select{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px;background:#fff;font-size:12px}
   .special{border:1px solid #D9C17E;background:#FFF9E8;border-radius:13px;padding:14px}
   .special-title{font-weight:700;color:#72591A;margin-bottom:10px}
   .radios{display:grid;gap:7px}
@@ -130,18 +112,18 @@
   .report-head{display:none;text-align:center;margin-bottom:12px}
   footer{text-align:center;color:var(--soft);font-size:11px;line-height:1.7;margin-top:24px}
 
-  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.protocol,.timers{grid-template-columns:repeat(2,1fr)}.timer:last-child,.tank-card:last-child{grid-column:span 2}.rules{grid-template-columns:1fr}.section-nav{position:static}}
-  @media(max-width:560px){body{padding:22px 10px 42px}.block{padding:13px;border-radius:14px}.grid,.protocol,.timers{grid-template-columns:1fr}.timer:last-child,.tank-card:last-child{grid-column:auto}.topbar{align-items:flex-start}.save-state{text-align:right}.toolbar .hint{width:100%;margin-left:0}.question{font-size:13px}}
+  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.protocol{grid-template-columns:repeat(2,1fr)}.tank-card:last-child{grid-column:span 2}.rules{grid-template-columns:1fr}.section-nav{position:static}}
+  @media(max-width:560px){body{padding:22px 10px 42px}.block{padding:13px;border-radius:14px}.grid,.protocol{grid-template-columns:1fr}.tank-card:last-child{grid-column:auto}.topbar{align-items:flex-start}.save-state{text-align:right}.toolbar .hint{width:100%;margin-left:0}.question{font-size:13px}}
   @media print{
     @page{size:A4 landscape;margin:8mm}
     body{background:#fff;background-image:none;padding:0;font-size:10px}
-    .sheet{max-width:none}.topbar,header,.section-nav,.toolbar,.timer-actions,.cooling-actions,.aging-actions,.save-state,footer,.no-print{display:none!important}
+    .sheet{max-width:none}.topbar,header,.section-nav,.toolbar,.cooling-actions,.aging-actions,.save-state,footer,.no-print{display:none!important}
     .report-head{display:block}.block{background:#fff;border:1px solid #bbb;box-shadow:none;border-radius:5px;padding:8px;margin-bottom:7px;break-inside:avoid}
     .block-title{font-size:11px;margin-bottom:6px}.tag{background:none;color:#000;border:1px solid #888;height:20px;min-width:20px}
     .protocol{grid-template-columns:repeat(5,1fr)}.tank-card{padding:7px;border-radius:4px}.tank-card h3{font-size:15px}.tank-card p,.tank-card .recipe,.pill{font-size:8.5px}
-    details{display:none}.timers{grid-template-columns:repeat(5,1fr)}.timer{padding:6px;border-radius:4px}.clock{font-size:18px;margin:3px}.timer-note{font-size:8px;min-height:0}
+    details{display:none}
     .table-wrap{overflow:visible;border-radius:3px}.table-wrap table{min-width:0}.row-label,thead th:first-child{width:180px}th,td{padding:4px}.cell input,.cell select,.cell textarea{border:none;padding:1px;background:none;font-size:9px;min-height:0}.cell textarea{height:30px}.feedback{font-size:8px;min-height:0}
-    .rank-grid{min-width:0;grid-template-columns:130px repeat(5,1fr)}.rank-grid>div{padding:3px}.rank-grid input,.rank-grid select{border:none;padding:1px;font-size:8.5px}.special{padding:8px}.radio{font-size:9px}
+    .special{padding:8px}.radio{font-size:9px}
   }
 </style>
 </head>
@@ -187,20 +169,8 @@
   </section>
 
   <nav class="section-nav" aria-label="ส่วนต่างๆ ของแบบบันทึก">
-    <a href="#setting">Setting</a><a href="#process">Process</a><a href="#overrun">%OR</a><a href="#churning">การปั่น</a><a href="#texture">เนื้อ</a><a href="#tasting">การชิม</a><a href="#notes">สรุป</a>
+    <a href="#process">Process</a><a href="#overrun">%OR</a><a href="#churning">การปั่น</a><a href="#texture">เนื้อ</a><a href="#tasting">คะแนนการชิม</a><a href="#notes">สรุป</a>
   </nav>
-
-  <section class="block" id="setting">
-    <h2 class="block-title"><span class="tag">⏱</span> ตัวจับเวลา Setting <span class="muted">· จบ PST → เทลงปั่น</span></h2>
-    <div class="timers" id="timerCards"></div>
-    <p class="hint" style="margin:10px 0 0">เวลาจะเดินต่อแม้ปิดหน้าจอ เมื่อกด “เทลงปั่น” ระบบจะบันทึกนาทีจริงลงตารางอัตโนมัติ</p>
-  </section>
-
-  <section class="block no-print" id="randomize">
-    <h2 class="block-title"><span class="tag">↝</span> สุ่มลำดับการปั่น</h2>
-    <div class="toolbar"><button class="btn primary" type="button" id="randomBtn">สุ่ม A–E</button><button class="btn" type="button" id="copyOrderBtn">คัดลอกลงตาราง</button><span class="hint">ลด bias จากเครื่องที่เย็นลงเรื่อยๆ ระหว่างวัน</span></div>
-    <div class="order-result" id="orderResult" aria-live="polite"></div>
-  </section>
 
   <section class="block" id="process">
     <h2 class="block-title"><span class="tag">1</span> การต้ม · ทำเย็น · ก่อนปั่น</h2>
@@ -219,7 +189,7 @@
   </section>
 
   <section class="block" id="texture">
-    <h2 class="block-title"><span class="tag">★</span> เนื้อตอนดึงออก <span class="muted">· ตัวชี้วัดสำคัญที่สุด</span></h2>
+    <h2 class="block-title"><span class="tag">★</span> เนื้อเมื่อปั่นเสร็จ <span class="muted">· ตัวชี้วัดสำคัญที่สุด</span></h2>
     <div class="table-wrap"><table id="textureTable"></table></div>
     <details>
       <summary>วิธีแปลผลลักษณะเนื้อ</summary>
@@ -232,12 +202,7 @@
   </section>
 
   <section class="block" id="tasting">
-    <h2 class="block-title"><span class="tag">3</span> การชิม Blind</h2>
-    <p class="hint" style="margin:-5px 0 12px">ใช้รหัสสุ่ม 3 หลัก · แข็งตัวอุณหภูมิ/เวลาเท่ากัน · เสิร์ฟ −14 ถึง −16°C · ล้างปากด้วยน้ำทุกครั้ง</p>
-    <div class="table-wrap"><table id="blindTable"></table></div>
-    <h3 style="font-size:13px;margin:16px 0 9px">เรียงจากน้อย → มาก <span class="muted">(ใส่ตัวอักษรถังตามลำดับ)</span></h3>
-    <div class="table-wrap" style="border:0"><div class="rank-grid" id="rankGrid"></div></div>
-    <h3 style="font-size:13px;margin:16px 0 9px">แล้วค่อยให้คะแนน</h3>
+    <h2 class="block-title"><span class="tag">3</span> คะแนนการชิม</h2>
     <div class="table-wrap"><table id="scoreTable"></table></div>
     <div class="special" style="margin-top:14px">
       <div class="special-title">คำถามพิเศษสำหรับถัง E — “อันนี้ใกล้เคียงกับ CM2020 ที่จำได้ไหม?”</div>
@@ -346,7 +311,6 @@ function buildOR(){
 }
 function buildChurn(){
   let h=tableHead()+'<tbody>';
-  h+=row('★ ลำดับที่ปั่น <small>ต้องสุ่ม</small>','order',(id,k)=>`<input type="number" min="1" max="5" inputmode="numeric" data-path="tanks.${id}.churn.${k}">`);
   h+=row('อุณหภูมิเริ่มปั่น','startTemp',(id,k)=>measure(`tanks.${id}.churn.${k}`,'°C'));
   h+=row('★ เวลาปั่น','duration',(id,k)=>textInput(`tanks.${id}.churn.${k}`,'นาที:วินาที'));
   h+=row('★★ Draw temp <small>อุณหภูมิตอนเครื่องหยุด</small>','drawTemp',(id,k)=>measure(`tanks.${id}.churn.${k}`,'°C'));
@@ -354,22 +318,10 @@ function buildChurn(){
 }
 function buildTexture(){
   let h=tableHead()+'<tbody>';
-  h+=row('ลักษณะเนื้อตอนดึงออก','drawTexture',(id,k)=>selectInput(`tanks.${id}.texture.${k}`,['แห้ง–ตั้งตัวได้','มันเงา–เปียก','มีน้ำซึม','มันเงา–เปียก + มีน้ำซึม']));
+  h+=row('ลักษณะเนื้อเมื่อปั่นเสร็จ','drawTexture',(id,k)=>selectInput(`tanks.${id}.texture.${k}`,['แห้ง–ตั้งตัวได้','มันเงา–เปียก','มีน้ำซึม','มันเงา–เปียก + มีน้ำซึม']));
   h+=row('มีเม็ดเนย (buttery) ไหม','buttery',(id,k)=>selectInput(`tanks.${id}.texture.${k}`,['ไม่มี','มีเล็กน้อย','มีชัดเจน']));
   h+=row('สิ่งผิดปกติอื่นๆ','abnormal',(id,k)=>textarea(`tanks.${id}.texture.${k}`,'บันทึกสิ่งที่เห็น'));
   h+='</tbody>';document.getElementById('textureTable').innerHTML=h;
-}
-function buildBlind(){
-  let h=tableHead()+'<tbody>';
-  h+=row('รหัส Blind 3 หลัก','code',(id,k)=>`<input type="text" maxlength="3" inputmode="numeric" pattern="[0-9]{3}" data-path="tanks.${id}.blind.${k}" placeholder="000"><div class="feedback" data-feedback="tanks.${id}.blind.${k}"></div>`);
-  h+=row('อุณหภูมิเสิร์ฟ <small>เป้าหมาย −14 ถึง −16°C</small>','serveTemp',(id,k)=>measure(`tanks.${id}.blind.${k}`,'°C'));
-  h+='</tbody>';document.getElementById('blindTable').innerHTML=h;
-}
-const RANKS=['เย็นลิ้น','ความข้น/แน่น','เกล็ดน้ำแข็ง','ตักยาก'];
-function buildRanks(){
-  let h='<div class="head">Dimension</div>'+[1,2,3,4,5].map(n=>`<div class="head">${n}${n===1?' · น้อยสุด':n===5?' · มากสุด':''}</div>`).join('');
-  RANKS.forEach((label,ri)=>{h+=`<div class="label">${label}${ri<2?' ★★':''}</div>`;for(let i=0;i<5;i++)h+=`<div>${selectInput(`ranks.r${ri}.p${i}`,IDS)}</div>`});
-  document.getElementById('rankGrid').innerHTML=h;
 }
 const SCORE_ROWS=[
   ['ความข้น/แน่น','density','−3 ถึง +3',range(-3,3)],['ความเย็นลิ้น','cold','0–3',range(0,3)],['เกล็ดน้ำแข็ง','ice','0–3',range(0,3)],
@@ -379,12 +331,7 @@ const SCORE_ROWS=[
 function range(a,b){return Array.from({length:b-a+1},(_,i)=>String(a+i))}
 function buildScores(){let h=tableHead()+'<tbody>';SCORE_ROWS.forEach(([label,key,scale,opts])=>{h+=row(`${label}${scale?` <small>${scale}</small>`:''}`,key,(id)=>opts?selectInput(`tanks.${id}.scores.${key}`,opts):textarea(`tanks.${id}.scores.${key}`,'บันทึก'))});h+='</tbody>';document.getElementById('scoreTable').innerHTML=h}
 
-function timerCards(){document.getElementById('timerCards').innerHTML=IDS.map(id=>`<article class="timer" id="timer_${id}"><div class="timer-head"><span>ถัง ${id}</span><span>${TANKS[id].setting}</span></div><div class="clock" id="clock_${id}">00:00:00</div><div class="timer-actions"><button type="button" class="mini start" data-action="start" data-tank="${id}">จบ PST · เริ่ม</button><button type="button" class="mini stop" data-action="stop" data-tank="${id}">เทลงปั่น</button><button type="button" class="mini clear" data-action="clear" data-tank="${id}">ล้าง</button></div><div class="timer-note" id="timerNote_${id}"></div></article>`).join('')}
-function elapsedMs(id){const t=state.tanks[id].timer;if(!t.start)return 0;return (t.stop||Date.now())-t.start}
 function fmtClock(ms){let s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),ss=s%60;return [h,m,ss].map(n=>String(n).padStart(2,'0')).join(':')}
-function updateTimers(){IDS.forEach(id=>{const t=state.tanks[id].timer,el=document.getElementById(`timer_${id}`),ms=elapsedMs(id),mins=ms/60000;document.getElementById(`clock_${id}`).textContent=fmtClock(ms);el.classList.toggle('running',!!t.start&&!t.stop);el.classList.toggle('done',!!t.stop);let note='ยังไม่เริ่ม';if(t.start&&!t.stop)note=`เริ่ม ${new Date(t.start).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}`;if(t.stop)note=`บันทึก ${mins.toFixed(1)} นาที`;if(id!=='A'&&t.start&&!t.stop){const remain=Math.max(0,90-mins);note=mins<90?`เหลือ ${Math.ceil(remain)} นาที ถึงเป้าหมาย`:`ครบ 90 นาทีแล้ว · พร้อมเทลงปั่น`}document.getElementById(`timerNote_${id}`).textContent=note})}
-function timerAction(action,id){const t=state.tanks[id].timer;if(action==='start'){if(t.start&&!t.stop&&!confirm(`เริ่มเวลาถัง ${id} ใหม่?`))return;t.start=Date.now();t.stop=null}else if(action==='stop'){if(!t.start){alert('กด “จบ PST · เริ่ม” ก่อนค่ะ');return}t.stop=Date.now();state.tanks[id].process.setting=Number((elapsedMs(id)/60000).toFixed(1));const inp=document.querySelector(`[data-path="tanks.${id}.process.setting"]`);if(inp)inp.value=state.tanks[id].process.setting}else if(action==='clear'){if((t.start||t.stop)&&!confirm(`ล้างเวลา Setting ถัง ${id}?`))return;t.start=null;t.stop=null;state.tanks[id].process.setting='';const inp=document.querySelector(`[data-path="tanks.${id}.process.setting"]`);if(inp)inp.value=''}save();updateTimers();validateAll()}
-
 const PASSIVE_SETTING_MS=30*60*1000;
 const SHORT_AGING_MS=45*60*1000;
 function formatTime(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
@@ -393,10 +340,6 @@ function coolingAction(action,id){const c=state.tanks[id].cooling;if(action==='s
 
 function updateAgingTimers(){IDS.forEach(id=>{const a=state.tanks[id].aging||{},clock=document.getElementById(`agingClock_${id}`),note=document.getElementById(`agingNote_${id}`),target=document.getElementById(`agingTarget_${id}`),countdown=document.getElementById(`agingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const now=a.stop||Date.now(),elapsed=a.start?Math.max(0,now-a.start):0;clock.textContent=fmtClock(elapsed);countdown.classList.remove('ready');if(!a.start){note.textContent='ยังไม่เริ่ม';target.textContent='กด “เริ่ม” เพื่อเริ่มบ่ม 45 นาที';countdown.textContent='';return}const plannedEnd=a.start+SHORT_AGING_MS,remain=plannedEnd-now;target.textContent=`กำหนดจบ เวลา ${formatTime(plannedEnd)}`;if(!a.stop){note.textContent=`เริ่ม ${formatTime(a.start)} · กำลังบ่ม`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`}else{countdown.textContent='ครบ 45 นาทีแล้ว · กด “จบ”';countdown.classList.add('ready')}return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(a.start)} · จบ ${formatTime(a.stop)} · ${mins.toFixed(1)} นาที`;if(remain>0){countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`}else{countdown.textContent='จบบ่มแล้ว';countdown.classList.add('ready')}})}
 function agingAction(action,id){const a=state.tanks[id].aging;if(action==='start'){if((a.start||a.stop)&&!confirm(`เริ่มบ่มถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;a.start=Date.now();a.stop=null;state.tanks[id].process.agingMinutes=''}else if(action==='stop'){if(!a.start){alert('กด “เริ่ม” บ่มก่อนค่ะ');return}if(a.stop&&!confirm(`บันทึกเวลาจบบ่มของถัง ${id} ใหม่?`))return;a.stop=Date.now();state.tanks[id].process.agingMinutes=Number(((a.stop-a.start)/60000).toFixed(1))}save();updateAgingTimers();validateAll()}
-
-function randomOrder(){state.order=[...IDS].sort(()=>Math.random()-.5);save();renderOrder()}
-function renderOrder(){const el=document.getElementById('orderResult');el.innerHTML=state.order.length?state.order.map((id,i)=>`<span class="order-chip">${id}<small>${i+1}</small></span>`).join(''):'<span class="hint">ยังไม่ได้สุ่มลำดับ</span>'}
-function copyOrder(){if(state.order.length!==5){alert('กดสุ่มลำดับก่อนค่ะ');return}state.order.forEach((id,i)=>{state.tanks[id].churn.order=i+1;const el=document.querySelector(`[data-path="tanks.${id}.churn.order"]`);if(el)el.value=i+1});save()}
 
 function numberAt(path){const v=getPath(path);return v===''||v==null?null:Number(v)}
 function feedback(path,msg,kind=''){const el=document.querySelector(`[data-feedback="${path}"]`);if(el){el.textContent=msg;el.className=`feedback ${kind}`}}
@@ -411,26 +354,22 @@ function validateTank(id){
   const mix1=numberAt(`tanks.${id}.or.mix1`),mix2=numberAt(`tanks.${id}.or.mix2`),ice=numberAt(`tanks.${id}.or.icecream`),out=document.getElementById(`or_${id}`);
   let diff=null;if(mix1!=null&&mix2!=null){diff=Math.abs(mix1-mix2);const msg=diff<=3?`✓ ต่าง ${diff.toFixed(1)} g`:`⚠ ต่าง ${diff.toFixed(1)} g · ทำใหม่`;feedback(`tanks.${id}.or.mix2`,msg,diff<=3?'good':'bad')}else feedback(`tanks.${id}.or.mix2`,'');
   if(mix1!=null&&mix2!=null&&ice>0){const avg=(mix1+mix2)/2,or=(avg-ice)/ice*100;out.textContent=`${or.toFixed(1)} %`;out.className=`feedback ${diff<=3?'good':'bad'}`}else{out.textContent='—';out.className='feedback'}
-  const code=String(getPath(`tanks.${id}.blind.code`)||''),validCode=/^\d{3}$/.test(code),duplicate=validCode&&IDS.some(other=>other!==id&&String(getPath(`tanks.${other}.blind.code`)||'')===code);const codeInput=document.querySelector(`[data-path="tanks.${id}.blind.code"]`);if(codeInput)codeInput.setCustomValidity(code&&(!validCode||duplicate)?'รหัสต้องเป็นตัวเลข 3 หลักและไม่ซ้ำกัน':'');feedback(`tanks.${id}.blind.code`,!code?'':!validCode?'กรอกตัวเลข 3 หลัก':duplicate?'รหัสซ้ำกับถังอื่น':'✓ รหัสพร้อมใช้',validCode&&!duplicate?'good':'bad');
 }
 function validateAll(){IDS.forEach(validateTank)}
-function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.')||path.includes('.blind.'))validateAll()}
+function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.'))validateAll()}
 
 function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CMR2-${state.meta.date||'data'}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importJSON(file){const reader=new FileReader();reader.onload=()=>{try{state=normalize(JSON.parse(reader.result));save();renderAll();alert('นำเข้าข้อมูลเรียบร้อยค่ะ')}catch(e){alert('ไฟล์ข้อมูลไม่ถูกต้อง')}};reader.readAsText(file)}
 function resetAll(){if(!confirm('ล้างข้อมูล CMR2 ทั้งหมดบนเครื่องนี้? การล้างย้อนกลับไม่ได้'))return;state=freshState();save();renderAll()}
-function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});renderOrder();updateTimers();updateCoolingTimers();updateAgingTimers();validateAll()}
+function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});updateCoolingTimers();updateAgingTimers();validateAll()}
 
-protocolCards();timerCards();buildProcess();buildOR();buildChurn();buildTexture();buildBlind();buildRanks();buildScores();bindAll();renderAll();
-document.getElementById('randomBtn').addEventListener('click',randomOrder);
-document.getElementById('copyOrderBtn').addEventListener('click',copyOrder);
-document.getElementById('timerCards').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(b)timerAction(b.dataset.action,b.dataset.tank)});
+protocolCards();buildProcess();buildOR();buildChurn();buildTexture();buildScores();bindAll();renderAll();
 document.getElementById('processTable').addEventListener('click',e=>{const coolingButton=e.target.closest('[data-cooling-action]');if(coolingButton){coolingAction(coolingButton.dataset.coolingAction,coolingButton.dataset.tank);return}const agingButton=e.target.closest('[data-aging-action]');if(agingButton)agingAction(agingButton.dataset.agingAction,agingButton.dataset.tank)});
 document.getElementById('printBtn').addEventListener('click',()=>window.print());
 document.getElementById('exportBtn').addEventListener('click',exportJSON);
 document.getElementById('importFile').addEventListener('change',e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value='' });
 document.getElementById('resetBtn').addEventListener('click',resetAll);
-setInterval(()=>{updateTimers();updateCoolingTimers();updateAgingTimers()},1000);
+setInterval(()=>{updateCoolingTimers();updateAgingTimers()},1000);
 </script>
 </body>
 </html>
