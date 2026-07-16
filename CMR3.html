@@ -168,10 +168,10 @@
       <div class="rules">
         <div class="rule"><b>ก่อนเริ่ม PST ≥58°C</b><br>ถ้าไม่ถึง ให้กลับขึ้นเตาอุ่นถึง 70°C ใหม่ ห้าม PST</div>
         <div class="rule"><b>หลังบ่มควร &lt;8°C</b><br>ตรวจอุณหภูมิมิกซ์หลังบ่มก่อนนำเข้าเครื่อง G5</div>
-        <div class="rule"><b>Cooling ถึง 4°C จริง</b><br>คนช้าๆ ต่อเนื่อง · วัดตรงกลาง · เป้าหมายไม่เกิน 30 นาที</div>
-        <div class="rule"><b>บ่มในน้ำแข็ง 30 นาที</b><br>เริ่มเมื่อมิกซ์ ≤4°C · ไม่คน · อ่างน้ำแข็ง+น้ำ ห้ามใส่เกลือ</div>
+        <div class="rule"><b>Cooling ถึง 4°C จริง</b><br>ถ้าเมื่อยค่อยๆ คนได้ · วัดตรงกลาง · เป้าหมายไม่เกิน 30 นาที</div>
+        <div class="rule"><b>บ่มในน้ำแข็ง 30 นาที</b><br>คนให้มิกซ์ถึง 4°C ก่อน แล้วค่อยกดเริ่ม · ไม่คนระหว่างบ่ม · อ่างน้ำแข็ง+น้ำ ห้ามใส่เกลือ</div>
         <div class="rule"><b>PST เหมือนกันทุกถัง</b><br>30 วินาที / พัก 60 วินาที × 3 รอบ</div>
-        <div class="rule"><b>ครีมเย็นหลัง cooling</b><br>ถัง A/B/E เติมครีม 6°C เมื่อถึง 4°C · ถัง C/D ใส่ครีมก่อนต้ม</div>
+        <div class="rule"><b>ครีมเย็นหลัง cooling</b><br>ถัง A/B/E เติมครีมที่ 4°C แล้วคนให้มิกซ์กลับมาถึง 4°C · ถัง C/D ใส่ครีมก่อนต้ม</div>
         <div class="rule"><b>SEP แยก</b><br>ถัง B/D/E ไฮเดรต SEP ในน้ำใส แล้วรวมสองหม้อตอนร้อน 70°C ก่อน PST</div>
       </div>
     </details>
@@ -233,14 +233,12 @@
 
   <section class="block" id="verdict">
     <h2 class="block-title"><span class="tag">4</span> สรุปผลหลังชิม</h2>
-    <p class="hint" style="margin:-5px 0 12px">เช็กก่อนสรุป: คู่ factorial ต้องมี Draw temp ต่าง ≤2°C และ %OR ต่าง ≤5 จุดเปอร์เซ็นต์</p>
+    <p class="hint" style="margin:-5px 0 12px">เช็กก่อนสรุป: ถัง A–D ทั้งกลุ่มควรมีช่วง Draw temp ≤2°C และช่วง %OR ≤5 จุดเปอร์เซ็นต์</p>
     <div class="decision-card">
-      <h3>เช็ก covariate ของ 2×2 factorial</h3>
+      <h3>เช็ก covariate ของ A–D ทั้งกลุ่ม</h3>
       <div class="decision-grid">
-        <div class="pair-check" id="pairCheck_AB">A↔B · รอ Draw temp และ %OR</div>
-        <div class="pair-check" id="pairCheck_CD">C↔D · รอ Draw temp และ %OR</div>
-        <div class="pair-check" id="pairCheck_AC">A↔C · รอ Draw temp และ %OR</div>
-        <div class="pair-check" id="pairCheck_BD">B↔D · รอ Draw temp และ %OR</div>
+        <div class="pair-check" id="factorialDrawRange">Draw temp A–D · รอข้อมูลครบ 4 ถัง</div>
+        <div class="pair-check" id="factorialORRange">%OR A–D · รอข้อมูลครบ 4 ถัง</div>
       </div>
     </div>
     <div class="decision-grid" style="margin-top:12px">
@@ -262,11 +260,10 @@
     </div>
     <div class="decision-card" style="margin-top:12px">
       <h3>H4 · SEP แยก/ครีมก่อน กระทบ %Overrun ไหม?</h3>
+      <p class="hint">เทียบค่าเฉลี่ยกลุ่มให้ตรงกับ main effect ของ H1 และ H2</p>
       <div class="decision-grid">
-        <div class="pair-check" id="h4OR_AB">A↔B · รอ %OR</div>
-        <div class="pair-check" id="h4OR_CD">C↔D · รอ %OR</div>
-        <div class="pair-check" id="h4OR_AC">A↔C · รอ %OR</div>
-        <div class="pair-check" id="h4OR_BD">B↔D · รอ %OR</div>
+        <div class="pair-check" id="h4ORSep">SEP แยก (B,D) vs รวม (A,C) · รอ %OR</div>
+        <div class="pair-check" id="h4ORCream">ครีมก่อน (C,D) vs หลัง (A,B) · รอ %OR</div>
       </div>
       <div class="field" style="margin-top:10px"><label for="h4Overrun">สรุปผล %OR</label><select id="h4Overrun" data-path="verdict.h4Overrun"><option value="">— เลือก —</option><option>กระทบ OR</option><option>ไม่กระทบ OR</option><option>ผลไม่ไปทางเดียวกัน</option><option>ข้อมูลยังไม่พอ</option></select></div>
     </div>
@@ -354,7 +351,7 @@ function selectInput(path,options){return `<select data-path="${path}"><option v
 function textarea(path,placeholder=''){return `<textarea data-path="${path}" placeholder="${placeholder}"></textarea>`}
 function row(label,key,make,na=[]){return `<tr><td class="row-label">${label}</td>${IDS.map(id=>na.includes(id)?'<td class="cell na">—</td>':`<td class="cell">${make(id,key)}</td>`).join('')}</tr>`}
 function coolingControl(id){return `<div class="cooling-control" id="cooling_${id}"><div class="cooling-clock" id="coolingClock_${id}">00:00:00</div><div class="cooling-actions"><button type="button" class="mini start" data-cooling-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-cooling-action="reached" data-tank="${id}">ถึง 4°C</button></div><div class="cooling-note" id="coolingNote_${id}">ยังไม่เริ่ม</div></div>`}
-function agingControl(id){return `<div class="aging-control" id="aging_${id}"><div class="aging-clock" id="agingClock_${id}">00:00:00</div><div class="aging-actions"><button type="button" class="mini start" data-aging-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-aging-action="stop" data-tank="${id}">จบ</button></div><div class="aging-note" id="agingNote_${id}">ยังไม่เริ่ม</div><div class="aging-target" id="agingTarget_${id}">เมื่อมิกซ์ ≤4°C กด “เริ่ม” เพื่อบ่มในน้ำแข็ง 30 นาที (ไม่คน)</div><div class="aging-countdown" id="agingCountdown_${id}"></div></div>`}
+function agingControl(id){return `<div class="aging-control" id="aging_${id}"><div class="aging-clock" id="agingClock_${id}">00:00:00</div><div class="aging-actions"><button type="button" class="mini start" data-aging-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-aging-action="stop" data-tank="${id}">จบ</button></div><div class="aging-note" id="agingNote_${id}">ยังไม่เริ่ม</div><div class="aging-target" id="agingTarget_${id}">คนให้มิกซ์ถึง 4°C ก่อน แล้วค่อยกด “เริ่ม” บ่ม 30 นาที (ไม่คน)</div><div class="aging-countdown" id="agingCountdown_${id}"></div></div>`}
 function churnTimerControl(id){return `<div class="churn-control" id="churnTimer_${id}"><div class="churn-clock" id="churnClock_${id}">00:00:00</div><div class="churn-actions"><button type="button" class="mini start" data-churn-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-churn-action="stop" data-tank="${id}">จบ</button></div><div class="churn-note" id="churnNote_${id}">ยังไม่เริ่ม</div></div>`}
 
 function buildProcess(){
@@ -364,7 +361,7 @@ function buildProcess(){
   h+=row('อุณหภูมิจบ PST <small>บันทึกไว้ · คาดหวัง ≥55°C</small>','postPst',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
   h+=group('ทำเย็นถึง 4°C จริง');
   h+=row('⏱ Cooling จนถึง 4°C <small>ถ้าเมื่อยค่อยๆ คนได้ · เป้าหมายไม่ให้เกิน 30 นาที</small>','to4',(id)=>coolingControl(id));
-  h+=group('ถัง A, B, E: เติมครีมที่ 4°C แล้วคนให้มิกซ์เหลือ 4°C อีกครั้ง');
+  h+=row('หลัง Cooling ถึง 4°C <small>ตรวจตามสูตรของแต่ละถัง</small>','creamAfterCooling',(id)=>['A','B','E'].includes(id)?'<div class="feedback good" style="font-size:11.5px"><b>เติมครีมที่ 4°C</b><br>แล้วคนให้มิกซ์ถึง 4°C อีกครั้ง</div>':'<div class="feedback" style="font-size:11.5px">ใส่ครีมก่อนต้มแล้ว<br>ไม่เติมหลัง Cooling</div>');
   h+=group('บ่มในน้ำแข็ง 30 นาที · ไม่คน');
   h+=row('⏱ เวลาบ่มจริง','setting',(id)=>agingControl(id));
   h+=row('อุณหภูมิมิกซ์หลังบ่ม <small>ควร &lt;8°C</small>','preChurn',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
@@ -414,7 +411,7 @@ function formatTime(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-
 function updateCoolingTimers(){IDS.forEach(id=>{const c=state.tanks[id].cooling||{},clock=document.getElementById(`coolingClock_${id}`),note=document.getElementById(`coolingNote_${id}`);if(!clock||!note)return;const elapsed=c.start?(c.reached4||Date.now())-c.start:0;clock.textContent=fmtClock(elapsed);if(!c.start){const old=numberAt(`tanks.${id}.process.to4`);note.textContent=old==null?'ยังไม่เริ่ม':`บันทึกเดิม ${old.toFixed(1)} นาที`;return}if(!c.reached4){note.textContent=`เริ่ม ${formatTime(c.start)} · กำลังคนช้าๆ ถึง 4°C`;return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(c.start)} · ถึง 4°C ${formatTime(c.reached4)} · ${mins.toFixed(1)} นาที${mins>30?' · เกิน 30 นาที':''}`})}
 function coolingAction(action,id){const c=state.tanks[id].cooling;if(action==='start'){if((c.start||c.reached4)&&!confirm(`เริ่มจับเวลาทำเย็นถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;c.start=Date.now();c.reached4=null;state.tanks[id].process.to4=''}else if(action==='reached'){if(!c.start){alert('กด “เริ่ม” ทำเย็นก่อนค่ะ');return}if(c.reached4&&!confirm(`บันทึกเวลาถึง 4°C ของถัง ${id} ใหม่?`))return;c.reached4=Date.now();state.tanks[id].process.to4=Number(((c.reached4-c.start)/60000).toFixed(1))}save();updateCoolingTimers();validateAll()}
 
-function updateAgingTimers(){IDS.forEach(id=>{const a=state.tanks[id].aging||{},clock=document.getElementById(`agingClock_${id}`),note=document.getElementById(`agingNote_${id}`),target=document.getElementById(`agingTarget_${id}`),countdown=document.getElementById(`agingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const now=a.stop||Date.now(),elapsed=a.start?Math.max(0,now-a.start):0;clock.textContent=fmtClock(elapsed);countdown.classList.remove('ready');if(!a.start){note.textContent='ยังไม่เริ่ม';target.textContent='เมื่อมิกซ์ ≤4°C กด “เริ่ม” เพื่อบ่มในน้ำแข็ง 30 นาที (ไม่คน)';countdown.textContent='';return}const plannedEnd=a.start+AGING_MS,remain=plannedEnd-now;target.textContent=`กำหนดจบ เวลา ${formatTime(plannedEnd)}`;if(!a.stop){note.textContent=`เริ่ม ${formatTime(a.start)} · กำลังบ่มในน้ำแข็ง (ไม่คน)`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`}else{countdown.textContent='ครบ 30 นาทีแล้ว · กด “จบ”';countdown.classList.add('ready')}return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(a.start)} · จบ ${formatTime(a.stop)} · ${mins.toFixed(1)} นาที`;if(remain>0){countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`}else{countdown.textContent='จบบ่มแล้ว';countdown.classList.add('ready')}})}
+function updateAgingTimers(){IDS.forEach(id=>{const a=state.tanks[id].aging||{},clock=document.getElementById(`agingClock_${id}`),note=document.getElementById(`agingNote_${id}`),target=document.getElementById(`agingTarget_${id}`),countdown=document.getElementById(`agingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const now=a.stop||Date.now(),elapsed=a.start?Math.max(0,now-a.start):0;clock.textContent=fmtClock(elapsed);countdown.classList.remove('ready');if(!a.start){note.textContent='ยังไม่เริ่ม';target.textContent='คนให้มิกซ์ถึง 4°C ก่อน แล้วค่อยกด “เริ่ม” บ่ม 30 นาที (ไม่คน)';countdown.textContent='';return}const plannedEnd=a.start+AGING_MS,remain=plannedEnd-now;target.textContent=`กำหนดจบ เวลา ${formatTime(plannedEnd)}`;if(!a.stop){note.textContent=`เริ่ม ${formatTime(a.start)} · กำลังบ่มในน้ำแข็ง (ไม่คน)`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`}else{countdown.textContent='ครบ 30 นาทีแล้ว · กด “จบ”';countdown.classList.add('ready')}return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(a.start)} · จบ ${formatTime(a.stop)} · ${mins.toFixed(1)} นาที`;if(remain>0){countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`}else{countdown.textContent='จบบ่มแล้ว';countdown.classList.add('ready')}})}
 function agingAction(action,id){const a=state.tanks[id].aging;if(action==='start'){if((a.start||a.stop)&&!confirm(`เริ่มบ่มถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;a.start=Date.now();a.stop=null;state.tanks[id].process.agingMinutes=''}else if(action==='stop'){if(!a.start){alert('กด “เริ่ม” บ่มก่อนค่ะ');return}if(a.stop&&!confirm(`บันทึกเวลาจบบ่มของถัง ${id} ใหม่?`))return;a.stop=Date.now();state.tanks[id].process.agingMinutes=Number(((a.stop-a.start)/60000).toFixed(1))}save();updateAgingTimers();validateAll()}
 
 function formatDurationValue(ms){let seconds=Math.max(0,Math.floor(ms/1000));const minutes=Math.floor(seconds/60);seconds%=60;return `${minutes}:${String(seconds).padStart(2,'0')}`}
@@ -424,17 +421,22 @@ function churnTimerAction(action,id){const t=state.tanks[id].churnTimer,churn=st
 
 function numberAt(path){const v=getPath(path);return v===''||v==null?null:Number(v)}
 function calculatedOverrun(id){const mix=numberAt(`tanks.${id}.or.mix`),cup=numberAt(`tanks.${id}.or.emptyCup`),gross1=numberAt(`tanks.${id}.or.iceCup1`),gross2=numberAt(`tanks.${id}.or.iceCup2`);if([mix,cup,gross1,gross2].some(v=>v==null))return null;const net1=gross1-cup,net2=gross2-cup;if(net1<=0||net2<=0)return null;const ice=Math.abs(net1-net2)>5?Math.max(net1,net2):(net1+net2)/2;return (mix-ice)/ice*100}
-function updatePairCheck(a,b,elId){const el=document.getElementById(elId);if(!el)return;const drawA=numberAt(`tanks.${a}.churn.drawTemp`),drawB=numberAt(`tanks.${b}.churn.drawTemp`),orA=calculatedOverrun(a),orB=calculatedOverrun(b),parts=[];let bad=false,complete=true;if(drawA==null||drawB==null){parts.push('รอ Draw temp');complete=false}else{const diff=Math.abs(drawA-drawB);if(diff>2){parts.push(`Draw temp ต่าง ${diff.toFixed(1)}°C (>2°C)`);bad=true}else parts.push(`Draw temp ต่าง ${diff.toFixed(1)}°C`)}if(orA==null||orB==null){parts.push('รอ %OR');complete=false}else{const diff=Math.abs(orA-orB);if(diff>5){parts.push(`%OR ต่าง ${diff.toFixed(1)} จุด (>5)`);bad=true}else parts.push(`%OR ต่าง ${diff.toFixed(1)} จุด`)}el.textContent=`${a}↔${b} · ${parts.join(' · ')}`;el.className=`pair-check ${bad?'bad':complete?'good':''}`}
-function updateOverrunReadout(a,b,elId){const el=document.getElementById(elId);if(!el)return;const orA=calculatedOverrun(a),orB=calculatedOverrun(b);if(orA==null||orB==null){el.textContent=`${a}↔${b} · รอข้อมูล %OR`;el.className='pair-check';return}const signed=orB-orA,diff=Math.abs(signed),direction=diff<.05?'เท่ากัน':`${b} ${signed>0?'สูงกว่า':'ต่ำกว่า'} ${diff.toFixed(1)} จุด`;el.textContent=`${a} ${orA.toFixed(1)}% · ${b} ${orB.toFixed(1)}% · ${direction}${diff>5?' · ⚠️ เย็นลิ้นเทียบไม่ได้':''}`;el.className=`pair-check ${diff>5?'bad':'good'}`}
+function updateFactorialCovariates(){
+  const factorialIds=['A','B','C','D'],drawValues=factorialIds.map(id=>numberAt(`tanks.${id}.churn.drawTemp`)),orValues=factorialIds.map(calculatedOverrun);
+  const updateRange=(elId,label,values,limit,unit,decimals)=>{const el=document.getElementById(elId);if(!el)return;if(values.some(v=>v==null)){el.textContent=`${label} A–D · รอข้อมูลครบ 4 ถัง`;el.className='pair-check';return}const min=Math.min(...values),max=Math.max(...values),range=max-min,bad=range>limit;el.textContent=`${label} A–D · ต่ำสุด ${min.toFixed(decimals)}${unit} · สูงสุด ${max.toFixed(decimals)}${unit} · ช่วง ${range.toFixed(decimals)}${unit}${bad?` (> ${limit}${unit})`:' · ผ่านเกณฑ์'}`;el.className=`pair-check ${bad?'bad':'good'}`};
+  updateRange('factorialDrawRange','Draw temp',drawValues,2,'°C',1);updateRange('factorialORRange','%OR',orValues,5,' จุด',1);
+}
+function meanOverrun(ids){const values=ids.map(calculatedOverrun);return values.some(v=>v==null)?null:values.reduce((a,b)=>a+b,0)/values.length}
+function updateOverrunEffect(elId,leftIds,rightIds,leftLabel,rightLabel){const el=document.getElementById(elId);if(!el)return;const left=meanOverrun(leftIds),right=meanOverrun(rightIds);if(left==null||right==null){el.textContent=`${leftLabel} vs ${rightLabel} · รอข้อมูล %OR A–D`;el.className='pair-check';return}const effect=left-right,diff=Math.abs(effect),bad=diff>5;el.textContent=`${leftLabel} ${left.toFixed(1)}% · ${rightLabel} ${right.toFixed(1)}% · ผลต่าง ${effect>0?'+':''}${effect.toFixed(1)} จุด${bad?' · ⚠️ ต่างเกิน 5 จุด':''}`;el.className=`pair-check ${bad?'bad':'good'}`}
 function meanCold(ids){const values=ids.map(id=>numberAt(`tanks.${id}.scores.cold`));return values.some(v=>v==null)?null:values.reduce((a,b)=>a+b,0)/values.length}
 function updateColdEffect(elId,leftIds,rightIds,leftLabel,rightLabel){const el=document.getElementById(elId);if(!el)return;const left=meanCold(leftIds),right=meanCold(rightIds);if(left==null||right==null){el.textContent='รอคะแนนความเย็นลิ้น A–D';el.className='pair-check';return}const effect=left-right;el.textContent=`${leftLabel} ${left.toFixed(2)} · ${rightLabel} ${right.toFixed(2)} · ผลต่าง ${effect>0?'+':''}${effect.toFixed(2)} (ยิ่งต่ำยิ่งดี)`;el.className='pair-check good'}
 function updatePostTastingAnalysis(){
-  updatePairCheck('A','B','pairCheck_AB');updatePairCheck('C','D','pairCheck_CD');updatePairCheck('A','C','pairCheck_AC');updatePairCheck('B','D','pairCheck_BD');
+  updateFactorialCovariates();
   updateColdEffect('h1SepReadout',['B','D'],['A','C'],'SEP แยก (B,D)','SEP รวม (A,C)');
   updateColdEffect('h2CreamReadout',['C','D'],['A','B'],'ครีมก่อน (C,D)','ครีมหลัง (A,B)');
   const coldA=numberAt('tanks.A.scores.cold'),coldB=numberAt('tanks.B.scores.cold'),coldC=numberAt('tanks.C.scores.cold'),coldD=numberAt('tanks.D.scores.cold'),h3=document.getElementById('h3InteractionReadout');
   if(h3){if([coldA,coldB,coldC,coldD].some(v=>v==null)){h3.textContent='รอคะแนนความเย็นลิ้น A–D';h3.className='pair-check'}else{const expected=coldB+coldC-coldA,interaction=coldD-expected;h3.textContent=`D จริง ${coldD.toFixed(2)} · D ที่คาดแบบผลบวก ${expected.toFixed(2)} · interaction ${interaction>0?'+':''}${interaction.toFixed(2)}${interaction<0?' (D ดีกว่าคาด)':''}`;h3.className='pair-check good'}}
-  updateOverrunReadout('A','B','h4OR_AB');updateOverrunReadout('C','D','h4OR_CD');updateOverrunReadout('A','C','h4OR_AC');updateOverrunReadout('B','D','h4OR_BD');
+  updateOverrunEffect('h4ORSep',['B','D'],['A','C'],'SEP แยก (B,D)','SEP รวม (A,C)');updateOverrunEffect('h4ORCream',['C','D'],['A','B'],'ครีมก่อน (C,D)','ครีมหลัง (A,B)');
   const butterC=getPath('tanks.C.texture.buttery')||'',butterD=getPath('tanks.D.texture.buttery')||'',h5=document.getElementById('h5ButteryReadout');
   if(h5){if(!butterC||!butterD){h5.textContent='C/D · รอผลเนื้อเมื่อปั่นเสร็จ';h5.className='pair-check'}else{const failed=butterC!=='ไม่มี'||butterD!=='ไม่มี';h5.textContent=`C: ${butterC} · D: ${butterD}${failed?' · 🛑 ตัวหยุด':''}`;h5.className=`pair-check ${failed?'bad':'good'}`}}
   IDS.forEach(id=>{const density=numberAt(`tanks.${id}.scores.density`),cold=numberAt(`tanks.${id}.scores.cold`),d=document.getElementById(`h6Density_${id}`),c=document.getElementById(`h6Cold_${id}`);if(d)d.textContent=density==null?'—':density.toFixed(1);if(c)c.textContent=cold==null?'—':cold.toFixed(1)})
