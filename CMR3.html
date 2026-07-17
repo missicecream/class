@@ -86,6 +86,9 @@
   .unit{font-size:11px;color:var(--muted);white-space:nowrap}
   .feedback{font-size:11px;line-height:1.35;margin-top:4px;min-height:15px;color:var(--muted)}
   .feedback.bad{color:var(--rose);font-weight:600}.feedback.good{color:var(--green-deep);font-weight:600}
+  .instruction-cell{text-align:center;font-size:11.5px;line-height:1.5;color:var(--muted);padding:4px 2px}
+  .instruction-cell.label{text-align:left;padding-left:0}
+  .instruction-cell b{color:var(--ink)}.instruction-cell.good{color:var(--green-deep)}.instruction-cell.good b{color:var(--green-deep)}
 
   .mini{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;cursor:pointer}
   .mini.start{background:var(--green-deep);border-color:var(--green-deep);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}.mini.clear{color:var(--rose)}.mini.edit{color:var(--blue);font-size:15px;padding:4px 8px}
@@ -115,6 +118,14 @@
   .radios{display:grid;gap:7px}
   .radio{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45}
   .radio input{margin-top:3px}
+  .production-closeout{border-color:#D7B8A7}
+  .phase-divider{margin:30px 0 16px;padding:21px 18px;border:1px solid #D9C17E;border-radius:17px;background:linear-gradient(135deg,#FFF9E8,#F4E8C9);text-align:center;box-shadow:0 8px 28px -22px rgba(74,55,18,.45)}
+  .phase-divider .phase-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8A6A20;font-weight:700}
+  .phase-divider h2{font-family:'Fraunces',serif;font-size:27px;font-weight:500;color:#5F4917;margin:5px 0 7px}
+  .phase-divider p{font-size:13px;line-height:1.65;color:#72591A;margin:0}
+  .phase-divider strong{color:var(--rose)}
+  .block.tasting-phase{border-color:#D9C17E;background:#FFF9E8}
+  .block.tasting-phase>.block-title{color:#72591A}.block.tasting-phase>.block-title .tag{background:#A97727}
 
   .report-head{display:none;text-align:center;margin-bottom:12px}
   footer{text-align:center;color:var(--soft);font-size:11px;line-height:1.7;margin-top:24px}
@@ -178,7 +189,7 @@
   </section>
 
   <nav class="section-nav" aria-label="ส่วนต่างๆ ของแบบบันทึก">
-    <a href="#process">Process</a><a href="#or-before">%OR ก่อนปั่น</a><a href="#churning">การปั่น</a><a href="#or-after">%OR หลังปั่น</a><a href="#texture">เนื้อ</a><a href="#tasting">คะแนนการชิม</a><a href="#verdict">ผลหลังชิม</a><a href="#notes">สรุป</a>
+    <a href="#process">Process</a><a href="#or-before">%OR ก่อนปั่น</a><a href="#churning">การปั่น</a><a href="#or-after">%OR หลังปั่น</a><a href="#texture">เนื้อ</a><a href="#production-deviations">ข้อผิดพลาด</a><a href="#tasting">คะแนนการชิม</a><a href="#verdict">ผลหลังชิม</a><a href="#notes">สรุป</a>
   </nav>
 
   <section class="block" id="process">
@@ -217,7 +228,19 @@
     </details>
   </section>
 
-  <section class="block" id="tasting">
+  <section class="block production-closeout" id="production-deviations">
+    <h2 class="block-title"><span class="tag">!</span> ข้อผิดพลาดระหว่างการผลิตแต่ละ Batch <span class="muted">· กรอกก่อนส่งต่อให้ทีมชิม</span></h2>
+    <p class="hint" style="margin:-5px 0 12px">บันทึกสิ่งที่ต่างจากแผน อุณหภูมิ เวลา ขั้นตอน หรือเหตุการณ์ผิดปกติของแต่ละถัง หากไม่มีให้ระบุ “ไม่มี”</p>
+    <div class="table-wrap"><table id="productionDeviationTable"></table></div>
+  </section>
+
+  <div class="phase-divider" id="tasting-start">
+    <div class="phase-kicker">สิ้นสุดการบันทึกช่วงผลิตไอศกรีม</div>
+    <h2>ส่วนบันทึกผลช่วงชิม</h2>
+    <p><strong>ผู้บันทึกช่วงผลิต:</strong> เมื่อกรอกข้อผิดพลาด A–E ครบแล้ว ให้หยุดที่นี่<br>ตั้งแต่ข้อ 3 เป็นต้นไปเป็นส่วนของผู้บันทึกผลช่วงชิม</p>
+  </div>
+
+  <section class="block tasting-phase" id="tasting">
     <h2 class="block-title"><span class="tag">3</span> คะแนนการชิม</h2>
     <div class="table-wrap"><table id="scoreTable"></table></div>
     <div class="special" style="margin-top:14px">
@@ -231,7 +254,7 @@
     </div>
   </section>
 
-  <section class="block" id="verdict">
+  <section class="block tasting-phase" id="verdict">
     <h2 class="block-title"><span class="tag">4</span> สรุปผลหลังชิม</h2>
     <p class="hint" style="margin:-5px 0 12px">เช็กก่อนสรุป: ถัง A–D ทั้งกลุ่มควรมีช่วง Draw temp ≤2°C และช่วง %OR ≤5 จุดเปอร์เซ็นต์</p>
     <div class="decision-card">
@@ -284,11 +307,11 @@
     <div class="field" style="margin-top:12px"><label for="verdictDetails">ระบุผลหลังชิมเพิ่มเติม</label><textarea id="verdictDetails" data-path="verdict.details" placeholder="เหตุผล สิ่งที่สังเกต หรือข้อจำกัดในการตีความ"></textarea></div>
   </section>
 
-  <section class="block" id="notes">
+  <section class="block tasting-phase" id="notes">
     <h2 class="block-title"><span class="tag">✓</span> สรุปผลและเหตุการณ์ผิดปกติ</h2>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <div class="field"><label for="conclusion">ข้อสรุป H1–H7</label><textarea id="conclusion" data-path="summary.conclusion" placeholder="H1 SEP · H2 ครีม · H3 interaction · H4 OR · H5 buttery · H6 body/เย็นลิ้น · H7 ความจำ CM2020"></textarea></div>
-      <div class="field"><label for="deviations">Deviation / สิ่งที่พลาด</label><textarea id="deviations" data-path="summary.deviations" placeholder="จดทุกเหตุการณ์ที่อาจกระทบผลทดลอง"></textarea></div>
+      <div class="field"><label for="deviations">ข้อจำกัดในการตีความ / หมายเหตุรวม</label><textarea id="deviations" data-path="summary.deviations" placeholder="สรุปจากข้อผิดพลาดรายถัง หรือจดข้อจำกัดอื่นที่กระทบการแปลผล"></textarea></div>
     </div>
   </section>
 
@@ -356,12 +379,12 @@ function churnTimerControl(id){return `<div class="churn-control" id="churnTimer
 
 function buildProcess(){
   let h=tableHead()+'<tbody>'+group('การต้ม');
-  h+=row('อุณหภูมิตอนยกลงจากเตา <small>เป้าหมาย 70°C</small>','stove',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
+  h+=row('<div class="instruction-cell label"><b>อุณหภูมิตอนยกลงจากเตา</b></div>','stoveInstruction',(id)=>['C','D'].includes(id)?'<div class="instruction-cell good"><b>เติมครีม</b><br>ต้มถึง 70°C แล้วจึงยกลงจากเตา</div>':'<div class="instruction-cell good"><b>ต้มถึง 70°C</b><br>แล้วจึงยกลงจากเตา</div>');
   h+=row('★ อุณหภูมิในโถก่อน PST <small>ต้อง ≥58°C</small>','prePst',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
   h+=row('อุณหภูมิจบ PST <small>บันทึกไว้ · คาดหวัง ≥55°C</small>','postPst',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
   h+=group('ทำเย็นถึง 4°C จริง');
   h+=row('⏱ Cooling จนถึง 4°C <small>ถ้าเมื่อยค่อยๆ คนได้ · เป้าหมายไม่ให้เกิน 30 นาที</small>','to4',(id)=>coolingControl(id));
-  h+=row('หลัง Cooling ถึง 4°C <small>ตรวจตามสูตรของแต่ละถัง</small>','creamAfterCooling',(id)=>['A','B','E'].includes(id)?'<div class="feedback good" style="font-size:11.5px"><b>เติมครีมที่ 4°C</b><br>แล้วคนให้มิกซ์ถึง 4°C อีกครั้ง</div>':'<div class="feedback" style="font-size:11.5px">ใส่ครีมก่อนต้มแล้ว<br>ไม่เติมหลัง Cooling</div>');
+  h+=row('<div class="instruction-cell label"><b>หลัง Cooling ถึง 4°C</b><br>ตรวจตามสูตรของแต่ละถัง</div>','creamAfterCooling',(id)=>['A','B','E'].includes(id)?'<div class="instruction-cell good"><b>เติมครีมที่ 4°C</b><br>แล้วคนให้มิกซ์ถึง 4°C อีกครั้ง</div>':'<div class="instruction-cell">ใส่ครีมก่อนต้มแล้ว<br>ไม่เติมหลัง Cooling</div>');
   h+=group('บ่มในน้ำแข็ง 30 นาที · ไม่คน');
   h+=row('⏱ เวลาบ่มจริง','setting',(id)=>agingControl(id));
   h+=row('อุณหภูมิมิกซ์หลังบ่ม <small>ควร &lt;8°C</small>','preChurn',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
@@ -370,14 +393,14 @@ function buildProcess(){
 }
 function buildORBefore(){
   let h=tableHead()+'<tbody>';
-  h+=row('น้ำหนักมิกซ์ 1 ถ้วย ก่อนปั่น <small>หลีกเลี่ยงฟองขณะชั่ง</small>','mix',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('น้ำหนักมิกซ์ 1 ถ้วย ก่อนปั่น <small>Tare ถ้วยก่อนชั่ง · บันทึกเฉพาะน้ำหนักมิกซ์ · หลีกเลี่ยงฟองขณะชั่ง</small>','mix',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
   h+='</tbody>';document.getElementById('orBeforeTable').innerHTML=h;
 }
 function buildORAfter(){
   let h=tableHead()+'<tbody>';
   h+=row('ถ้วยเปล่าก่อนใส่ไอศกรีม','emptyCup',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('ไอศกรีมและถ้วย ครั้งที่ 1','iceCup1',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('ไอศกรีมและถ้วย ครั้งที่ 2','iceCup2',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('ไอศกรีมและถ้วย ครั้งที่ 1 <small>ชั่งน้ำหนักไอศกรีมพร้อมถ้วย · กด 0 ก่อนวางถ้วยที่บรรจุไอศกรีมแล้ว</small>','iceCup1',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
+  h+=row('ไอศกรีมและถ้วย ครั้งที่ 2 <small>ชั่งน้ำหนักไอศกรีมพร้อมถ้วย · กด 0 ก่อนวางถ้วยที่บรรจุไอศกรีมแล้ว</small>','iceCup2',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
   h+=row('น้ำหนักไอศกรีมหลังปั่น <small>หักน้ำหนักถ้วยแล้ว</small>','icecreamNet',(id)=>`<div class="feedback" id="iceNet_${id}" style="font-size:15px;padding:7px 2px">—</div><div class="feedback" id="iceNetNote_${id}"></div>`);
   h+=row('%OR <small>(มิกซ์ − ไอศกรีม) ÷ ไอศกรีม ×100</small>','result',(id)=>`<div class="feedback" id="or_${id}" style="font-size:15px;padding:7px 2px">—</div>`);
   h+='</tbody>';document.getElementById('orAfterTable').innerHTML=h;
@@ -395,6 +418,11 @@ function buildTexture(){
   h+=row('มีเม็ดเนย (buttery) ไหม','buttery',(id,k)=>selectInput(`tanks.${id}.texture.${k}`,['ไม่มี','มีเล็กน้อย','มีชัดเจน']));
   h+=row('สิ่งผิดปกติอื่นๆ','abnormal',(id,k)=>textarea(`tanks.${id}.texture.${k}`,'บันทึกสิ่งที่เห็น'));
   h+='</tbody>';document.getElementById('textureTable').innerHTML=h;
+}
+function buildProductionDeviations(){
+  let h=tableHead()+'<tbody>';
+  h+=row('ข้อผิดพลาด / Deviation <small>ระบุแยกตาม Batch</small>','deviation',(id)=>textarea(`tanks.${id}.process.deviation`,'ไม่มี / ระบุเหตุการณ์ที่เกิดขึ้น'));
+  h+='</tbody>';document.getElementById('productionDeviationTable').innerHTML=h;
 }
 const SCORE_ROWS=[
   ['ความข้น/แน่น','density','−3 ถึง +3',range(-3,3)],['ความเย็นลิ้น','cold','0–3',range(0,3)],['เกล็ดน้ำแข็ง','ice','0–3',range(0,3)],
@@ -444,8 +472,7 @@ function updatePostTastingAnalysis(){
 function feedback(path,msg,kind=''){const el=document.querySelector(`[data-feedback="${path}"]`);if(el){el.textContent=msg;el.className=`feedback ${kind}`}}
 function validateTank(id){
   const base=`tanks.${id}.process.`;
-  const stove=numberAt(base+'stove'),pre=numberAt(base+'prePst'),post=numberAt(base+'postPst'),pc=numberAt(base+'preChurn');
-  feedback(base+'stove',stove==null?'':stove===70?'✓ ตรงเป้า':stove<70?'ต่ำกว่า 70°C':'สูงกว่า 70°C',stove===70?'good':stove==null?'':'bad');
+  const pre=numberAt(base+'prePst'),post=numberAt(base+'postPst'),pc=numberAt(base+'preChurn');
   feedback(base+'prePst',pre==null?'':pre>=58?'✓ ผ่านเกณฑ์':'ห้าม PST · อุ่นถึง 70°C ใหม่',pre>=58?'good':pre==null?'':'bad');
   feedback(base+'postPst',post==null?'':post>=55?'✓ ≥55°C':'ต่ำกว่า 55°C · บันทึก deviation',post>=55?'good':post==null?'':'bad');
   feedback(base+'preChurn',pc==null?'':pc<8?'✓ พร้อมปั่น':'ควรทำให้มิกซ์ต่ำกว่า 8°C',pc<8?'good':pc==null?'':'bad');
@@ -461,7 +488,7 @@ function importJSON(file){const reader=new FileReader();reader.onload=()=>{try{s
 function resetAll(){if(!confirm('ล้างข้อมูล CMR3 ทั้งหมดบนเครื่องนี้? การล้างย้อนกลับไม่ได้'))return;state=freshState();save();renderAll()}
 function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});updateCoolingTimers();updateAgingTimers();updateChurnTimers();validateAll();updatePostTastingAnalysis()}
 
-protocolCards();buildProcess();buildORBefore();buildChurn();buildORAfter();buildTexture();buildScores();buildH6Table();bindAll();renderAll();
+protocolCards();buildProcess();buildORBefore();buildChurn();buildORAfter();buildTexture();buildProductionDeviations();buildScores();buildH6Table();bindAll();renderAll();
 document.getElementById('processTable').addEventListener('click',e=>{const coolingButton=e.target.closest('[data-cooling-action]');if(coolingButton){coolingAction(coolingButton.dataset.coolingAction,coolingButton.dataset.tank);return}const agingButton=e.target.closest('[data-aging-action]');if(agingButton)agingAction(agingButton.dataset.agingAction,agingButton.dataset.tank)});
 document.getElementById('churnTable').addEventListener('click',e=>{const button=e.target.closest('[data-churn-action]');if(button)churnTimerAction(button.dataset.churnAction,button.dataset.tank)});
 document.getElementById('printBtn').addEventListener('click',()=>window.print());
