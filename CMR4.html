@@ -9,140 +9,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CM R4 · ครีมก่อน/หลังพัก</title>
+<title>CM R4 · CMDL10 vs CMDL11</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&amp;family=Sarabun:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F4ECE0;--card:#FBF6EC;--ink:#2B1F15;--muted:#806F5C;--soft:#B7A58F;
+    --bg:#F4ECE0;--card:#FBF6EC;--ink:#2B1F15;--muted:#766653;--soft:#AD9B85;
     --line:#E3D5C0;--line-soft:#EEE3D2;--green:#5F7F46;--green-deep:#466134;
     --amber:#B9792E;--rose:#A45143;--blue:#3E73A6;--cream:#FFFDF8;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Sarabun',sans-serif;padding:30px 18px 54px;
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Sarabun',sans-serif;font-size:16px;padding:30px 18px 54px;
     background-image:radial-gradient(circle at 8% 2%,rgba(214,228,192,.55),transparent 33%),radial-gradient(circle at 94% 98%,rgba(189,112,91,.10),transparent 36%);
     -webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  button,input,select,textarea{font:inherit}
-  button{touch-action:manipulation}
+  button,input,select,textarea{font:inherit}button{touch-action:manipulation}
   .sheet{max-width:1180px;margin:0 auto}
   .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-  .back{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:var(--card);border:1px solid var(--line);border-radius:999px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600}
-  .save-state{font-size:12px;color:var(--muted)}
-  header{text-align:center;margin:8px auto 24px;max-width:780px}
-  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px}
-  h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(31px,5vw,50px);line-height:1.05;margin:0}
+  .back{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;background:var(--card);border:1px solid var(--line);border-radius:999px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:600}
+  .save-state{font-size:13px;color:var(--muted)}
+  header{text-align:center;margin:8px auto 24px;max-width:850px}
+  .eyebrow{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px}
+  h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(34px,5vw,52px);line-height:1.05;margin:0}
   h1 em{font-style:italic;color:var(--green-deep)}
-  .lead{color:var(--muted);font-size:14px;line-height:1.65;margin:10px auto 0}
-  .question{margin:14px auto 0;padding:10px 16px;border-radius:12px;background:#EAF0DE;color:var(--green-deep);font-weight:700;display:inline-block}
+  .lead{color:var(--muted);font-size:16px;line-height:1.7;margin:11px auto 0}
+  .question{margin:15px auto 0;padding:11px 17px;border-radius:12px;background:#EAF0DE;color:var(--green-deep);font-size:15px;font-weight:700;display:inline-block}
 
-  .block{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin-bottom:16px;box-shadow:0 5px 24px -20px rgba(43,31,21,.35)}
-  .block-title{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:14px;font-weight:700;color:var(--green-deep)}
-  .tag{display:inline-flex;min-width:27px;height:27px;padding:0 8px;align-items:center;justify-content:center;border-radius:999px;background:var(--green);color:#fff;font-family:'Fraunces',serif;font-size:13px}
-  .muted{color:var(--muted)}
-  .hint{font-size:12px;color:var(--muted);line-height:1.55}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-  .field{display:flex;flex-direction:column;gap:5px}
-  .field label{font-size:12px;color:var(--muted);font-weight:600}
-  .field input,.field select,.field textarea,.cell input,.cell select,.cell textarea{
-    width:100%;border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:9px;padding:9px 10px;outline:none;min-height:40px}
-  .field textarea,.cell textarea{resize:vertical;min-height:68px;line-height:1.55}
+  .block{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:19px;margin-bottom:16px;box-shadow:0 5px 24px -20px rgba(43,31,21,.35)}
+  .block-title{display:flex;align-items:center;gap:9px;margin:0 0 14px;font-size:16px;font-weight:700;color:var(--green-deep)}
+  .tag{display:inline-flex;min-width:29px;height:29px;padding:0 8px;align-items:center;justify-content:center;border-radius:999px;background:var(--green);color:#fff;font-family:'Fraunces',serif;font-size:14px}
+  .muted{color:var(--muted)}.hint{font-size:13px;color:var(--muted);line-height:1.6}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .field{display:flex;flex-direction:column;gap:5px}.field.wide{grid-column:1/-1}
+  .field label{font-size:13px;color:var(--muted);font-weight:600}
+  .field input,.field select,.field textarea,.cell input,.cell select,.cell textarea{width:100%;border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:9px;padding:9px 10px;outline:none;min-height:42px}
+  .field textarea,.cell textarea{resize:vertical;min-height:72px;line-height:1.55}
   input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(95,127,70,.11)}
 
-  .protocol{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .tank-card{border:1px solid var(--line);background:var(--cream);border-radius:13px;padding:13px;position:relative;overflow:hidden}
-  .tank-card.star{border-color:#C2A35B;background:#FFF9E8}
-  .tank-card h3{font-family:'Fraunces',serif;font-size:23px;font-weight:600;margin:0 0 4px}
-  .tank-card .recipe{font-size:12px;font-weight:700;color:var(--green-deep)}
-  .tank-card p{font-size:12px;line-height:1.5;color:var(--muted);margin:6px 0 0}
-  .tank-card b{color:var(--ink)}
-  .pill{display:inline-flex;margin-top:8px;border-radius:999px;padding:3px 9px;background:#ECE6DA;color:var(--muted);font-size:11px;font-weight:700}
-  .star .pill{background:#F0DFA8;color:#765B18}
-  details{border-top:1px solid var(--line-soft);margin-top:14px;padding-top:10px}
-  summary{cursor:pointer;color:var(--green-deep);font-weight:700;font-size:13px}
-  .rules{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:12px}
-  .rule{font-size:12.5px;line-height:1.55;color:var(--muted)}
-  .rule b{color:var(--ink)}
+  .protocol{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .batch-card{border:1px solid var(--line);background:var(--cream);border-radius:13px;padding:15px;position:relative;overflow:hidden}
+  .batch-card.star{border-color:#C2A35B;background:#FFF9E8}
+  .batch-card h3{font-family:'Fraunces',serif;font-size:25px;font-weight:600;margin:0 0 4px}
+  .batch-card .recipe{font-size:14px;font-weight:700;color:var(--green-deep)}
+  .batch-card p{font-size:13px;line-height:1.6;color:var(--muted);margin:7px 0 0}.batch-card b{color:var(--ink)}
+  .pill{display:inline-flex;margin-top:9px;border-radius:999px;padding:4px 10px;background:#ECE6DA;color:var(--muted);font-size:12px;font-weight:700}.star .pill{background:#F0DFA8;color:#765B18}
+  details{border-top:1px solid var(--line-soft);margin-top:15px;padding-top:11px}summary{cursor:pointer;color:var(--green-deep);font-weight:700;font-size:14px}
+  .rules{display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;margin-top:12px}.rule{font-size:14px;line-height:1.6;color:var(--muted)}.rule b{color:var(--ink)}
+  .research-grid,.decision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .decision-card{border:1px solid var(--line);background:var(--cream);border-radius:13px;padding:14px}.decision-card h3{margin:0 0 9px;font-size:14px;color:var(--green-deep)}
+  .decision-card p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}.decision-card .field+.field{margin-top:10px}
+  .special{border:1px solid #D9C17E;background:#FFF9E8;border-radius:13px;padding:14px}.special-title{font-weight:700;color:#72591A;margin-bottom:8px}
 
   .section-nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px;position:sticky;top:8px;z-index:10;padding:8px;border:1px solid var(--line);background:rgba(251,246,236,.94);backdrop-filter:blur(8px);border-radius:14px}
-  .section-nav a{color:var(--muted);font-size:12px;font-weight:600;text-decoration:none;padding:6px 10px;border-radius:999px}
-  .section-nav a:hover{background:#EAF0DE;color:var(--green-deep)}
-
+  .section-nav a{color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;padding:6px 10px;border-radius:999px}.section-nav a:hover{background:#EAF0DE;color:var(--green-deep)}
   .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:var(--cream)}
-  table{width:100%;border-collapse:collapse;min-width:890px;table-layout:fixed}
-  th,td{border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:8px;vertical-align:top}
-  tr:last-child td{border-bottom:0} th:last-child,td:last-child{border-right:0}
-  thead th{position:sticky;top:0;background:#EEE8DC;z-index:2;text-align:center;font-family:'Fraunces',serif;font-size:16px}
-  thead th:first-child{font-family:'Sarabun',sans-serif;font-size:12px;text-align:left;width:245px}
-  .row-label{width:245px;background:#FAF4E9;font-size:12.5px;line-height:1.45;font-weight:600;color:var(--ink)}
-  .row-label small{display:block;color:var(--muted);font-weight:400;margin-top:2px}
-  .group-row td{background:#E8E1D4;color:var(--green-deep);font-weight:700;font-size:12px;letter-spacing:.04em;padding:7px 10px}
-  .cell input,.cell select,.cell textarea{font-size:13px;background:#fff;padding:7px 8px;min-height:36px}
-  .cell textarea{min-height:58px}
-  .cell.na{background:#F0ECE4;color:var(--soft);text-align:center;vertical-align:middle;font-size:13px}
-  .measure{display:flex;align-items:center;gap:5px}
-  .measure input{min-width:0}
-  .unit{font-size:11px;color:var(--muted);white-space:nowrap}
-  .feedback{font-size:11px;line-height:1.35;margin-top:4px;min-height:15px;color:var(--muted)}
-  .feedback.bad{color:var(--rose);font-weight:600}.feedback.good{color:var(--green-deep);font-weight:600}
-  .instruction-cell{text-align:center;font-size:11.5px;line-height:1.5;color:var(--muted);padding:4px 2px}
-  .instruction-cell.label{text-align:left;padding-left:0}
-  .instruction-cell b{color:var(--ink)}.instruction-cell.good{color:var(--green-deep)}.instruction-cell.good b{color:var(--green-deep)}
-
-  .mini{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:6px 8px;font-size:11px;font-weight:700;cursor:pointer}
-  .mini.start{background:var(--green-deep);border-color:var(--green-deep);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}.mini.clear{color:var(--rose)}.mini.edit{color:var(--blue);font-size:15px;padding:4px 8px}
-  .cooling-control,.aging-control,.churn-control{display:grid;gap:6px;text-align:center}
-  .cooling-clock,.aging-clock,.churn-clock{font-family:'Fraunces',serif;font-size:19px;font-variant-numeric:tabular-nums;color:var(--green-deep)}
-  .cooling-actions,.aging-actions,.churn-actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
-  .cooling-note,.cooling-target,.cooling-countdown,.aging-note,.aging-target,.aging-countdown,.churn-note{font-size:10.5px;line-height:1.35;color:var(--muted)}
-  .cooling-target,.aging-target{margin-top:5px;color:var(--green-deep);font-weight:600}
-  .cooling-countdown,.aging-countdown{font-family:'Fraunces',serif;font-size:15px;font-variant-numeric:tabular-nums;color:var(--amber)}
-  .cooling-countdown.ready,.aging-countdown.ready{color:var(--green-deep);font-family:'Sarabun',sans-serif;font-size:11px;font-weight:700}
-
-  .toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-  .btn{border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:999px;padding:10px 17px;font-weight:700;font-size:13px;cursor:pointer}
-  .btn:hover{border-color:var(--green)}
-  .btn.primary{background:var(--green-deep);border-color:var(--green-deep);color:#fff}
-  .btn.danger{color:var(--rose)}
-  .toolbar .hint{margin-left:auto}
-  .special{border:1px solid #D9C17E;background:#FFF9E8;border-radius:13px;padding:14px}
-  .special-title{font-weight:700;color:#72591A;margin-bottom:10px}
-  .decision-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .decision-card{border:1px solid var(--line);background:var(--cream);border-radius:13px;padding:14px}
-  .decision-card h3{margin:0 0 9px;font-size:13px;color:var(--green-deep)}
-  .decision-card .field+.field{margin-top:10px}
-  .pair-check{font-size:12px;line-height:1.55;border-radius:9px;padding:9px 10px;background:#F3EEE5;color:var(--muted)}
-  .pair-check.good{background:#EAF0DE;color:var(--green-deep);font-weight:600}
-  .pair-check.bad{background:#F8E6E1;color:var(--rose);font-weight:600}
-  .radios{display:grid;gap:7px}
-  .radio{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45}
-  .radio input{margin-top:3px}
-  .production-closeout{border-color:#D7B8A7}
-  .phase-divider{margin:30px 0 16px;padding:21px 18px;border:1px solid #D9C17E;border-radius:17px;background:linear-gradient(135deg,#FFF9E8,#F4E8C9);text-align:center;box-shadow:0 8px 28px -22px rgba(74,55,18,.45)}
-  .phase-divider .phase-kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8A6A20;font-weight:700}
-  .phase-divider h2{font-family:'Fraunces',serif;font-size:27px;font-weight:500;color:#5F4917;margin:5px 0 7px}
-  .phase-divider p{font-size:13px;line-height:1.65;color:#72591A;margin:0}
-  .phase-divider strong{color:var(--rose)}
-  .block.tasting-phase{border-color:#D9C17E;background:#FFF9E8}
-  .block.tasting-phase>.block-title{color:#72591A}.block.tasting-phase>.block-title .tag{background:#A97727}
-
-  .report-head{display:none;text-align:center;margin-bottom:12px}
-  footer{text-align:center;color:var(--soft);font-size:11px;line-height:1.7;margin-top:24px}
-
-  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.protocol{grid-template-columns:repeat(3,1fr)}.tank-card:last-child{grid-column:auto}.rules{grid-template-columns:1fr}.section-nav{position:static}}
-  @media(max-width:720px){.decision-grid{grid-template-columns:1fr}}
-  @media(max-width:560px){body{padding:22px 10px 42px}.block{padding:13px;border-radius:14px}.grid,.protocol{grid-template-columns:1fr}.tank-card:last-child{grid-column:auto}.topbar{align-items:flex-start}.save-state{text-align:right}.toolbar .hint{width:100%;margin-left:0}.question{font-size:13px}}
+  table{width:100%;border-collapse:collapse;min-width:840px;table-layout:fixed}
+  th,td{border-right:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:9px;vertical-align:top}
+  tr:last-child td{border-bottom:0}th:last-child,td:last-child{border-right:0}
+  thead th{position:sticky;top:0;background:#EEE8DC;z-index:2;text-align:center;font-family:'Fraunces',serif;font-size:17px}
+  thead th:first-child{font-family:'Sarabun',sans-serif;font-size:13px;text-align:left;width:270px}
+  .row-label{width:270px;background:#FAF4E9;font-size:14px;line-height:1.5;font-weight:600;color:var(--ink)}.row-label small{display:block;color:var(--muted);font-weight:400;margin-top:2px}
+  .group-row td{background:#E8E1D4;color:var(--green-deep);font-weight:700;font-size:13px;letter-spacing:.03em;padding:8px 10px}
+  .cell input,.cell select,.cell textarea{font-size:14px;background:#fff;padding:8px 9px;min-height:38px}.cell textarea{min-height:62px}
+  .measure{display:flex;align-items:center;gap:6px}.measure input{min-width:0}.unit{font-size:12px;color:var(--muted);white-space:nowrap}
+  .feedback{font-size:12px;line-height:1.4;margin-top:4px;min-height:16px;color:var(--muted)}.feedback.bad{color:var(--rose);font-weight:600}.feedback.good{color:var(--green-deep);font-weight:600}
+  .instruction-cell{text-align:center;font-size:13.5px;line-height:1.6;color:var(--muted);padding:4px 2px}.instruction-cell.label{text-align:left;padding-left:0}.instruction-cell b{color:var(--ink)}.instruction-cell.good,.instruction-cell.good b{color:var(--green-deep)}
+  .timer-control{display:grid;gap:6px;text-align:center}.timer-clock{font-family:'Fraunces',serif;font-size:21px;font-variant-numeric:tabular-nums;color:var(--green-deep)}
+  .timer-actions{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}.timer-note,.timer-target,.timer-countdown{font-size:11.5px;line-height:1.4;color:var(--muted)}.timer-target{color:var(--green-deep);font-weight:600}.timer-countdown{font-family:'Fraunces',serif;font-size:16px;color:var(--amber)}.timer-countdown.ready{color:var(--green-deep);font-family:'Sarabun',sans-serif;font-size:12px;font-weight:700}
+  .mini{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:7px 9px;font-size:12px;font-weight:700;cursor:pointer}.mini.start{background:var(--green-deep);border-color:var(--green-deep);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}
+  .pair-check{font-size:13px;line-height:1.55;border-radius:9px;padding:10px 11px;background:#F3EEE5;color:var(--muted)}.pair-check.good{background:#EAF0DE;color:var(--green-deep);font-weight:600}.pair-check.bad{background:#F8E6E1;color:var(--rose);font-weight:600}
+  .production-closeout{border-color:#D7B8A7}.phase-divider{margin:30px 0 16px;padding:21px 18px;border:1px solid #D9C17E;border-radius:17px;background:linear-gradient(135deg,#FFF9E8,#F4E8C9);text-align:center}.phase-divider h2{font-family:'Fraunces',serif;font-size:28px;font-weight:500;color:#5F4917;margin:5px 0 7px}.phase-divider p{font-size:14px;line-height:1.65;color:#72591A;margin:0}.block.tasting-phase{border-color:#D9C17E;background:#FFF9E8}.block.tasting-phase>.block-title{color:#72591A}.block.tasting-phase>.block-title .tag{background:#A97727}
+  .toolbar{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{border:1px solid var(--line);background:var(--cream);color:var(--ink);border-radius:999px;padding:10px 17px;font-weight:700;font-size:14px;cursor:pointer}.btn.primary{background:var(--green-deep);border-color:var(--green-deep);color:#fff}.btn.danger{color:var(--rose)}
+  .report-head{display:none;text-align:center;margin-bottom:12px}footer{text-align:center;color:var(--soft);font-size:12px;line-height:1.7;margin-top:24px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.research-grid,.decision-grid{grid-template-columns:1fr}.rules{grid-template-columns:1fr}.section-nav{position:static}}
+  @media(max-width:560px){body{padding:22px 10px 42px}.block{padding:14px;border-radius:14px}.grid,.protocol{grid-template-columns:1fr}.topbar{align-items:flex-start}.save-state{text-align:right}.question{font-size:14px}.field.wide{grid-column:auto}}
   @media print{
-    @page{size:A4 landscape;margin:8mm}
-    body{background:#fff;background-image:none;padding:0;font-size:10px}
-    .sheet{max-width:none}.topbar,header,.section-nav,.toolbar,.cooling-actions,.aging-actions,.churn-actions,.save-state,footer,.no-print{display:none!important}
-    .report-head{display:block}.block{background:#fff;border:1px solid #bbb;box-shadow:none;border-radius:5px;padding:8px;margin-bottom:7px;break-inside:avoid}
-    .block-title{font-size:11px;margin-bottom:6px}.tag{background:none;color:#000;border:1px solid #888;height:20px;min-width:20px}
-    .protocol{grid-template-columns:repeat(5,1fr)}.tank-card{padding:7px;border-radius:4px}.tank-card h3{font-size:15px}.tank-card p,.tank-card .recipe,.pill{font-size:8.5px}
-    details{display:none}
-    .table-wrap{overflow:visible;border-radius:3px}.table-wrap table{min-width:0}.row-label,thead th:first-child{width:180px}th,td{padding:4px}.cell input,.cell select,.cell textarea{border:none;padding:1px;background:none;font-size:9px;min-height:0}.cell textarea{height:30px}.feedback{font-size:8px;min-height:0}
-    .special{padding:8px}.radio{font-size:9px}
+    @page{size:A4 landscape;margin:8mm}body{background:#fff;background-image:none;padding:0;font-size:10px}.sheet{max-width:none}.topbar,header,.section-nav,.toolbar,.timer-actions,.save-state,footer{display:none!important}
+    .report-head{display:block}.block{background:#fff;border:1px solid #bbb;box-shadow:none;border-radius:5px;padding:8px;margin-bottom:7px;break-inside:avoid}.block-title{font-size:11px;margin-bottom:6px}.tag{background:none;color:#000;border:1px solid #888;height:20px;min-width:20px}
+    .protocol{grid-template-columns:repeat(2,1fr)}.batch-card{padding:7px;border-radius:4px}.batch-card h3{font-size:15px}.batch-card p,.batch-card .recipe,.pill{font-size:8.5px}details{display:none}.research-grid,.decision-grid{grid-template-columns:repeat(3,1fr)}
+    .table-wrap{overflow:visible;border-radius:3px}.table-wrap table{min-width:0}.row-label,thead th:first-child{width:185px}th,td{padding:4px}.cell input,.cell select,.cell textarea{border:none;padding:1px;background:none;font-size:9px;min-height:0}.cell textarea{height:30px}.feedback{font-size:8px;min-height:0}.special{padding:8px}
   }
 </style>
 </head>
@@ -154,374 +100,260 @@
   </div>
 
   <header>
-    <div class="eyebrow">02CM Dairy · LabRecord R4 · Cream Timing</div>
+    <div class="eyebrow">02CM Dairy Light · LabRecord R4 · TS32</div>
     <h1>CM <em>R4</em></h1>
-    <p class="lead">CMDL11 · 3 ถัง · Cooling ถึง 10°C · ทุกถังพัก 30 นาที<br>ต่างกันที่ “ครีมเข้าก่อน/หลังพัก” และ “วิธีต้ม SEP” · เทลงเครื่องที่ 8°C</p>
-    <div class="question">ครีมเข้าก่อนพัก ช่วยลดความเย็นลิ้นไหม?</div>
+    <p class="lead">CMDL10 (fat 10 · TS 31) เทียบ CMDL11 (fat 11 · TS 32)<br>วิธีผลิตใหม่เหมือนกันทั้งคู่ · แยกละลาย SEP · PBT · Cooling ถึง 4°C + บ่ม 30 นาที</p>
+    <div class="question">เลือก fat tier ที่เนื้อดีกว่า · เช็กเย็นลิ้น · เช็ก PMP 33 ทับกลิ่นกะทิหรือไม่</div>
   </header>
-  <div class="report-head"><b>02CM LabRecord R4 · ครีมก่อน/หลังพัก</b><br><span>Miss Icecream · A ครีมหลังพัก · B ครีมก่อนพัก · C ครีมก่อนพัก + SEP แยก</span></div>
+  <div class="report-head"><b>02CM LabRecord R4 · CMDL10 vs CMDL11</b><br><span>สูตร TS32 ใหม่ · วิธีผลิตใหม่ · 20 ก.ค. 2026</span></div>
 
   <section class="block" id="info">
     <h2 class="block-title"><span class="tag">i</span> ข้อมูลการทดลอง</h2>
     <div class="grid">
       <div class="field"><label for="testDate">วันที่ทดลอง</label><input id="testDate" type="date" data-path="meta.date"></div>
-      <div class="field"><label for="team">ทีมงาน</label><input id="team" type="text" placeholder="ชื่อทีม / ผู้บันทึก" data-path="meta.team"></div>
-      <div class="field"><label for="machine">เครื่องปั่น</label><input id="machine" type="text" placeholder="รุ่น / หมายเลขเครื่อง" data-path="meta.machine"></div>
-      <div class="field"><label for="coconutLot">กะทิล็อต / วันที่คั้น</label><input id="coconutLot" type="text" placeholder="กะทิคั้นวันเดียวกันทุกถัง" data-path="meta.coconutLot"></div>
+      <div class="field"><label for="maker">ผู้ทำ</label><input id="maker" type="text" placeholder="ชื่อผู้ผลิต / ผู้บันทึก" data-path="meta.maker"></div>
+      <div class="field"><label for="taster">ผู้ชิม</label><input id="taster" type="text" data-path="meta.taster"></div>
+      <div class="field"><label for="machine">เครื่องปั่น</label><input id="machine" type="text" data-path="meta.machine"></div>
+      <div class="field"><label for="coconutLot">กะทิล็อต / วันที่คั้น</label><input id="coconutLot" type="text" placeholder="ใช้ล็อตเดียวกันทั้ง A/B" data-path="meta.coconutLot"></div>
+      <div class="field"><label for="productionOrder">ลำดับการผลิต</label><select id="productionOrder" data-path="meta.productionOrder"><option value="">— เลือก —</option><option>A → B</option><option>B → A</option></select></div>
     </div>
   </section>
 
   <section class="block">
-    <h2 class="block-title"><span class="tag">3</span> แผนทดลอง 3 ถัง</h2>
+    <h2 class="block-title"><span class="tag">2</span> แผนทดลอง 2 Batch</h2>
     <div class="protocol" id="protocolCards"></div>
-    <details>
-      <summary>เปิดดูเกณฑ์สำคัญของ R4</summary>
+    <details open>
+      <summary>เกณฑ์การผลิตที่ต้องทำเหมือนกันทั้ง A/B</summary>
       <div class="rules">
-        <div class="rule"><b>ก่อนเริ่ม PST ≥58°C</b><br>ถ้าไม่ถึง ให้อุ่นถึง 70°C ใหม่ ห้าม PST</div>
-        <div class="rule"><b>Cooling ถึง 10°C ทุกถัง</b><br>คนช้าๆ · วัดตรงกลาง · ทำให้ถึงก่อนเข้าสู่ขั้นตอนพัก</div>
-        <div class="rule"><b>พัก 30 นาทีทุกถัง</b><br>บ่มในน้ำแข็ง · ไม่คน · ใช้นาฬิกาจับเวลา</div>
-        <div class="rule"><b>A ครีมเข้าหลังพัก</b><br>พักมิกซ์ก่อน แล้วเติมครีมเย็น 6°C และคนให้เข้ากัน</div>
-        <div class="rule"><b>B/C ครีมเข้าก่อนพัก</b><br>เติมครีมเย็น 6°C และคนให้เข้ากัน แล้วนำไปพักทันที</div>
-        <div class="rule"><b>PST เหมือนกันทุกถัง</b><br>30 วินาที / พัก 60 วินาที × 3 รอบ</div>
-        <div class="rule"><b>ลำดับการผลิต</b><br>เริ่ม Batch ห่างกัน 30 นาที · Rinse เครื่องก่อนปั่นทุกถัง</div>
-        <div class="rule"><b>ก่อนเทลงเครื่องทุกถัง</b><br>ชั่งมิกซ์ 1 ถ้วย เทคืน แล้วคนให้เหลือ 8°C ก่อนเทลงเครื่อง</div>
-        <div class="rule"><b>คุม covariate A–C</b><br>ทำตามจุดกำหนด 8°C · draw ≤2°C · %OR ≤5 จุด</div>
-        <div class="rule"><b>Blind side-by-side</b><br>ชิมทั้ง 3 ถังพร้อมกัน ห้ามชิมจากความจำ</div>
+        <div class="rule"><b>แยกละลาย SEP</b><br>คลุก SEP กับ SUC · ใช้น้ำทั้งหมด · ต้มละลายถึง 65°C</div>
+        <div class="rule"><b>PBT (เดิม PST)</b><br>เริ่มเมื่อ mix ≥58°C · ปั่น 30 วินาที พัก 10 วินาที x 3 รอบ · end-PBT 55°C</div>
+        <div class="rule"><b>ตัด PSS</b><br>Cooling ถึง ≤10°C แล้วเติมครีม · ทำเย็นมิกซ์ครบต่อถึง ≤4°C</div>
+        <div class="rule"><b>บ่ม 30 นาที</b><br>เริ่มจับเวลาหลังมิกซ์ครบถึง ≤4°C · หลังบ่มต้อง 0–4°C</div>
+        <div class="rule"><b>เข้าเครื่องที่ 8°C</b><br>จดค่าจริงทั้ง 2 Batch · รีบเริ่มปั่นเพื่อให้อุณหภูมิใกล้กันที่สุด</div>
+        <div class="rule"><b>คุม covariate</b><br>Entry เท่ากัน · Draw ต่าง ≤2°C · %OR ต่าง ≤5 จุด</div>
+        <div class="rule"><b>การเก็บ</b><br>เก็บ −18°C เวลาเท่ากัน · Temper ก่อนชิมเท่ากัน</div>
+        <div class="rule"><b>Blind side-by-side</b><br>สลับซ้าย–ขวาสุ่ม · ชิมพร้อมกัน · แยก Cold / Iciness / Body</div>
       </div>
     </details>
   </section>
 
-  <section class="block">
-    <h2 class="block-title"><span class="tag">สูตร</span> CMDL11 ต่อถัง · รวม 1,000 g</h2>
-    <div class="rules">
-      <div class="rule"><b>CCM กะทิคั้นสด</b> 498 g</div><div class="rule"><b>WTR น้ำ</b> 277 g</div>
-      <div class="rule"><b>CRM ครีมวิปปิ้ง 36%</b> 60 g</div><div class="rule"><b>DEX เดกซ์โตรส</b> 69 g</div>
-      <div class="rule"><b>SUC น้ำตาลทราย</b> 29 g</div><div class="rule"><b>PMP นมผงพร่องมันเนย</b> 20 g</div>
-      <div class="rule"><b>INL อินูลิน</b> 40 g</div><div class="rule"><b>SEP</b> 6 g</div><div class="rule"><b>SLT เกลือทะเล</b> 1 g</div>
-    </div>
-    <div class="special" style="margin-top:14px">
-      <div class="special-title">✓ สูตร CMDL11 merged · 14 Parameters verified</div>
-      <p class="hint" style="margin:0">CMC ถอดออก · SEP 6 g · INL 40 g · DEX:SUC = 69:29 (2.38) ยอมรับได้ตามผล R1</p>
-    </div>
-    <h3 style="margin:17px 0 8px;font-size:14px">14 Parameters · CMDL11 merged</h3>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Parameter</th><th>ค่า</th><th>สถานะ</th><th>Parameter</th><th>ค่า</th><th>สถานะ</th></tr></thead>
-      <tbody>
-        <tr><td>Fat%</td><td>10.99</td><td>✓</td><td>MSNF%</td><td>2.18</td><td>—</td></tr>
-        <tr><td>Lactose mix%</td><td>1.22</td><td>✓</td><td>Lactose serum%</td><td>1.75</td><td>✓</td></tr>
-        <tr><td>Protein%</td><td>1.84</td><td>—</td><td>TS%</td><td>31.50</td><td>✓</td></tr>
-        <tr><td>RSW%</td><td>15.00</td><td>✓</td><td>RST%</td><td>10.28</td><td>—</td></tr>
-        <tr><td>S&amp;B%</td><td>13.80</td><td>✓</td><td>DEX%</td><td>6.9</td><td>⚠️</td></tr>
-        <tr><td>AFPW%</td><td>28.88</td><td>✓</td><td>AFPT%</td><td>19.78</td><td>✓</td></tr>
-        <tr><td>FP (°C)</td><td>−2.30</td><td>✓</td><td>FW%</td><td>79.93</td><td>✓</td></tr>
-      </tbody>
-    </table></div>
-  </section>
-
   <nav class="section-nav" aria-label="ส่วนต่างๆ ของแบบบันทึก">
-    <a href="#process">Process</a><a href="#or-before">%OR ก่อนปั่น</a><a href="#churning">การปั่น</a><a href="#or-after">%OR หลังปั่น</a><a href="#texture">หลังปั่น</a><a href="#production-deviations">ข้อผิดพลาด</a><a href="#tasting">คะแนนการชิม</a><a href="#verdict">ตีความผล</a><a href="#theory">ทฤษฎี</a><a href="#notes">Verdict</a>
+    <a href="#process">Process</a><a href="#or-before">%OR ก่อนปั่น</a><a href="#churning">การปั่น</a><a href="#or-after">%OR หลังปั่น</a><a href="#texture">หลังปั่น</a><a href="#tasting">การชิม</a><a href="#paired">เทียบคู่</a><a href="#research">คำถาม</a><a href="#formula">สูตร</a><a href="#verdict">Hypothesis</a><a href="#notes">Decision</a>
   </nav>
 
-  <section class="block" id="process">
-    <h2 class="block-title"><span class="tag">1</span> การต้ม · Cooling · ครีมก่อน/หลังพัก</h2>
-    <div class="table-wrap"><table id="processTable"></table></div>
-  </section>
+  <section class="block" id="process"><h2 class="block-title"><span class="tag">1</span> การผลิต · PBT · Cooling · บ่ม</h2><div class="table-wrap"><table id="processTable"></table></div></section>
+  <section class="block" id="or-before"><h2 class="block-title"><span class="tag">%1</span> %Overrun · ก่อนปั่น</h2><p class="hint" style="margin:-5px 0 12px">ชั่งมิกซ์จากส่วนที่ไม่มีฟอง 1 ถ้วย · Tare ถ้วยก่อนชั่ง · บันทึกเฉพาะน้ำหนักมิกซ์</p><div class="table-wrap"><table id="orBeforeTable"></table></div></section>
+  <section class="block" id="churning"><h2 class="block-title"><span class="tag">2</span> เข้าเครื่องและการปั่น</h2><div class="table-wrap"><table id="churnTable"></table></div></section>
+  <section class="block" id="or-after"><h2 class="block-title"><span class="tag">%2</span> %Overrun · หลังปั่น</h2><p class="hint" style="margin:-5px 0 12px">ชั่งไอศกรีมพร้อมถ้วย 2 ครั้ง · ระบบหักถ้วยและคำนวณ %OR อัตโนมัติ: ต่าง ≤5 g ใช้ค่าเฉลี่ย · ต่าง &gt;5 g ใช้ค่ามากกว่า</p><div class="table-wrap"><table id="orAfterTable"></table></div></section>
+  <section class="block" id="texture"><h2 class="block-title"><span class="tag">★</span> เนื้อตอนดึงออก</h2><div class="table-wrap"><table id="textureTable"></table></div></section>
+  <section class="block production-closeout" id="production-deviations"><h2 class="block-title"><span class="tag">!</span> ข้อผิดพลาดระหว่างการผลิต</h2><p class="hint" style="margin:-5px 0 12px">บันทึกสิ่งที่ต่างจากแผน อุณหภูมิ เวลา ขั้นตอน หรือเหตุการณ์ผิดปกติของแต่ละ Batch หากไม่มีให้ระบุ “ไม่มี”</p><div class="table-wrap"><table id="productionDeviationTable"></table></div></section>
 
-  <section class="block" id="or-before">
-    <h2 class="block-title"><span class="tag">%1</span> %Overrun · ช่วงที่ 1 ก่อนปั่น</h2>
-    <p class="hint" style="margin:-5px 0 12px">ชั่งน้ำหนักมิกซ์ก่อนเริ่มปั่น เพื่อให้บันทึกตาม Timeline การผลิต</p>
-    <div class="table-wrap"><table id="orBeforeTable"></table></div>
-  </section>
-
-  <section class="block" id="churning">
-    <h2 class="block-title"><span class="tag">2</span> การปั่น</h2>
-    <div class="table-wrap"><table id="churnTable"></table></div>
-  </section>
-
-  <section class="block" id="or-after">
-    <h2 class="block-title"><span class="tag">%2</span> %Overrun · ช่วงที่ 2 หลังปั่น</h2>
-    <p class="hint" style="margin:-5px 0 12px">ชั่งไอศกรีมพร้อมถ้วย 2 ครั้ง · ระบบหักน้ำหนักถ้วยและคำนวณ %OR อัตโนมัติ: ต่างกัน ≤5 g ใช้ค่าเฉลี่ย · &gt;5 g ใช้ค่ามากกว่า</p>
-    <div class="table-wrap"><table id="orAfterTable"></table></div>
-  </section>
-
-  <section class="block" id="texture">
-    <h2 class="block-title"><span class="tag">★</span> ลักษณะหลังปั่น</h2>
-    <div class="table-wrap"><table id="textureTable"></table></div>
-  </section>
-
-  <section class="block production-closeout" id="production-deviations">
-    <h2 class="block-title"><span class="tag">!</span> ข้อผิดพลาดระหว่างการผลิตแต่ละ Batch <span class="muted">· กรอกก่อนส่งต่อให้ทีมชิม</span></h2>
-    <p class="hint" style="margin:-5px 0 12px">บันทึกสิ่งที่ต่างจากแผน อุณหภูมิ เวลา ขั้นตอน หรือเหตุการณ์ผิดปกติของแต่ละถัง หากไม่มีให้ระบุ “ไม่มี”</p>
-    <div class="table-wrap"><table id="productionDeviationTable"></table></div>
-  </section>
-
-  <div class="phase-divider" id="tasting-start">
-    <div class="phase-kicker">สิ้นสุดการบันทึกช่วงผลิตไอศกรีม</div>
-    <h2>ส่วนบันทึกผลช่วงชิม</h2>
-    <p><strong>ผู้บันทึกช่วงผลิต:</strong> เมื่อกรอกข้อผิดพลาด A–C ครบแล้ว ให้หยุดที่นี่<br>ตั้งแต่ข้อ 3 เป็นต้นไปเป็นส่วนของผู้บันทึกผลช่วงชิม</p>
-  </div>
+  <div class="phase-divider"><h2>ส่วนบันทึกผลช่วงชิม</h2><p>Blind side-by-side · สลับซ้าย–ขวาสุ่ม · ชิม A/B พร้อมกัน<br>แยกคำว่า <b>เย็นลิ้น (Cold)</b> · <b>สาก (Iciness)</b> · <b>Body</b> ออกจากกัน</p></div>
 
   <section class="block tasting-phase" id="tasting">
-    <h2 class="block-title"><span class="tag">3</span> คะแนนการชิม <span class="muted">· Blind side-by-side 3 ถังพร้อมกัน</span></h2>
+    <h2 class="block-title"><span class="tag">3</span> คะแนนการชิม</h2>
+    <div class="special" style="margin-bottom:12px"><div class="special-title">Legend</div><p class="hint" style="margin:0"><b>Bipolar −3/+3:</b> −3 = น้อยไป/อุ่น · 0 = พอดี · +3 = มากไป/เย็นจัด · <b>Presence 0–3:</b> 0 ไม่มี · 1 นิดหน่อย · 2 ชัดเจน · 3 เด่นมาก · <b>Liking:</b> 0–10</p></div>
     <div class="table-wrap"><table id="scoreTable"></table></div>
   </section>
 
-  <section class="block tasting-phase" id="verdict">
-    <h2 class="block-title"><span class="tag">4</span> ตีความผลหลังชิม</h2>
-    <p class="hint" style="margin:-5px 0 12px">สรุป H1–H3 ได้เมื่อทำตามจุดกำหนด 8°C ทุกถัง · draw อยู่ในช่วง ≤2°C · %OR ≤5 จุด</p>
-    <div class="decision-card">
-      <h3>เช็ก covariate ของ A–C ทั้งกลุ่ม</h3>
-      <div class="decision-grid">
-        <div class="pair-check good">ก่อนเทลงเครื่อง · จุดกำหนด 8°C ทุกถัง (ไม่ต้องบันทึกค่า)</div>
-        <div class="pair-check" id="drawRange">Draw temp A–C · รอข้อมูลครบ 3 ถัง</div>
-        <div class="pair-check" id="orRange">%OR A–C · รอข้อมูลครบ 3 ถัง</div>
-      </div>
-    </div>
-    <div class="decision-grid" style="margin-top:12px">
-      <div class="decision-card">
-        <h3>⭐⭐ H1 · ครีมเข้าก่อนพักช่วยลดเย็นลิ้นไหม?</h3>
-        <div class="pair-check" id="h1Readout">A ครีมหลังพัก vs B ครีมก่อนพัก · รอคะแนน Cold</div>
-        <div class="field" style="margin-top:10px"><label for="h1Verdict">ผล H1</label><select id="h1Verdict" data-path="verdict.h1"><option value="">— เลือก —</option><option>pass — ครีมก่อนพักช่วยลดเย็นลิ้น</option><option>fail — จังหวะเติมครีมไม่ต่าง</option><option>เทียบไม่ได้ — covariate หลุด</option><option>ข้อมูลยังไม่พอ</option></select></div>
-      </div>
-      <div class="decision-card">
-        <h3>⭐ H2 · ต้มแยก SEP ช่วยเพิ่มอีกไหม?</h3>
-        <div class="pair-check" id="h2Readout">B SEP รวม vs C SEP แยก · รอคะแนน Cold</div>
-        <div class="field" style="margin-top:10px"><label for="h2Verdict">ผล H2</label><select id="h2Verdict" data-path="verdict.h2"><option value="">— เลือก —</option><option>pass — ต้มแยกช่วยเสริม</option><option>fail — ต้มแยกไม่ต่าง</option><option>เทียบไม่ได้ — covariate หลุด</option><option>ข้อมูลยังไม่พอ</option></select></div>
-      </div>
-    </div>
-    <div class="decision-card" style="margin-top:12px">
-      <h3>🎯 H3 · กู้อุ่นลิ้นกลับได้ไหม?</h3>
-      <div class="pair-check" id="h3Readout">A PSS ปัจจุบัน vs C สูตรร้านเดิม · รอคะแนน Cold</div>
-      <div class="field" style="margin-top:10px"><label for="h3Verdict">ผล H3 / production</label><select id="h3Verdict" data-path="verdict.h3"><option value="">— เลือก —</option><option>pass — สูตรร้านเดิมกู้อุ่นลิ้นได้</option><option>fail — ยังไม่กู้อุ่นลิ้น</option><option>เทียบไม่ได้ — covariate หลุด</option><option>ข้อมูลยังไม่พอ</option></select></div>
-    </div>
-    <div class="special" style="margin-top:12px">
-      <div class="special-title">ข้อจำกัดถาวร</div>
-      <div class="rules">
-        <div class="rule"><b>n=1 วัน</b><br>เป็น screening ไม่ใช่ข้อพิสูจน์ ต้องทำซ้ำก่อน lock causation</div>
-        <div class="rule"><b>Perception เป็น relative</b><br>Blind side-by-side ลด bias แต่ไม่ตัดหมด</div>
-        <div class="rule"><b>Covariate หลุด</b><br>ผลเป็น process note ไม่ใช้สรุปสมมติฐาน</div>
-        <div class="rule"><b>ทุกถังพัก 30 นาทีเท่ากัน</b><br>A/B ต่างเฉพาะจังหวะเติมครีม เพื่ออ่านผลของครีมก่อน/หลังพัก</div>
-      </div>
+  <section class="block tasting-phase" id="paired">
+    <h2 class="block-title"><span class="tag">A/B</span> เทียบคู่ Paired A vs B</h2>
+    <div class="table-wrap"><table id="pairedTable"></table></div>
+    <div class="grid" style="margin-top:12px">
+      <div class="field"><label for="oldComparison">เทียบกับความจำ CMDL11 เดิม TS 29.8 (เย็นลิ้น 1–2)</label><select id="oldComparison" data-path="summary.oldComparison"><option value="">— เลือก —</option><option>ดีขึ้น</option><option>เท่าเดิม</option><option>แย่ลง</option><option>จำไม่ได้ / เทียบไม่ได้</option></select></div>
+      <div class="field wide"><label for="oldComparisonNote">บันทึกการเทียบสูตรเดิม</label><textarea id="oldComparisonNote" data-path="summary.oldComparisonNote" placeholder="สิ่งที่จำได้ / ข้อจำกัดของการเทียบจากความจำ"></textarea></div>
     </div>
   </section>
 
-  <section class="block tasting-phase" id="theory">
-    <h2 class="block-title"><span class="tag">?</span> ตรวจสอบทฤษฎี / ผู้ต้องสงสัย</h2>
-    <div class="table-wrap"><table id="theoryTable"></table></div>
+  <section class="block" id="research">
+    <h2 class="block-title"><span class="tag">H</span> คำถามการทดลอง</h2>
+    <details>
+      <summary>แสดงคำถามการทดลอง</summary>
+      <div class="research-grid" style="margin-top:10px">
+        <article class="decision-card"><h3>H1 · เนื้อ/body</h3><p>CMDL11 (TS 32 · CRM 57 g) แน่น/นวลกว่า CMDL10 (TS 31 · CRM 29 g) แค่ไหน และผู้ชิมแยกออกหรือไม่</p></article>
+        <article class="decision-card"><h3>H2 · เย็นลิ้น</h3><p>TS 31–32 ช่วยลดเย็นลิ้นจาก CMDL11 เดิม TS 29.8 ที่เคยได้ 1–2 หรือไม่ และ A/B ต่างกันหรือไม่</p></article>
+        <article class="decision-card"><h3>H3 · กลิ่น PMP 33</h3><p>นมผง 33 g ทำให้กลิ่นนมทับกลิ่นกะทิคั้นสดซึ่งเป็นคาแรกเตอร์หลักหรือไม่</p></article>
+      </div>
+      <div class="special" style="margin-top:12px"><div class="special-title">บริบท MR v8.1.0</div><p class="hint" style="margin:0">Body / serum viscosity เป็นผู้ต้องสงสัยหลักของเย็นลิ้น รอบนี้จึงดัน TS + INL 40 + PMP 33 เพื่อเพิ่ม body/matrix แต่ผลจากวันเดียวเป็น screening และการเทียบสูตรเดิมเป็นการเทียบจากความจำ ไม่ใช่ side-by-side โดยตรง</p></div>
+    </details>
+  </section>
+
+  <section class="block" id="formula">
+    <h2 class="block-title"><span class="tag">สูตร</span> ส่วนผสมต่อ Batch · รวม 1,000 g</h2>
+    <details>
+      <summary>แสดงตารางส่วนผสม</summary>
+      <div class="table-wrap" style="margin-top:10px"><table>
+      <thead><tr><th>ส่วนผสม</th><th>A · CMDL10</th><th>B · CMDL11</th><th>กลุ่มผลิต</th></tr></thead>
+      <tbody>
+        <tr><td class="row-label">SEP · สารคงตัว P</td><td>6 g</td><td>6 g</td><td>① ต้มละลาย 65°C</td></tr>
+        <tr><td class="row-label">SUC · น้ำตาลทราย</td><td>42 g</td><td>40 g</td><td>① คลุก SEP</td></tr>
+        <tr><td class="row-label">WTR · น้ำ</td><td>300 g</td><td>273 g</td><td>① ใช้ทั้งหมด</td></tr>
+        <tr><td class="row-label">PMP · นมผงพร่องมันเนย</td><td>33 g</td><td>33 g</td><td>② กะทิ–นม</td></tr>
+        <tr><td class="row-label">DEX · เดกซ์โตรส</td><td>50 g</td><td>50 g</td><td>②</td></tr>
+        <tr><td class="row-label">INL · อินูลิน DP14</td><td>39 g</td><td>40 g</td><td>②</td></tr>
+        <tr><td class="row-label">SLT · เกลือทะเล</td><td>1 g</td><td>1 g</td><td>②</td></tr>
+        <tr><td class="row-label">CCM · กะทิคั้นสด</td><td>500 g</td><td>500 g</td><td>②</td></tr>
+        <tr><td class="row-label">CRM · ครีมวิปปิ้ง 36%</td><td><b>29 g</b></td><td><b>57 g</b></td><td>③ เติมตอน Cooling ≤10°C</td></tr>
+        <tr><td class="row-label"><b>รวม</b></td><td><b>1,000 g</b></td><td><b>1,000 g</b></td><td>—</td></tr>
+      </tbody>
+      </table></div>
+    </details>
+    <details>
+      <summary>แสดงตารางตรวจค่า MR v8.1.0 · 20 Parameters</summary>
+      <div class="table-wrap" style="margin-top:10px"><table>
+      <thead><tr><th>Parameter</th><th>A · CMDL10</th><th>B · CMDL11</th><th>Target / สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td class="row-label">Fat%</td><td>10.00</td><td>11.01</td><td>per tier ±0.15 · ✓</td></tr>
+        <tr><td class="row-label">MSNF%</td><td>3.24</td><td>3.38</td><td>informative</td></tr>
+        <tr><td class="row-label">Lactose มิกซ์%</td><td>1.80</td><td>1.89</td><td>&lt;7 · ✓</td></tr>
+        <tr><td class="row-label">Lactose serum%</td><td>2.55</td><td>2.70</td><td>&lt;11 · ✓</td></tr>
+        <tr><td class="row-label">Protein%</td><td>2.21</td><td>2.28</td><td>informative</td></tr>
+        <tr><td class="row-label">TS%</td><td>31.01</td><td>32.06</td><td>≥32 (fat 10 ผ่อน 31) · ✓</td></tr>
+        <tr><td class="row-label">RSW%</td><td>15.03</td><td>15.01</td><td>15 ±0.25 · ✓</td></tr>
+        <tr><td class="row-label">RST%</td><td>10.37</td><td>10.20</td><td>informative</td></tr>
+        <tr><td class="row-label">S&amp;B%</td><td>13.10</td><td>13.00</td><td>13–17 · ✓</td></tr>
+        <tr><td class="row-label">DEX%</td><td>5.00</td><td>5.00</td><td>ปรัชญา A ~5 · ✓</td></tr>
+        <tr><td class="row-label">AFPW%</td><td>26.64</td><td>26.90</td><td>informative</td></tr>
+        <tr><td class="row-label">AFPT%</td><td>18.38</td><td>18.27</td><td>18–21 · ✓</td></tr>
+        <tr><td class="row-label">FP (°C)</td><td>−1.76</td><td>−1.78</td><td>plant informative · ✓</td></tr>
+        <tr><td class="row-label">FWW%</td><td>84.68</td><td>84.49</td><td>intermediate</td></tr>
+        <tr><td class="row-label">FWT%</td><td>58.42</td><td>57.40</td><td>informative</td></tr>
+        <tr><td class="row-label">น้ำแข็ง g/kg</td><td>584</td><td>574</td><td>informative</td></tr>
+        <tr><td class="row-label">%OR</td><td>วัดจริง</td><td>วัดจริง</td><td>35–45</td></tr>
+        <tr><td class="row-label">kcal/100g</td><td>157</td><td>166</td><td>informative</td></tr>
+        <tr><td class="row-label">Total sugar%</td><td>12.67</td><td>12.56</td><td>informative</td></tr>
+        <tr><td class="row-label">Added sugar%</td><td>8.87</td><td>8.67</td><td>informative</td></tr>
+        <tr><td class="row-label">ต้นทุน บ/kg</td><td>72.8</td><td>78.8</td><td>ต่าง 6 บ/kg</td></tr>
+      </tbody>
+      </table></div>
+    </details>
+  </section>
+
+  <section class="block tasting-phase" id="verdict">
+    <h2 class="block-title"><span class="tag">4</span> Hypothesis Verdict</h2>
+    <p class="hint" style="margin:-5px 0 12px">อ่านผลเมื่อ Entry temp เท่ากันที่ 8°C · Draw ต่าง ≤2°C · %OR ต่าง ≤5 จุด หาก covariate หลุด ให้บันทึกเป็น process note และไม่สรุปสมมติฐาน</p>
+    <div class="decision-card">
+      <h3>Covariate check</h3>
+      <div class="decision-grid"><div class="pair-check" id="entryRange">Entry temp · รอข้อมูล A/B</div><div class="pair-check" id="drawRange">Draw temp · รอข้อมูล A/B</div><div class="pair-check" id="orRange">%OR · รอข้อมูล A/B</div></div>
+    </div>
+    <div class="decision-grid" style="margin-top:12px">
+      <article class="decision-card"><h3>H1 · เนื้อ/body fat 10 vs fat 11</h3><div class="pair-check" id="bodyReadout">รอคะแนน Body</div><div class="field" style="margin-top:10px"><label for="h1Verdict">ผล H1</label><select id="h1Verdict" data-path="verdict.h1"><option value="">— เลือก —</option><option>CMDL11 ดีกว่าชัด → เลือก fat 11</option><option>A ≈ B → เลือก fat 10 (ถูกกว่า)</option><option>CMDL10 บางเกิน → fat 11 เป็นพื้น</option><option>เทียบไม่ได้ — covariate หลุด</option><option>ข้อมูลยังไม่พอ</option></select></div></article>
+      <article class="decision-card"><h3>H2 · TS ลดเย็นลิ้น</h3><div class="pair-check" id="coldReadout">รอคะแนน Cold</div><div class="field" style="margin-top:10px"><label for="h2Verdict">ผล H2</label><select id="h2Verdict" data-path="verdict.h2"><option value="">— เลือก —</option><option>ทั้งคู่ดีขึ้น (0–1) → ยืนยันทิศทาง TS/body</option><option>ยังเย็นลิ้น 1–2 → ตรวจ covariate + ทบทวน</option><option>CMDL11 เย็นน้อยกว่า CMDL10 ชัด → body dose-response</option><option>เทียบไม่ได้ — covariate หลุด</option><option>ข้อมูลยังไม่พอ</option></select></div></article>
+      <article class="decision-card"><h3>H3 · PMP 33 กลิ่นนม</h3><div class="pair-check" id="aromaReadout">รอคะแนนกลิ่นกะทิและกลิ่นนม</div><div class="field" style="margin-top:10px"><label for="h3Verdict">ผล H3</label><select id="h3Verdict" data-path="verdict.h3"><option value="">— เลือก —</option><option>กลิ่นกะทิยังนำ → PMP 33 รับได้</option><option>กลิ่นนมทับ → ลด PMP / ทบทวน fat 10</option><option>ข้อมูลยังไม่พอ</option></select></div></article>
+    </div>
+    <div class="grid" style="margin-top:12px"><div class="field"><label for="h1Note">ระบุเพิ่ม H1</label><textarea id="h1Note" data-path="verdict.h1Note"></textarea></div><div class="field"><label for="h2Note">ระบุเพิ่ม H2</label><textarea id="h2Note" data-path="verdict.h2Note"></textarea></div><div class="field"><label for="h3Note">ระบุเพิ่ม H3</label><textarea id="h3Note" data-path="verdict.h3Note"></textarea></div></div>
   </section>
 
   <section class="block tasting-phase" id="notes">
-    <h2 class="block-title"><span class="tag">✓</span> Verdict และขั้นต่อไป</h2>
-    <div class="grid" style="grid-template-columns:1fr 1fr">
-      <div class="field"><label for="conclusion">ข้อสรุป H1–H3</label><textarea id="conclusion" data-path="summary.conclusion" placeholder="H1 จังหวะเติมครีม · H2 SEP แยก · H3 production"></textarea></div>
-      <div class="field"><label for="nextStep">ขั้นต่อไป</label><textarea id="nextStep" data-path="summary.nextStep" placeholder="ทำซ้ำ / ปรับ process / lock วิธีผลิต"></textarea></div>
-      <div class="field"><label for="deviations">ข้อจำกัดในการตีความ / หมายเหตุรวม</label><textarea id="deviations" data-path="summary.deviations" placeholder="สรุปจากข้อผิดพลาดรายถัง หรือจดข้อจำกัดอื่นที่กระทบการแปลผล"></textarea></div>
+    <h2 class="block-title"><span class="tag">✓</span> Decision &amp; Next Steps</h2>
+    <div class="grid">
+      <div class="field"><label for="overallVerdict">Verdict โดยรวม</label><select id="overallVerdict" data-path="summary.overallVerdict"><option value="">— เลือก —</option><option>ผ่าน — lock สูตร TS32</option><option>ผ่านบางส่วน — ต้องปรับ</option><option>ไม่ผ่าน</option></select></div>
+      <div class="field"><label for="selectedTier">เลือก fat tier</label><select id="selectedTier" data-path="summary.selectedTier"><option value="">— เลือก —</option><option>fat 10 · CMDL10</option><option>fat 11 · CMDL11</option><option>ยังไม่เลือก</option></select></div>
+      <div class="field"><label for="validity">ความสมบูรณ์ของการเทียบ</label><select id="validity" data-path="summary.validity"><option value="">— เลือก —</option><option>valid — covariate ผ่าน</option><option>invalid — covariate หลุด</option><option>ข้อมูลยังไม่ครบ</option></select></div>
+      <div class="field wide"><label for="conclusion">ข้อสรุป</label><textarea id="conclusion" data-path="summary.conclusion" placeholder="สรุป H1–H3 และเหตุผลในการเลือกสูตร"></textarea></div>
+      <div class="field"><label for="adjustment">สิ่งที่ต้องปรับ</label><textarea id="adjustment" data-path="summary.adjustment" placeholder="PMP / DEX / fat tier / process"></textarea></div>
+      <div class="field"><label for="nextStep">Action ถัดไป</label><textarea id="nextStep" data-path="summary.nextStep" placeholder="ทำซ้ำ / lock baseline / ออกแบบรอบถัดไป"></textarea></div>
     </div>
+    <div class="special" style="margin-top:12px"><div class="special-title">ข้อจำกัดถาวร</div><div class="rules"><div class="rule"><b>n=1 วัน</b><br>เป็น screening ไม่ใช่ข้อพิสูจน์ ต้องทำซ้ำก่อน lock causation</div><div class="rule"><b>สูตรเดิมไม่ได้ชิมพร้อมกัน</b><br>การบอกว่าดีขึ้นจาก TS 29.8 เป็นความจำ จึงอ่อนกว่าผล A/B side-by-side</div></div></div>
   </section>
 
-  <div class="toolbar" style="justify-content:center;margin-top:18px">
-    <button class="btn primary" type="button" id="printBtn">พิมพ์ / บันทึก PDF</button>
-    <button class="btn" type="button" id="exportBtn">ดาวน์โหลดข้อมูล JSON</button>
-    <label class="btn" for="importFile" style="cursor:pointer">นำเข้าข้อมูล<input id="importFile" type="file" accept="application/json" hidden></label>
-    <button class="btn danger" type="button" id="resetBtn">ล้างแบบฟอร์ม</button>
-  </div>
-
-  <footer>Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit">เงื่อนไขการใช้งาน</a><br>02CM LabRecord R4 · ครีมก่อน/หลังพัก · 17 ก.ค. 2026</footer>
+  <div class="toolbar"><button class="btn primary" type="button" id="printBtn">พิมพ์ / บันทึก PDF</button><button class="btn" type="button" id="exportBtn">ดาวน์โหลดข้อมูล JSON</button><label class="btn" for="importFile" style="cursor:pointer">นำเข้าข้อมูล<input id="importFile" type="file" accept="application/json" hidden></label><button class="btn danger" type="button" id="resetBtn">ล้างแบบฟอร์ม</button></div>
+  <footer>Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html" style="color:inherit">เงื่อนไขการใช้งาน</a><br>02CM LabRecord R4 · CMDL10 vs CMDL11 · สูตร TS32 v8.1.0 · 20 ก.ค. 2026</footer>
 </div>
 
 <script>
-const TANKS = {
-  A:{recipe:'CMDL11',sep:'SEP รวม',cream:'ครีมหลังพัก',setting:'พัก 30 นาที · ปัจจุบัน',star:false},
-  B:{recipe:'CMDL11',sep:'SEP รวม',cream:'ครีมก่อนพัก',setting:'พัก 30 นาที',star:true},
-  C:{recipe:'CMDL11',sep:'SEP แยก',cream:'ครีมก่อนพัก',setting:'พัก 30 นาที · วิธีร้านเดิม',star:false}
+const BATCHES={
+  A:{recipe:'CMDL10',fat:'10',ts:'31',cream:29,water:300,sugar:42,inulin:39,cost:'72.8',role:'Light ไขมันต่ำ · ผ่อน TS 31',star:false},
+  B:{recipe:'CMDL11',fat:'11',ts:'32',cream:57,water:273,sugar:40,inulin:40,cost:'78.8',role:'Light มาตรฐาน · TS 32',star:true}
 };
-const IDS = Object.keys(TANKS);
-const STORAGE_KEY = 'missicecream_cmr4_v3';
-
-function emptyTank(){return {cooling:{start:null,reached10:null},aging:{start:null,stop:null},churnTimer:{start:null,stop:null,overrideMs:null},process:{},or:{},churn:{},texture:{},scores:{}}}
+const IDS=Object.keys(BATCHES),STORAGE_KEY='missicecream_cmr4_v4_ts32',AGING_MS=30*60*1000;
+function emptyTimer(){return {start:null,stop:null}}
+function emptyBatch(){return {timers:{cool10:emptyTimer(),cool4:emptyTimer(),aging:emptyTimer(),churn:emptyTimer()},process:{},or:{},churn:{},texture:{},scores:{}}}
 function localDate(){const d=new Date(),off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10)}
-function freshState(){
-  const tanks={};IDS.forEach(id=>tanks[id]=emptyTank());
-  return {version:3,meta:{date:localDate(),team:'',machine:'',coconutLot:''},tanks,verdict:{h1:'',h2:'',h3:''},theory:{rest:'',sep:'',body:'',setting:'',machine:''},summary:{conclusion:'',nextStep:'',deviations:''},updatedAt:Date.now()};
-}
-function normalize(raw){
-  const base=freshState(), s=(raw&&typeof raw==='object')?raw:{};
-  base.meta=Object.assign(base.meta,s.meta||{});base.verdict=Object.assign(base.verdict,s.verdict||{});base.theory=Object.assign(base.theory,s.theory||{});base.summary=Object.assign(base.summary,s.summary||{});
-  IDS.forEach(id=>{const t=(s.tanks&&s.tanks[id])||{};base.tanks[id]={cooling:Object.assign({},base.tanks[id].cooling,t.cooling||{}),aging:Object.assign({},base.tanks[id].aging,t.aging||{}),churnTimer:Object.assign({},base.tanks[id].churnTimer,t.churnTimer||{}),process:Object.assign({},t.process||{}),or:Object.assign({},t.or||{}),churn:Object.assign({},t.churn||{}),texture:Object.assign({},t.texture||{}),scores:Object.assign({},t.scores||{})}});
-  return base;
-}
-let state;
-try{state=normalize(JSON.parse(localStorage.getItem(STORAGE_KEY)||'null'))}catch(e){state=freshState()}
-
+function freshState(){const batches={};IDS.forEach(id=>batches[id]=emptyBatch());const paired={};['body','cold','ice','aroma','liking'].forEach(k=>paired[k]={choice:'',note:''});return {version:4,meta:{date:localDate(),maker:'',taster:'เล็ก',machine:'Sharp EMC-21',coconutLot:'',productionOrder:''},batches,paired,verdict:{h1:'',h2:'',h3:'',h1Note:'',h2Note:'',h3Note:''},summary:{oldComparison:'',oldComparisonNote:'',overallVerdict:'',selectedTier:'',validity:'',conclusion:'',adjustment:'',nextStep:''},updatedAt:Date.now()}}
+function normalize(raw){const base=freshState(),s=raw&&typeof raw==='object'?raw:{};base.meta=Object.assign(base.meta,s.meta||{});base.verdict=Object.assign(base.verdict,s.verdict||{});base.summary=Object.assign(base.summary,s.summary||{});Object.keys(base.paired).forEach(k=>base.paired[k]=Object.assign(base.paired[k],(s.paired&&s.paired[k])||{}));IDS.forEach(id=>{const b=(s.batches&&s.batches[id])||{};base.batches[id].process=Object.assign({},b.process||{});base.batches[id].or=Object.assign({},b.or||{});base.batches[id].churn=Object.assign({},b.churn||{});base.batches[id].texture=Object.assign({},b.texture||{});base.batches[id].scores=Object.assign({},b.scores||{});Object.keys(base.batches[id].timers).forEach(k=>base.batches[id].timers[k]=Object.assign(emptyTimer(),(b.timers&&b.timers[k])||{}))});return base}
+let state;try{state=normalize(JSON.parse(localStorage.getItem(STORAGE_KEY)||'null'))}catch(e){state=freshState()}
 function getPath(path){return path.split('.').reduce((o,k)=>o==null?undefined:o[k],state)}
 function setPath(path,value){const keys=path.split('.');let o=state;keys.slice(0,-1).forEach(k=>{if(!o[k]||typeof o[k]!=='object')o[k]={};o=o[k]});o[keys.at(-1)]=value;save()}
-let saveFlash;
-function save(){state.updatedAt=Date.now();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));const el=document.getElementById('saveState');el.textContent='บันทึกแล้ว';clearTimeout(saveFlash);saveFlash=setTimeout(()=>el.textContent='บันทึกอัตโนมัติบนเครื่องนี้',1200)}
+let saveFlash;function save(){state.updatedAt=Date.now();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));const el=document.getElementById('saveState');el.textContent='บันทึกแล้ว';clearTimeout(saveFlash);saveFlash=setTimeout(()=>el.textContent='บันทึกอัตโนมัติบนเครื่องนี้',1200)}
 function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-
-function bindInput(el){
-  const path=el.dataset.path;if(!path)return;
-  if(el.type==='radio'){el.checked=getPath(path)===el.value}else if(el.type==='checkbox'){el.checked=!!getPath(path)}else{el.value=getPath(path)??''}
-  const evt=(el.tagName==='SELECT'||el.type==='radio'||el.type==='checkbox'||el.type==='date')?'change':'input';
-  el.addEventListener(evt,()=>{let v=(el.type==='radio'||el.type==='checkbox')?(el.type==='checkbox'?el.checked:el.value):el.value;if(el.type==='number')v=el.value===''?'':Number(el.value);setPath(path,v);afterFieldChange(path)});
-}
+function bindInput(el){const path=el.dataset.path;if(!path)return;const evt=(el.tagName==='SELECT'||el.type==='date')?'change':'input';el.value=getPath(path)??'';el.addEventListener(evt,()=>{let v=el.value;if(el.type==='number')v=v===''?'':Number(v);setPath(path,v);afterFieldChange(path)})}
 function bindAll(){document.querySelectorAll('[data-path]').forEach(bindInput)}
-
-function protocolCards(){document.getElementById('protocolCards').innerHTML=IDS.map(id=>{const t=TANKS[id];return `<article class="tank-card ${t.star?'star':''}"><h3>${id}${t.star?' ★':''}</h3><div class="recipe">${t.recipe}</div><p><b>${t.sep}</b><br>${t.cream}</p><span class="pill">${t.setting}</span></article>`}).join('')}
-function tableHead(){return `<thead><tr><th>รายการ</th>${IDS.map(id=>`<th>${id}${TANKS[id].star?' ★':''}<br><small style="font:500 10px Sarabun;color:var(--muted)">${TANKS[id].recipe}</small></th>`).join('')}</tr></thead>`}
+function tableHead(){return `<thead><tr><th>รายการ</th>${IDS.map(id=>`<th>${id}${BATCHES[id].star?' ★':''}<br><small style="font:600 11px Sarabun;color:var(--muted)">${BATCHES[id].recipe}</small></th>`).join('')}</tr></thead>`}
 function group(label){return `<tr class="group-row"><td colspan="${IDS.length+1}">${label}</td></tr>`}
+function row(label,key,make){return `<tr><td class="row-label">${label}</td>${IDS.map(id=>`<td class="cell">${make(id,key)}</td>`).join('')}</tr>`}
 function measure(path,unit,attrs=''){return `<div class="measure"><input type="number" step="0.1" inputmode="decimal" data-path="${path}" ${attrs}><span class="unit">${unit}</span></div><div class="feedback" data-feedback="${path}"></div>`}
-function textInput(path,placeholder=''){return `<input type="text" data-path="${path}" placeholder="${placeholder}">`}
 function selectInput(path,options){return `<select data-path="${path}"><option value="">— เลือก —</option>${options.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}</select>`}
 function textarea(path,placeholder=''){return `<textarea data-path="${path}" placeholder="${placeholder}"></textarea>`}
-function row(label,key,make,na=[]){return `<tr><td class="row-label">${label}</td>${IDS.map(id=>na.includes(id)?'<td class="cell na">—</td>':`<td class="cell">${make(id,key)}</td>`).join('')}</tr>`}
-function coolingControl(id){return `<div class="cooling-control" id="cooling_${id}"><div class="cooling-clock" id="coolingClock_${id}">00:00:00</div><div class="cooling-actions"><button type="button" class="mini start" data-cooling-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-cooling-action="reached" data-tank="${id}">ถึง 10°C</button></div><div class="cooling-note" id="coolingNote_${id}">ยังไม่เริ่ม</div></div>`}
-function agingControl(id){const timing=id==='A'?'ครีมยังไม่เข้า':'เติมครีมและคนให้เข้ากันแล้ว';return `<div class="aging-control" id="aging_${id}"><div class="aging-clock" id="agingClock_${id}">00:00:00</div><div class="aging-actions"><button type="button" class="mini start" data-aging-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-aging-action="stop" data-tank="${id}">จบ</button></div><div class="aging-note" id="agingNote_${id}">ยังไม่เริ่ม</div><div class="aging-target" id="agingTarget_${id}">${timing} · กด “เริ่ม” พักในน้ำแข็ง 30 นาที (ไม่คน)</div><div class="aging-countdown" id="agingCountdown_${id}"></div></div>`}
-function churnTimerControl(id){return `<div class="churn-control" id="churnTimer_${id}"><div class="churn-clock" id="churnClock_${id}">00:00:00</div><div class="churn-actions"><button type="button" class="mini start" data-churn-action="start" data-tank="${id}">เริ่ม</button><button type="button" class="mini stop" data-churn-action="stop" data-tank="${id}">จบ</button></div><div class="churn-note" id="churnNote_${id}">ยังไม่เริ่ม</div></div>`}
-
+function protocolCards(){document.getElementById('protocolCards').innerHTML=IDS.map(id=>{const b=BATCHES[id];return `<article class="batch-card ${b.star?'star':''}"><h3>${id}${b.star?' ★':''}</h3><div class="recipe">${b.recipe} · fat ${b.fat} · TS ${b.ts}</div><p><b>CRM ${b.cream} g</b> · WTR ${b.water} g · INL ${b.inulin} g<br>${b.role}</p><span class="pill">ต้นทุน ${b.cost} บ/kg</span></article>`}).join('')}
+function fmtClock(ms){let s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),ss=s%60;return [h,m,ss].map(n=>String(n).padStart(2,'0')).join(':')}
+function formatTime(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
+function timerControl(kind,id,startLabel,stopLabel,target=''){return `<div class="timer-control"><div class="timer-clock" id="${kind}Clock_${id}">00:00:00</div><div class="timer-actions"><button type="button" class="mini start" data-timer-kind="${kind}" data-timer-action="start" data-batch="${id}">${startLabel}</button><button type="button" class="mini stop" data-timer-kind="${kind}" data-timer-action="stop" data-batch="${id}">${stopLabel}</button></div><div class="timer-note" id="${kind}Note_${id}">ยังไม่เริ่ม</div>${target?`<div class="timer-target" id="${kind}Target_${id}">${target}</div><div class="timer-countdown" id="${kind}Countdown_${id}"></div>`:''}</div>`}
 function buildProcess(){
-  let h=tableHead()+'<tbody>'+group('การต้ม');
-  h+=row('<div class="instruction-cell label"><b>การต้มถึง 70°C</b></div>','stoveInstruction',(id)=>id==='C'?'<div class="instruction-cell good"><b>ต้ม SEP แยก</b><br>เทรวมแล้วอุ่นกลับถึง 70°C จึงยกลง</div>':'<div class="instruction-cell good"><b>ต้ม SEP รวม</b><br>ถึง 70°C แล้วจึงยกลงจากเตา</div>');
-  h+=row('★ อุณหภูมิในโถก่อน PST <small>ต้อง ≥58°C</small>','prePst',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
-  h+=row('อุณหภูมิจบ PST <small>บันทึกไว้ · คาดหวัง ≥55°C</small>','postPst',(id,k)=>measure(`tanks.${id}.process.${k}`,'°C'));
-  h+=group('ทำเย็นถึง 10°C จริง');
-  h+=row('⏱ Cooling จนถึง 10°C <small>วัดตรงกลาง</small>','to10',(id)=>coolingControl(id));
-  h+=row('<div class="instruction-cell label"><b>อุณหภูมิหลัง Cooling ก่อนเติมครีม</b><br>เป้าหมาย 10°C · ไม่ต้องบันทึกค่า</div>','coolingInstruction',()=>'<div class="instruction-cell good"><b>คนให้มิกซ์ถึง 10°C</b><br>วัดตรงกลางหม้อก่อนทำขั้นตอนถัดไป</div>');
-  h+=group('ครีมก่อน/หลังพัก');
-  h+=row('<div class="instruction-cell label"><b>ก่อนเริ่มพัก</b><br>ครีมเย็น 6°C</div>','beforeRest',(id)=>id==='A'?'<div class="instruction-cell good"><b>ยังไม่เติมครีม</b><br>นำมิกซ์ไปพักในน้ำแข็ง</div>':'<div class="instruction-cell good"><b>เติมครีม 60 g แล้วคนให้เข้ากัน</b><br>นำไปพักในน้ำแข็งได้เลย</div>');
-  h+=row('⏱ เวลาพักจริง <small>ทุกถังพักในน้ำแข็ง 30 นาที · ไม่คน</small>','setting',(id)=>agingControl(id));
-  h+=row('<div class="instruction-cell label"><b>หลังพักครบ 30 นาที</b></div>','afterRest',(id)=>id==='A'?'<div class="instruction-cell good"><b>เติมครีม 60 g (เย็น 6°C)</b><br>คนให้เข้ากัน</div>':'<div class="instruction-cell good"><b>ครีมอยู่ในมิกซ์แล้ว</b><br>ไม่ต้องเติมเพิ่ม</div>');
+  let h=tableHead()+'<tbody>'+group('① แยกละลาย SEP · ต่างเฉพาะน้ำหนักสูตร');
+  h+=row('<div class="instruction-cell label"><b>SEP + SUC + WTR</b><br>คลุก SEP กับ SUC ก่อนเติมน้ำ</div>','group1',(id)=>{const b=BATCHES[id];return `<div class="instruction-cell good"><b>SEP 6 + SUC ${b.sugar} + WTR ${b.water} g</b><br>ใช้น้ำทั้งหมด · ต้มละลายถึง 65°C</div>`});
+  h+=group('② กะทิ–นม');
+  h+=row('<div class="instruction-cell label"><b>CCM + PMP + DEX + INL + SLT</b></div>','group2',(id)=>{const b=BATCHES[id];return `<div class="instruction-cell good"><b>CCM 500 + PMP 33 + DEX 50</b><br>INL ${b.inulin} + SLT 1 g · ทำเหมือนกันทั้ง A/B</div>`});
+  h+=row('<div class="instruction-cell label"><b>รวม ① + ②</b></div>','combine',()=>'<div class="instruction-cell good"><b>รวมแล้วอุ่นถึง 68°C</b><br>เทลง Sharp เพื่อเริ่ม PBT</div>');
+  h+=group('PBT · ปั่น 30 วินาที พัก 10 วินาที x 3 รอบ');
+  h+=row('★ อุณหภูมิ mix เริ่ม PBT <small>เกณฑ์ ≥58°C</small>','startPbt',(id,k)=>measure(`batches.${id}.process.${k}`,'°C'));
+  h+=row('<div class="instruction-cell label"><b>PBT (เดิม PST)</b><br>ระยะเวลาสั้น ไม่ต้องจับเวลาในฟอร์ม</div>','pbtInstruction',()=>'<div class="instruction-cell good"><b>ปั่น 30 วินาที พัก 10 วินาที x 3 รอบ</b><br>ทำเหมือนกันทั้ง A/B</div>');
+  h+=row('อุณหภูมิ end-PBT <small>เกณฑ์ 55°C</small>','endPbt',(id,k)=>measure(`batches.${id}.process.${k}`,'°C'));
+  h+=group('Cooling · เติมครีม · บ่ม');
+  h+=row('⏱ Cooling ถึง ≤10°C <small>วัดตรงกลางมิกซ์</small>','cool10',(id)=>timerControl('cool10',id,'เริ่ม','ถึง ≤10°C'));
+  h+=row('<div class="instruction-cell label"><b>เมื่อมิกซ์ ≤10°C</b><br>เติม CRM แล้วคนให้เข้ากัน</div>','cream',(id)=>`<div class="instruction-cell good"><b>เติม CRM ${BATCHES[id].cream} g</b><br>ทำเหมือนกันตามสูตรของแต่ละ Batch</div>`);
+  h+=row('⏱ Cooling มิกซ์ครบถึง ≤4°C <small>เริ่มหลังเติมครีม</small>','cool4',(id)=>timerControl('cool4',id,'เริ่ม','ถึง ≤4°C'));
+  h+=row('⏱ บ่ม 30 นาที <small>เริ่มเมื่อมิกซ์ครบ ≤4°C</small>','aging',(id)=>timerControl('aging',id,'เริ่มบ่ม','จบบ่ม','บ่ม 30 นาทีเท่ากันทั้ง A/B'));
+  h+=row('อุณหภูมิหลังบ่ม 30 นาที <small>เกณฑ์ 0–4°C</small>','afterAging',(id,k)=>measure(`batches.${id}.process.${k}`,'°C'));
   h+='</tbody>';document.getElementById('processTable').innerHTML=h;
 }
-function buildORBefore(){
-  let h=tableHead()+'<tbody>';
-  h+=row('น้ำหนักมิกซ์ 1 ถ้วย ก่อนปั่น <small>Tare ถ้วยก่อนชั่ง · บันทึกเฉพาะน้ำหนักมิกซ์ · หลีกเลี่ยงฟองขณะชั่ง</small>','mix',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+='</tbody>';document.getElementById('orBeforeTable').innerHTML=h;
-}
-function buildORAfter(){
-  let h=tableHead()+'<tbody>';
-  h+=row('ถ้วยเปล่าก่อนใส่ไอศกรีม','emptyCup',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('ไอศกรีมและถ้วย ครั้งที่ 1 <small>ชั่งน้ำหนักไอศกรีมพร้อมถ้วย · กด 0 ก่อนวางถ้วยที่บรรจุไอศกรีมแล้ว</small>','iceCup1',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('ไอศกรีมและถ้วย ครั้งที่ 2 <small>ชั่งน้ำหนักไอศกรีมพร้อมถ้วย · กด 0 ก่อนวางถ้วยที่บรรจุไอศกรีมแล้ว</small>','iceCup2',(id,k)=>measure(`tanks.${id}.or.${k}`,'g'));
-  h+=row('น้ำหนักไอศกรีมหลังปั่น <small>หักน้ำหนักถ้วยแล้ว</small>','icecreamNet',(id)=>`<div class="feedback" id="iceNet_${id}" style="font-size:15px;padding:7px 2px">—</div><div class="feedback" id="iceNetNote_${id}"></div>`);
-  h+=row('%OR <small>(มิกซ์ − ไอศกรีม) ÷ ไอศกรีม ×100</small>','result',(id)=>`<div class="feedback" id="or_${id}" style="font-size:15px;padding:7px 2px">—</div>`);
-  h+='</tbody>';document.getElementById('orAfterTable').innerHTML=h;
-}
-function buildChurn(){
-  let h=tableHead()+'<tbody>';
-  h+=row('<div class="instruction-cell label"><b>ก่อนเทลงเครื่องปั่น</b><br>จุดกำหนด 8°C · ไม่ต้องบันทึกค่า</div>','entryInstruction',()=>'<div class="instruction-cell good"><b>หลังชั่งมิกซ์ 1 ถ้วยแล้ว ให้เทคืน</b><br>คนให้เหลือ 8°C ก่อนค่อยเทลงเครื่องปั่น</div>');
-  h+=row('★ เวลาปั่น <small>บันทึกอัตโนมัติ</small>','duration',(id)=>churnTimerControl(id));
-  h+=row('★★ Draw temp <small>อุณหภูมิตอนเครื่องหยุด</small>','drawTemp',(id,k)=>measure(`tanks.${id}.churn.${k}`,'°C'));
-  h+='</tbody>';document.getElementById('churnTable').innerHTML=h;
-}
-function buildTexture(){
-  let h=tableHead()+'<tbody>';
-  h+=row('ลักษณะเนื้อเมื่อปั่นเสร็จ','drawTexture',(id,k)=>textarea(`tanks.${id}.texture.${k}`,'ผิว / น้ำซึม / ความแห้ง / สิ่งผิดปกติ'));
-  h+='</tbody>';document.getElementById('textureTable').innerHTML=h;
-}
-function buildProductionDeviations(){
-  let h=tableHead()+'<tbody>';
-  h+=row('ข้อผิดพลาด / Deviation <small>ระบุแยกตาม Batch</small>','deviation',(id)=>textarea(`tanks.${id}.process.deviation`,'ไม่มี / ระบุเหตุการณ์ที่เกิดขึ้น'));
-  h+='</tbody>';document.getElementById('productionDeviationTable').innerHTML=h;
-}
-const SCORE_ROWS=[
-  ['Cold / ความเย็นลิ้น','cold','0 ไม่เย็น → 3 เย็นมาก',range(0,3)],
-  ['Iciness / ความสาก','ice','0 เนียน → 3 หยาบ',range(0,3)],
-  ['Body','body','−2 บางมาก → +2 แน่นมาก',range(-2,2)],
-  ['Liking','liking','0–10',range(0,10)],
-  ['หมายเหตุเพิ่มเติม','note','ผิว / น้ำซึม / กลิ่น',null]
-];
+function buildORBefore(){document.getElementById('orBeforeTable').innerHTML=tableHead()+'<tbody>'+row('น้ำหนักมิกซ์ 1 ถ้วยก่อนปั่น <small>ส่วนไม่มีฟอง · Tare ถ้วยก่อนชั่ง</small>','mix',(id,k)=>measure(`batches.${id}.or.${k}`,'g'))+'</tbody>'}
+function buildChurn(){let h=tableHead()+'<tbody>';h+=row('★★ Entry temp เข้าเครื่องปั่น <small>เป้าหมาย 8°C เท่ากันทั้ง A/B · จดค่าจริง</small>','entryTemp',(id,k)=>measure(`batches.${id}.churn.${k}`,'°C'));h+=row('⏱ ระยะเวลาปั่น <small>บันทึกอัตโนมัติ</small>','duration',(id)=>timerControl('churn',id,'เริ่มปั่น','หยุดปั่น'));h+=row('★★ Draw temp <small>ต่างกัน ≤2°C</small>','drawTemp',(id,k)=>measure(`batches.${id}.churn.${k}`,'°C'));h+='</tbody>';document.getElementById('churnTable').innerHTML=h}
+function buildORAfter(){let h=tableHead()+'<tbody>';h+=row('ถ้วยเปล่าก่อนใส่ไอศกรีม','emptyCup',(id,k)=>measure(`batches.${id}.or.${k}`,'g'));h+=row('ไอศกรีมและถ้วย ครั้งที่ 1','iceCup1',(id,k)=>measure(`batches.${id}.or.${k}`,'g'));h+=row('ไอศกรีมและถ้วย ครั้งที่ 2','iceCup2',(id,k)=>measure(`batches.${id}.or.${k}`,'g'));h+=row('น้ำหนักไอศกรีมหลังปั่น <small>หักน้ำหนักถ้วยแล้ว</small>','icecreamNet',(id)=>`<div class="feedback" id="iceNet_${id}" style="font-size:16px;padding:7px 2px">—</div><div class="feedback" id="iceNetNote_${id}"></div>`);h+=row('%OR <small>(มิกซ์ − ไอศกรีม) ÷ ไอศกรีม ×100 · target 35–45</small>','result',(id)=>`<div class="feedback" id="or_${id}" style="font-size:16px;padding:7px 2px">—</div>`);h+='</tbody>';document.getElementById('orAfterTable').innerHTML=h}
+function buildTexture(){let h=tableHead()+'<tbody>';h+=row('ลักษณะเนื้อตอนดึงออก','drawTexture',(id,k)=>selectInput(`batches.${id}.texture.${k}`,['แห้ง ปกติ','มีน้ำซึม เกือบปกติ','เปียก เหลว']));h+=row('รายละเอียดเพิ่มเติม','textureNote',(id,k)=>textarea(`batches.${id}.texture.${k}`,'สิ่งที่สังเกตเห็น'));h+='</tbody>';document.getElementById('textureTable').innerHTML=h}
+function buildProductionDeviations(){document.getElementById('productionDeviationTable').innerHTML=tableHead()+'<tbody>'+row('ข้อผิดพลาด / Deviation <small>ระบุแยกตาม Batch</small>','deviation',(id)=>textarea(`batches.${id}.process.deviation`,'ไม่มี / ระบุเหตุการณ์ที่เกิดขึ้น'))+'</tbody>'}
 function range(a,b){return Array.from({length:b-a+1},(_,i)=>String(a+i))}
-function buildScores(){let h=tableHead()+'<tbody>';SCORE_ROWS.forEach(([label,key,scale,opts])=>{h+=row(`${label}${scale?` <small>${scale}</small>`:''}`,key,(id)=>opts?selectInput(`tanks.${id}.scores.${key}`,opts):textarea(`tanks.${id}.scores.${key}`,'บันทึก'))});h+='</tbody>';document.getElementById('scoreTable').innerHTML=h}
-function buildTheoryTable(){
-  const rows=[['จังหวะเติมครีมก่อน/หลังพัก','สูง (ทดสอบตรงใน R4)','rest'],['ต้มรวม SEP','ปานกลาง','sep'],['สูตร/body CMDL11 บาง','สูง แต่คงที่ทุกถัง R4','body'],['passive setting โซนผิด','ปานกลาง','setting'],['ตัวแปรเครื่อง 8°C/draw/OR','คุมแล้วใน R4','machine']];
-  let h='<thead><tr><th>ผู้ต้องสงสัย</th><th>ก่อน R4</th><th>หลัง R4</th></tr></thead><tbody>';
-  rows.forEach(([name,before,key])=>{h+=`<tr><td class="row-label">${name}</td><td class="cell">${before}</td><td class="cell">${selectInput(`theory.${key}`,['สูง','ปานกลาง','ต่ำ','ตัดออกได้','ข้อมูลยังไม่พอ'])}</td></tr>`});
-  h+='</tbody>';document.getElementById('theoryTable').innerHTML=h;
-}
-
-function fmtClock(ms){let s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600);s%=3600;const m=Math.floor(s/60),ss=s%60;return [h,m,ss].map(n=>String(n).padStart(2,'0')).join(':')}
-const AGING_MS=30*60*1000;
-function formatTime(ts){return new Date(ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
-function updateCoolingTimers(){IDS.forEach(id=>{const c=state.tanks[id].cooling||{},clock=document.getElementById(`coolingClock_${id}`),note=document.getElementById(`coolingNote_${id}`);if(!clock||!note)return;const elapsed=c.start?(c.reached10||Date.now())-c.start:0;clock.textContent=fmtClock(elapsed);if(!c.start){const old=numberAt(`tanks.${id}.process.to10`);note.textContent=old==null?'ยังไม่เริ่ม':`บันทึกเดิม ${old.toFixed(1)} นาที`;return}if(!c.reached10){note.textContent=`เริ่ม ${formatTime(c.start)} · กำลังคนช้าๆ ถึง 10°C`;return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(c.start)} · ถึง 10°C ${formatTime(c.reached10)} · ${mins.toFixed(1)} นาที`})}
-function coolingAction(action,id){const c=state.tanks[id].cooling;if(action==='start'){if((c.start||c.reached10)&&!confirm(`เริ่มจับเวลาทำเย็นถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;c.start=Date.now();c.reached10=null;state.tanks[id].process.to10=''}else if(action==='reached'){if(!c.start){alert('กด “เริ่ม” ทำเย็นก่อนค่ะ');return}if(c.reached10&&!confirm(`บันทึกเวลาถึง 10°C ของถัง ${id} ใหม่?`))return;c.reached10=Date.now();state.tanks[id].process.to10=Number(((c.reached10-c.start)/60000).toFixed(1))}save();updateCoolingTimers();validateAll()}
-
-function updateAgingTimers(){IDS.forEach(id=>{const a=state.tanks[id].aging||{},clock=document.getElementById(`agingClock_${id}`),note=document.getElementById(`agingNote_${id}`),target=document.getElementById(`agingTarget_${id}`),countdown=document.getElementById(`agingCountdown_${id}`);if(!clock||!note||!target||!countdown)return;const now=a.stop||Date.now(),elapsed=a.start?Math.max(0,now-a.start):0;clock.textContent=fmtClock(elapsed);countdown.classList.remove('ready');if(!a.start){note.textContent='ยังไม่เริ่ม';target.textContent=`${id==='A'?'ครีมยังไม่เข้า':'เติมครีมและคนให้เข้ากันแล้ว'} · กด “เริ่ม” พักในน้ำแข็ง 30 นาที (ไม่คน)`;countdown.textContent='';return}const plannedEnd=a.start+AGING_MS,remain=plannedEnd-now;target.textContent=`กำหนดจบ เวลา ${formatTime(plannedEnd)}`;if(!a.stop){note.textContent=`เริ่ม ${formatTime(a.start)} · กำลังพักในน้ำแข็ง (ไม่คน)`;if(remain>0){countdown.textContent=`เหลือ ${fmtClock(remain)}`}else{countdown.textContent='ครบ 30 นาทีแล้ว · กด “จบ”';countdown.classList.add('ready')}return}const mins=elapsed/60000;note.textContent=`เริ่ม ${formatTime(a.start)} · จบ ${formatTime(a.stop)} · ${mins.toFixed(1)} นาที`;if(remain>0){countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`}else{countdown.textContent='จบการพักแล้ว';countdown.classList.add('ready')}})}
-function agingAction(action,id){const a=state.tanks[id].aging;if(action==='start'){if((a.start||a.stop)&&!confirm(`เริ่มบ่มถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;a.start=Date.now();a.stop=null;state.tanks[id].process.agingMinutes=''}else if(action==='stop'){if(!a.start){alert('กด “เริ่ม” บ่มก่อนค่ะ');return}if(a.stop&&!confirm(`บันทึกเวลาจบบ่มของถัง ${id} ใหม่?`))return;a.stop=Date.now();state.tanks[id].process.agingMinutes=Number(((a.stop-a.start)/60000).toFixed(1))}save();updateAgingTimers();validateAll()}
-
-function formatDurationValue(ms){let seconds=Math.max(0,Math.floor(ms/1000));const minutes=Math.floor(seconds/60);seconds%=60;return `${minutes}:${String(seconds).padStart(2,'0')}`}
-function parseDurationValue(value){const text=String(value??'').trim();if(/^\d+(\.\d+)?$/.test(text))return Number(text)*60000;const parts=text.split(':').map(Number);if(parts.some(x=>!Number.isFinite(x)||x<0||!Number.isInteger(x)))return null;if(parts.length===2&&parts[1]<60)return (parts[0]*60+parts[1])*1000;if(parts.length===3&&parts[1]<60&&parts[2]<60)return (parts[0]*3600+parts[1]*60+parts[2])*1000;return null}
-function updateChurnTimers(){IDS.forEach(id=>{const t=state.tanks[id].churnTimer||{},clock=document.getElementById(`churnClock_${id}`),note=document.getElementById(`churnNote_${id}`);if(!clock||!note)return;const saved=state.tanks[id].churn.duration||'',parsedSaved=parseDurationValue(saved);let elapsed=0;if(t.start)elapsed=Math.max(0,(t.stop||Date.now())-t.start);else if(parsedSaved!=null)elapsed=parsedSaved;clock.textContent=fmtClock(elapsed);if(t.start&&!t.stop){note.textContent=`เริ่ม ${formatTime(t.start)} · กำลังปั่น`;return}if(t.start&&t.stop){const duration=formatDurationValue(elapsed);note.textContent=`เริ่ม ${formatTime(t.start)} · จบ ${formatTime(t.stop)} · ${duration}`;return}note.textContent=saved?`บันทึกเดิม ${saved}`:'ยังไม่เริ่ม'})}
-function churnTimerAction(action,id){const t=state.tanks[id].churnTimer,churn=state.tanks[id].churn;if(action==='start'){if((t.start||t.stop||churn.duration)&&!confirm(`เริ่มเวลาปั่นถัง ${id} ใหม่? เวลาที่บันทึกเดิมจะถูกแทนที่`))return;t.start=Date.now();t.stop=null;t.overrideMs=null;churn.duration=''}else if(action==='stop'){if(!t.start){alert('กด “เริ่ม” เวลาปั่นก่อนค่ะ');return}if(t.stop&&!confirm(`บันทึกเวลาจบปั่นของถัง ${id} ใหม่?`))return;t.stop=Date.now();t.overrideMs=null;churn.duration=formatDurationValue(t.stop-t.start)}save();updateChurnTimers()}
-
+const SCORE_ROWS=[['Scoopability / ตักง่าย','scoop','bipolar −3/+3',range(-3,3)],['ความหวานโดยรวม','sweetness','bipolar −3/+3',range(-3,3)],['ความข้น / Body','body','bipolar −3/+3',range(-3,3)],['เนื้อแน่น','firmness','bipolar −3/+3',range(-3,3)],['Creamy หอมมัน','creamy','presence 0–3',range(0,3)],['เย็นลิ้น (Cold) ⭐','cold','−3 อุ่น → +3 เย็นจัด',range(-3,3)],['สาก (Iciness) ⭐','ice','presence 0–3',range(0,3)],['อัตราการละลาย','melt','bipolar −3/+3',range(-3,3)],['กลิ่นกะทิสด ⭐','coconutAroma','presence 0–3',range(0,3)],['กลิ่นนม (dairy) ⭐','dairyAroma','presence 0–3',range(0,3)],['ชอบโดยรวม','liking','Liking 0–10',range(0,10)],['หมายเหตุ','note','แยก Cold / Iciness / Body',null]];
+function buildScores(){let h=tableHead()+'<tbody>';SCORE_ROWS.forEach(([label,key,scale,opts])=>h+=row(`${label} <small>${scale}</small>`,key,(id)=>opts?selectInput(`batches.${id}.scores.${key}`,opts):textarea(`batches.${id}.scores.${key}`,'บันทึก')));h+='</tbody>';document.getElementById('scoreTable').innerHTML=h}
+const PAIRED_ROWS=[['body / ความแน่น','body'],['เย็นลิ้น (ตัวไหนเย็นน้อยกว่า = ดีกว่า)','cold'],['สาก','ice'],['กลิ่นกะทิ vs กลิ่นนม','aroma'],['ความชอบรวม','liking']];
+function buildPaired(){let h='<thead><tr><th>ประเด็น</th><th>ผลเทียบคู่</th><th>บันทึก</th></tr></thead><tbody>';PAIRED_ROWS.forEach(([label,key])=>h+=`<tr><td class="row-label">${label}</td><td class="cell">${selectInput(`paired.${key}.choice`,['A เด่น','B เด่น','ใกล้กัน'])}</td><td class="cell">${textarea(`paired.${key}.note`,'บันทึก')}</td></tr>`);h+='</tbody>';document.getElementById('pairedTable').innerHTML=h}
+function timerAction(kind,action,id){const t=state.batches[id].timers[kind];if(action==='start'){if((t.start||t.stop)&&!confirm(`เริ่มจับเวลา ${kind} ของ Batch ${id} ใหม่?`))return;t.start=Date.now();t.stop=null}else{if(!t.start){alert('กดเริ่มจับเวลาก่อนค่ะ');return}if(t.stop&&!confirm(`บันทึกเวลาจบ ${kind} ของ Batch ${id} ใหม่?`))return;t.stop=Date.now();const elapsed=t.stop-t.start;if(kind==='churn')state.batches[id].churn.duration=fmtClock(elapsed);else state.batches[id].process[`${kind}Minutes`]=Number((elapsed/60000).toFixed(1))}save();updateTimers();validateAll()}
+function updateTimers(){IDS.forEach(id=>['cool10','cool4','aging','churn'].forEach(kind=>{const t=state.batches[id].timers[kind],clock=document.getElementById(`${kind}Clock_${id}`),note=document.getElementById(`${kind}Note_${id}`);if(!clock||!note)return;const now=t.stop||Date.now(),elapsed=t.start?Math.max(0,now-t.start):0;clock.textContent=fmtClock(elapsed);if(!t.start)note.textContent='ยังไม่เริ่ม';else if(!t.stop)note.textContent=`เริ่ม ${formatTime(t.start)} · กำลังจับเวลา`;else note.textContent=`เริ่ม ${formatTime(t.start)} · จบ ${formatTime(t.stop)} · ${fmtClock(elapsed)}`;if(kind==='aging'){const countdown=document.getElementById(`${kind}Countdown_${id}`),target=document.getElementById(`${kind}Target_${id}`);countdown.classList.remove('ready');if(!t.start){target.textContent='บ่ม 30 นาทีเท่ากันทั้ง A/B';countdown.textContent=''}else{const end=t.start+AGING_MS,remain=end-now;target.textContent=`กำหนดครบ ${formatTime(end)}`;if(!t.stop&&remain>0)countdown.textContent=`เหลือ ${fmtClock(remain)}`;else if(!t.stop){countdown.textContent='ครบ 30 นาทีแล้ว · กด “จบบ่ม”';countdown.classList.add('ready')}else if(remain>0)countdown.textContent=`จบก่อนกำหนด ${fmtClock(remain)}`;else{countdown.textContent='จบการบ่มแล้ว';countdown.classList.add('ready')}}}}))}
 function numberAt(path){const v=getPath(path);return v===''||v==null?null:Number(v)}
-function calculatedOverrun(id){const mix=numberAt(`tanks.${id}.or.mix`),cup=numberAt(`tanks.${id}.or.emptyCup`),gross1=numberAt(`tanks.${id}.or.iceCup1`),gross2=numberAt(`tanks.${id}.or.iceCup2`);if([mix,cup,gross1,gross2].some(v=>v==null))return null;const net1=gross1-cup,net2=gross2-cup;if(net1<=0||net2<=0)return null;const ice=Math.abs(net1-net2)>5?Math.max(net1,net2):(net1+net2)/2;return (mix-ice)/ice*100}
-function rangeStatus(values,limit){
-  if(values.some(v=>v==null))return {ready:false,pass:false};
-  const min=Math.min(...values),max=Math.max(...values);
-  return {ready:true,pass:max-min<=limit,min,max,range:max-min};
-}
-function updateRangeReadout(elId,label,ids,values,limit,unit,rangeUnit){
-  const el=document.getElementById(elId);if(!el)return;
-  const status=rangeStatus(values,limit);
-  if(!status.ready){el.textContent=`${label} A–C · รอข้อมูลครบ 3 ถัง`;el.className='pair-check';return}
-  const minId=ids[values.indexOf(status.min)],maxId=ids[values.indexOf(status.max)];
-  el.textContent=`${label} · ต่ำสุด ${minId} ${status.min.toFixed(1)}${unit} · สูงสุด ${maxId} ${status.max.toFixed(1)}${unit} · ช่วง ${status.range.toFixed(1)}${rangeUnit}${status.pass?' · ผ่านเกณฑ์':` (> ${limit}${rangeUnit}) · ⚠️ เทียบไม่ได้`}`;
-  el.className=`pair-check ${status.pass?'good':'bad'}`;
-}
-function covariateState(){
-  const draw=IDS.map(id=>numberAt(`tanks.${id}.churn.drawTemp`)),overrun=IDS.map(calculatedOverrun);
-  const states=[rangeStatus(draw,2),rangeStatus(overrun,5)];
-  return {ready:states.every(x=>x.ready),pass:states.every(x=>x.ready&&x.pass),draw,overrun};
-}
-function updateCovariates(){
-  const c=covariateState();
-  updateRangeReadout('drawRange','Draw temp',IDS,c.draw,2,'°C','°C');
-  updateRangeReadout('orRange','%OR',IDS,c.overrun,5,'%',' จุด');
-}
-function updateHypothesis(elId,leftId,rightId,leftLabel,rightLabel,successText){
-  const el=document.getElementById(elId);if(!el)return;
-  const left=numberAt(`tanks.${leftId}.scores.cold`),right=numberAt(`tanks.${rightId}.scores.cold`);
-  if(left==null||right==null){el.textContent=`${leftLabel} vs ${rightLabel} · รอคะแนน Cold`;el.className='pair-check';return}
-  const improvement=left-right,c=covariateState();
-  let result=improvement>=1?`✓ ${successText}`:improvement===0?'ไม่ต่าง':improvement>0?'ดีขึ้นน้อยกว่า 1 จุด':`${rightId} เย็นลิ้นมากกว่า ${leftId}`;
-  if(c.ready&&!c.pass)result+=' · ⚠️ covariate หลุด ห้ามสรุป';
-  else if(!c.ready)result+=' · รอ covariate';
-  el.textContent=`${leftLabel} ${left.toFixed(1)} · ${rightLabel} ${right.toFixed(1)} · ลดลง ${improvement.toFixed(1)} จุด · ${result}`;
-  el.className=`pair-check ${c.ready&&!c.pass?'bad':improvement>=1?'good':''}`;
-}
-function updatePostTastingAnalysis(){
-  updateCovariates();
-  updateHypothesis('h1Readout','A','B','A ครีมหลังพัก','B ครีมก่อนพัก','ครีมก่อนพักช่วยลดเย็นลิ้น');
-  updateHypothesis('h2Readout','B','C','B SEP รวม','C SEP แยก','ต้มแยกช่วยเสริม');
-  updateHypothesis('h3Readout','A','C','A PSS ปัจจุบัน','C วิธีร้านเดิม','วิธีร้านเดิมกู้อุ่นลิ้นได้');
-}
+function calculatedOverrun(id){const mix=numberAt(`batches.${id}.or.mix`),cup=numberAt(`batches.${id}.or.emptyCup`),g1=numberAt(`batches.${id}.or.iceCup1`),g2=numberAt(`batches.${id}.or.iceCup2`);if([mix,cup,g1,g2].some(v=>v==null))return null;const n1=g1-cup,n2=g2-cup;if(n1<=0||n2<=0)return null;const ice=Math.abs(n1-n2)>5?Math.max(n1,n2):(n1+n2)/2;return (mix-ice)/ice*100}
 function feedback(path,msg,kind=''){const el=document.querySelector(`[data-feedback="${path}"]`);if(el){el.textContent=msg;el.className=`feedback ${kind}`}}
-function validateTank(id){
-  const base=`tanks.${id}.process.`;
-  const pre=numberAt(base+'prePst'),post=numberAt(base+'postPst');
-  feedback(base+'prePst',pre==null?'':pre>=58?'✓ ผ่านเกณฑ์':'ห้าม PST · อุ่นถึง 70°C ใหม่',pre>=58?'good':pre==null?'':'bad');
-  feedback(base+'postPst',post==null?'':post>=55?'✓ ≥55°C':'ต่ำกว่า 55°C · บันทึก deviation',post>=55?'good':post==null?'':'bad');
-  const mix=numberAt(`tanks.${id}.or.mix`),cup=numberAt(`tanks.${id}.or.emptyCup`),gross1=numberAt(`tanks.${id}.or.iceCup1`),gross2=numberAt(`tanks.${id}.or.iceCup2`),netOut=document.getElementById(`iceNet_${id}`),netNote=document.getElementById(`iceNetNote_${id}`),out=document.getElementById(`or_${id}`);
-  let chosenIce=null;if(cup!=null&&gross1!=null&&gross2!=null){const net1=gross1-cup,net2=gross2-cup;if(net1>0&&net2>0){const diff=Math.abs(net1-net2),useHigher=diff>5;chosenIce=useHigher?Math.max(net1,net2):(net1+net2)/2;netOut.textContent=`${chosenIce.toFixed(1)} g`;netOut.className='feedback good';netNote.textContent=`ครั้งที่ 1 ${net1.toFixed(1)} g · ครั้งที่ 2 ${net2.toFixed(1)} g · ต่าง ${diff.toFixed(1)} g → ${useHigher?'ใช้ค่าที่มากกว่า':'ใช้ค่าเฉลี่ย'}`;netNote.className=`feedback ${useHigher?'bad':'good'}`;state.tanks[id].or.icecreamNet=Number(chosenIce.toFixed(1));state.tanks[id].or.icecreamMethod=useHigher?'higher':'average'}else{netOut.textContent='ตรวจน้ำหนัก';netOut.className='feedback bad';netNote.textContent='น้ำหนักไอศกรีมพร้อมถ้วยต้องมากกว่าน้ำหนักถ้วยเปล่า';netNote.className='feedback bad';state.tanks[id].or.icecreamNet='';state.tanks[id].or.icecreamMethod=''}}else{netOut.textContent='—';netOut.className='feedback';netNote.textContent='';netNote.className='feedback';state.tanks[id].or.icecreamNet='';state.tanks[id].or.icecreamMethod=''}
-  if(mix!=null&&chosenIce>0){const or=(mix-chosenIce)/chosenIce*100;out.textContent=`${or.toFixed(1)} %`;out.className='feedback good'}else{out.textContent='—';out.className='feedback'}
+function validateBatch(id){
+  const base=`batches.${id}.process.`,start=numberAt(base+'startPbt'),end=numberAt(base+'endPbt'),aged=numberAt(base+'afterAging'),entry=numberAt(`batches.${id}.churn.entryTemp`);
+  feedback(base+'startPbt',start==null?'':start>=58?'✓ ผ่าน ≥58°C':'ต่ำกว่า 58°C · บันทึก Deviation',start>=58?'good':start==null?'':'bad');
+  feedback(base+'endPbt',end==null?'':end>=55?'✓ ผ่านเกณฑ์ 55°C':'ต่ำกว่า 55°C · บันทึก Deviation',end>=55?'good':end==null?'':'bad');
+  feedback(base+'afterAging',aged==null?'':aged>=0&&aged<=4?'✓ อยู่ในช่วง 0–4°C':'นอกช่วง 0–4°C',aged>=0&&aged<=4?'good':aged==null?'':'bad');
+  feedback(`batches.${id}.churn.entryTemp`,entry==null?'':Math.abs(entry-8)<.05?'✓ 8°C':'ไม่ใช่ 8°C · บันทึกค่าจริงและ Deviation',Math.abs(entry-8)<.05?'good':entry==null?'':'bad');
+  const mix=numberAt(`batches.${id}.or.mix`),cup=numberAt(`batches.${id}.or.emptyCup`),g1=numberAt(`batches.${id}.or.iceCup1`),g2=numberAt(`batches.${id}.or.iceCup2`),net=document.getElementById(`iceNet_${id}`),note=document.getElementById(`iceNetNote_${id}`),out=document.getElementById(`or_${id}`);
+  let chosen=null;
+  if(cup!=null&&g1!=null&&g2!=null){
+    const n1=g1-cup,n2=g2-cup;
+    if(n1>0&&n2>0){
+      const diff=Math.abs(n1-n2),higher=diff>5;chosen=higher?Math.max(n1,n2):(n1+n2)/2;
+      net.textContent=`${chosen.toFixed(1)} g`;net.className='feedback good';note.textContent=`ครั้งที่ 1 ${n1.toFixed(1)} g · ครั้งที่ 2 ${n2.toFixed(1)} g · ต่าง ${diff.toFixed(1)} g → ${higher?'ใช้ค่ามากกว่า':'ใช้ค่าเฉลี่ย'}`;note.className=`feedback ${higher?'bad':'good'}`;state.batches[id].or.icecreamNet=Number(chosen.toFixed(1));
+    }else{net.textContent='ตรวจน้ำหนัก';net.className='feedback bad';note.textContent='น้ำหนักพร้อมถ้วยต้องมากกว่าถ้วยเปล่า';note.className='feedback bad'}
+  }else{net.textContent='—';net.className='feedback';note.textContent='';note.className='feedback'}
+  if(mix!=null&&chosen>0){const value=(mix-chosen)/chosen*100;out.textContent=`${value.toFixed(1)} %${value>=35&&value<=45?' · ผ่าน 35–45':' · นอกเป้าหมาย 35–45'}`;out.className=`feedback ${value>=35&&value<=45?'good':'bad'}`}else{out.textContent='—';out.className='feedback'}
 }
-function validateAll(){IDS.forEach(validateTank)}
-function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.')||path.includes('.churn.'))validateAll();if(path.includes('.process.')||path.includes('.or.')||path.includes('.churn.')||path.includes('.scores.')||path.includes('.texture.'))updatePostTastingAnalysis()}
-
-function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CMR4-${state.meta.date||'data'}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function rangeState(values,limit){if(values.some(v=>v==null))return {ready:false,pass:false};const min=Math.min(...values),max=Math.max(...values);return {ready:true,pass:max-min<=limit,min,max,range:max-min}}
+function updateRange(id,label,values,limit,unit,requireEight=false){const el=document.getElementById(id),s=rangeState(values,limit);if(!s.ready){el.textContent=`${label} · รอข้อมูล A/B`;el.className='pair-check';return s}const targetPass=!requireEight||values.every(v=>Math.abs(v-8)<.05),pass=s.pass&&targetPass;el.textContent=`${label} · A ${values[0].toFixed(1)}${unit} · B ${values[1].toFixed(1)}${unit} · ต่าง ${s.range.toFixed(1)}${unit}${pass?' · ผ่านเกณฑ์':' · ⚠️ ไม่ผ่านเกณฑ์'}`;el.className=`pair-check ${pass?'good':'bad'}`;return Object.assign(s,{pass})}
+function covariateState(){const entry=IDS.map(id=>numberAt(`batches.${id}.churn.entryTemp`)),draw=IDS.map(id=>numberAt(`batches.${id}.churn.drawTemp`)),or=IDS.map(calculatedOverrun);const states=[rangeState(entry,.1),rangeState(draw,2),rangeState(or,5)];if(states[0].ready)states[0].pass=states[0].pass&&entry.every(v=>Math.abs(v-8)<.05);return {ready:states.every(s=>s.ready),pass:states.every(s=>s.ready&&s.pass),entry,draw,or}}
+function scoreFact(id,key){return numberAt(`batches.${id}.scores.${key}`)}
+function updateAnalysis(){const c=covariateState();updateRange('entryRange','Entry temp',c.entry,.1,'°C',true);updateRange('drawRange','Draw temp',c.draw,2,'°C');updateRange('orRange','%OR',c.or,5,' จุด');const bodyA=scoreFact('A','body'),bodyB=scoreFact('B','body'),bodyEl=document.getElementById('bodyReadout');bodyEl.textContent=bodyA==null||bodyB==null?'รอคะแนน Body':`Body · A ${bodyA} · B ${bodyB} · B−A ${(bodyB-bodyA).toFixed(1)}${c.ready&&!c.pass?' · ⚠️ covariate หลุด':''}`;bodyEl.className=`pair-check ${c.ready&&!c.pass?'bad':''}`;const coldA=scoreFact('A','cold'),coldB=scoreFact('B','cold'),coldEl=document.getElementById('coldReadout');coldEl.textContent=coldA==null||coldB==null?'รอคะแนน Cold':`Cold · A ${coldA} · B ${coldB} · ${coldA<=1&&coldB<=1?'ทั้งคู่ 0–1':'มีอย่างน้อยหนึ่งสูตร >1'}${c.ready&&!c.pass?' · ⚠️ covariate หลุด':''}`;coldEl.className=`pair-check ${c.ready&&!c.pass?'bad':coldA<=1&&coldB<=1?'good':''}`;const ca=IDS.map(id=>scoreFact(id,'coconutAroma')),da=IDS.map(id=>scoreFact(id,'dairyAroma')),aromaEl=document.getElementById('aromaReadout');if([...ca,...da].some(v=>v==null)){aromaEl.textContent='รอคะแนนกลิ่นกะทิและกลิ่นนม';aromaEl.className='pair-check'}else{const coconutLeads=ca.every((v,i)=>v>=da[i]);aromaEl.textContent=`A กะทิ ${ca[0]} / นม ${da[0]} · B กะทิ ${ca[1]} / นม ${da[1]} · ${coconutLeads?'กลิ่นกะทิยังนำ/ไม่ต่ำกว่านม':'มีกลิ่นนมสูงกว่ากะทิ'}`;aromaEl.className=`pair-check ${coconutLeads?'good':'bad'}`}}
+function validateAll(){IDS.forEach(validateBatch);updateAnalysis()}
+function afterFieldChange(path){if(path.includes('.process.')||path.includes('.or.')||path.includes('.churn.')||path.includes('.scores.'))validateAll()}
+function exportJSON(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`CMR4-${state.meta.date||'data'}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function importJSON(file){const reader=new FileReader();reader.onload=()=>{try{state=normalize(JSON.parse(reader.result));save();renderAll();alert('นำเข้าข้อมูลเรียบร้อยค่ะ')}catch(e){alert('ไฟล์ข้อมูลไม่ถูกต้อง')}};reader.readAsText(file)}
 function resetAll(){if(!confirm('ล้างข้อมูล CMR4 ทั้งหมดบนเครื่องนี้? การล้างย้อนกลับไม่ได้'))return;state=freshState();save();renderAll()}
-function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>{const path=el.dataset.path;if(el.type==='radio')el.checked=getPath(path)===el.value;else if(el.type==='checkbox')el.checked=!!getPath(path);else el.value=getPath(path)??''});updateCoolingTimers();updateAgingTimers();updateChurnTimers();validateAll();updatePostTastingAnalysis()}
-
-protocolCards();buildProcess();buildORBefore();buildChurn();buildORAfter();buildTexture();buildProductionDeviations();buildScores();buildTheoryTable();bindAll();renderAll();
-document.getElementById('processTable').addEventListener('click',e=>{const coolingButton=e.target.closest('[data-cooling-action]');if(coolingButton){coolingAction(coolingButton.dataset.coolingAction,coolingButton.dataset.tank);return}const agingButton=e.target.closest('[data-aging-action]');if(agingButton)agingAction(agingButton.dataset.agingAction,agingButton.dataset.tank)});
-document.getElementById('churnTable').addEventListener('click',e=>{const button=e.target.closest('[data-churn-action]');if(button)churnTimerAction(button.dataset.churnAction,button.dataset.tank)});
-document.getElementById('printBtn').addEventListener('click',()=>window.print());
-document.getElementById('exportBtn').addEventListener('click',exportJSON);
-document.getElementById('importFile').addEventListener('change',e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value='' });
-document.getElementById('resetBtn').addEventListener('click',resetAll);
-setInterval(()=>{updateCoolingTimers();updateAgingTimers();updateChurnTimers()},1000);
+function renderAll(){document.querySelectorAll('[data-path]').forEach(el=>el.value=getPath(el.dataset.path)??'');updateTimers();validateAll()}
+protocolCards();buildProcess();buildORBefore();buildChurn();buildORAfter();buildTexture();buildProductionDeviations();buildScores();buildPaired();bindAll();renderAll();
+document.getElementById('processTable').addEventListener('click',e=>{const b=e.target.closest('[data-timer-action]');if(b)timerAction(b.dataset.timerKind,b.dataset.timerAction,b.dataset.batch)});
+document.getElementById('churnTable').addEventListener('click',e=>{const b=e.target.closest('[data-timer-action]');if(b)timerAction(b.dataset.timerKind,b.dataset.timerAction,b.dataset.batch)});
+document.getElementById('printBtn').addEventListener('click',()=>window.print());document.getElementById('exportBtn').addEventListener('click',exportJSON);document.getElementById('importFile').addEventListener('change',e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value=''});document.getElementById('resetBtn').addEventListener('click',resetAll);setInterval(updateTimers,1000);
 </script>
 </body>
 </html>
