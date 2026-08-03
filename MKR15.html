@@ -325,7 +325,8 @@ const BOIL=[
  N("temp_pbt_start","อุณหภูมิเริ่ม PBT","เกณฑ์ 60–65°C","°C"),
  N("temp_pbt_end","อุณหภูมิ end-PBT","เกณฑ์ ≥ 50°C","°C"),
  N("cream_add_temp","เติมครีมตอนกี่องศา","เป้า ≤ 10°C","°C"),
- N("cool_total","เวลา cooling ถึง 4°C","บันทึกเฉยๆ — B นานกว่าเป็นธรรมดา","นาที"),
+ R("cooling","⏱ Cooling ถึง 4°C","เริ่มทันทีหลัง PBT · หยุดเมื่อมิกซ์ครบส่วนถึง 4°C","เริ่ม Cooling","ถึง 4°C"),
+ C("cool_minutes","เวลา Cooling จริง","คำนวณจากนาฬิกา"),
 ];
 const AGE=[
  R("age","⏱ เวลาบ่มจริง","เป้า 30 นาที · เริ่มเมื่อมิกซ์ครบถึง 4°C","เริ่มบ่ม","จบบ่ม"),
@@ -481,7 +482,7 @@ function currentTime(){
 }
 function timerAction(kind,action,col){
   const startId=kind+"_start_"+col,stopId=kind+"_stop_"+col;
-  const label=kind==="age"?"บ่ม":(kind==="churn"?"ปั่น":"ปั่นถังเสริม");
+  const label=kind==="cooling"?" Cooling":(kind==="age"?"บ่ม":(kind==="churn"?"ปั่น":"ปั่นถังเสริม"));
   if(action==="start"){
     if((val(startId)||val(stopId))&&!confirm("เริ่มจับเวลา"+label+"ใหม่?"))return;
     g(startId).value=currentTime();
@@ -520,6 +521,8 @@ function calcAll(){
   const target={A:1000,B:1300};
   const out={};
   ["A","B"].forEach(c=>{
+    const cd=diffMin("cooling_start_"+c,"cooling_stop_"+c);
+    setCalc("cool_minutes_"+c, cd==null?null:fmtMin(cd)+" นาที");
     const am=diffMin("age_start_"+c,"age_stop_"+c);
     setCalc("age_minutes_"+c, am==null?null:fmtMin(am)+" นาที");
     const cm=diffMin("churn_start_"+c,"churn_stop_"+c);
@@ -544,7 +547,7 @@ function calcAll(){
     warn("w_pbt_"+c, pe!=null && pe<50, "end-PBT ต่ำกว่า 50°C");
     warn("w_probe_"+c, toSec(val("churn_stop_"+c))!=null && pt==null, "ยังไม่ได้วัดอุณหภูมิเนื้อ — ตัวเลขนี้ใช้คำนวณ FWT");
 
-    out[c]={am,cm,or,pt,fw,z,dt:num("display_temp_"+c),tex:val("texture_after_"+c),
+    out[c]={cd,am,cm,or,pt,fw,z,dt:num("display_temp_"+c),tex:val("texture_after_"+c),
             stopType:val("machine_stop_type_"+c)};
   });
   ["A","B"].forEach(c=>{
@@ -573,6 +576,7 @@ function renderSummary(o,calOK){
   ["A","B"].forEach(c=>{
     const d=o[c];
     let h="";
+    h+=row("Cooling ถึง 4°C", d.cd==null?"—":fmtMin(d.cd)+" นาที");
     h+=row("① เวลาปั่น", d.cm==null?"—":fmtMin(d.cm)+" นาที");
     h+=row("② เลขบนจอ", d.dt==null?"—":d.dt.toFixed(1)+" °C");
     h+=row("③ อุณหภูมิเนื้อ", d.pt==null?"—":d.pt.toFixed(1)+" °C");
@@ -742,7 +746,7 @@ function tick(){
       }
     }
   };
-  ["A","B"].forEach(c=>{update("age",c);update("churn",c);});
+  ["A","B"].forEach(c=>{update("cooling",c);update("age",c);update("churn",c);});
   update("syr","S");
 }
 setInterval(tick,1000);

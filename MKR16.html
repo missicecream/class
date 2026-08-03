@@ -1,0 +1,591 @@
+<!--
+  Copyright © 2026 Miss Icecream Co., Ltd. / พรหล้า ขาวเธียร (Paula Kaothien)
+  All Rights Reserved.
+-->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MK R16 · RSW 15/17 + CH Balance · Feasibility 4 ถัง</title>
+<style>
+:root{
+  --bg:#f7f3ea;--card:#fffdf8;--line:#cfc1aa;--line2:#ddd2be;--ink:#2b2521;--ink2:#655b51;
+  --accent:#70533a;--red:#982d2d;--redbg:#fbeaea;--amber:#866010;--amberbg:#fdf3dc;
+  --green:#2d6945;--greenbg:#e8f3ec;--blue:#2b5578;--bluebg:#e8f0f7
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai","Sarabun",sans-serif;font-size:17px;line-height:1.55;padding-bottom:28px}
+.wrap{max-width:1440px;margin:0 auto;padding:0 18px}
+header{background:var(--card);border-bottom:2px solid var(--line);padding:14px 0 12px}
+h1{font-size:1.4rem;margin:0 0 2px}h2{font-size:1.12rem;margin:0 0 6px;color:var(--accent)}h3{font-size:1rem;margin:14px 0 6px}
+.sub{color:var(--ink2);font-size:.9rem}.back{display:inline-flex;color:var(--accent);font-weight:700;text-decoration:none;margin-bottom:5px}
+section,details.panel{background:var(--card);border:1.5px solid var(--line);border-radius:14px;margin:16px 0;padding:14px}
+details.panel>summary{cursor:pointer;color:var(--accent);font-weight:800;font-size:1.02rem}
+.note,.warnbox,.okbox{padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:.94rem}
+.note{background:var(--bluebg);border-left:5px solid var(--blue)}.warnbox{background:var(--redbg);border-left:5px solid var(--red)}.okbox{background:var(--greenbg);border-left:5px solid var(--green)}
+.batch-plan{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+.batch-plan article{border:2px solid var(--line);border-radius:12px;padding:12px;background:#fff}.batch-plan h3{margin:0 0 3px}.batch-plan p{margin:0;color:var(--ink2);font-size:.88rem}
+.scroll{overflow-x:auto;border-radius:10px}.scroll table{min-width:1050px}
+table{width:100%;border-collapse:collapse;margin:8px 0}th,td{border:1px solid var(--line2);padding:7px 8px;text-align:left;vertical-align:middle}
+th{background:#f2ece0;font-weight:750;font-size:.9rem}td.lab{width:31%;font-size:.93rem}td.lab small{display:block;color:var(--ink2);font-size:.78rem;line-height:1.35}
+th.cA{background:#edf2f6}th.cB{background:#f7efe7}th.cC{background:#eef4ea}th.cD{background:#e8f1f7}
+input[type=number],input[type=text],input[type=date],select,textarea{width:100%;font:inherit;font-size:1rem;padding:10px 9px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+textarea{min-height:72px;resize:vertical}input:focus,select:focus,textarea:focus{outline:3px solid #cbbfa6;outline-offset:0}
+.calc{background:#f2ece0;border:1.5px dashed var(--line);border-radius:9px;padding:10px 9px;font-weight:750;font-variant-numeric:tabular-nums;min-height:44px;display:flex;align-items:center}
+.timer-control{display:grid;gap:6px;text-align:center;min-width:210px}.timer-clock{font-size:1.5rem;font-weight:850;font-variant-numeric:tabular-nums;color:var(--green)}
+.timer-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.mini{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font:inherit;font-size:.82rem;font-weight:800;cursor:pointer}
+.mini.start{background:var(--green);border-color:var(--green);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}
+.timer-note,.timer-target,.timer-countdown{font-size:.78rem;line-height:1.4;color:var(--ink2)}.timer-target{color:var(--green);font-weight:700}
+.timer-countdown{font-size:1rem;color:var(--amber);font-weight:850;font-variant-numeric:tabular-nums}.timer-countdown.ready{color:var(--green);font-size:.8rem}
+.timer-manual{margin:1px 0 0;padding:4px 7px;border:1px dashed var(--line);border-radius:8px;background:#fff}.timer-manual summary{font-size:.74rem;color:var(--ink2);font-weight:650;cursor:pointer}
+.timer-manual-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:5px;text-align:left}.timer-manual-grid label{font-size:.7rem;color:var(--ink2)}.timer-manual-grid input{padding:5px;font-size:.78rem;text-align:center;border-style:dashed;margin-top:2px}
+.warn{display:none;background:var(--amberbg);border-left:4px solid var(--amber);color:#594009;padding:7px 9px;border-radius:0 6px 6px 0;font-size:.82rem;margin-top:6px;font-weight:650}.warn.show{display:block}.warn.hard{background:var(--redbg);border-color:var(--red);color:var(--red)}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{border:1.5px solid var(--line);border-radius:12px;padding:11px;background:#fff}.card h3{margin:0 0 8px}.kv{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dotted var(--line2);font-size:.9rem}.kv:last-child{border:0}.kv b{font-variant-numeric:tabular-nums}
+.toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0 10px}button{font:inherit;font-size:.86rem;padding:8px 12px;border-radius:9px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-weight:650}button.ghost{background:transparent}button.danger{border-color:#dfb9b9;color:var(--red)}
+.savebar{max-width:1440px;margin:0 auto;padding:8px 18px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;color:var(--ink2);font-size:.86rem}
+footer{text-align:center;color:var(--ink2);font-size:.8rem;margin:16px 0 4px}.rc{color:var(--red)}.gc{color:var(--green)}
+ol.protocol{margin:8px 0;padding-left:24px}ol.protocol li{margin:6px 0}
+@media(max-width:850px){.batch-plan,.summary-grid{grid-template-columns:1fr}.wrap{padding:0 10px}body{font-size:16px}}
+@media print{.back,.toolbar,.timer-actions,.savebar{display:none!important}section,details.panel{break-inside:avoid;border-color:#999}details.panel{display:block}details.panel>summary{list-style:none}body{background:#fff;padding:0}.wrap{max-width:none}.scroll{overflow:visible}.scroll table{min-width:0;font-size:10px}input,select,textarea{border-color:#aaa!important;padding:4px!important}.timer-manual{display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="back" href="index.html">← กลับหน้าหลัก</a>
+  <h1>MK R16 · RSW 15/17 + ช็อกโกแลตเงื่อนไขคลาส</h1>
+  <div class="sub">feasibility (single-arm × 4) · <b>A/B/C: Frigomat G5 · 1.0 kg</b> · <b>D: Frigomat G10 · 2.0 kg</b></div>
+</div></header>
+
+<main class="wrap">
+<section>
+  <h2>📋 ข้อมูลรอบ</h2>
+  <table><tbody>
+    <tr><td class="lab">วันที่ทดลอง</td><td><input type="date" id="meta_date"></td></tr>
+    <tr><td class="lab">ผู้ทำ</td><td><input type="text" id="meta_who" placeholder="ชื่อ — คนเดียวทำทั้ง 4 ถัง"></td></tr>
+  </tbody></table>
+  <div class="warnbox"><b>รอบนี้ตอบได้เฉพาะ “ทำได้ไหม / รสโอเคไหม / เนื้อมีปัญหาไหม”</b><br><b>D เทียบกับ A/B/C ไม่ได้</b> — คนละเครื่อง โหลด เบส และวิธี Cooling · D เทียบกับ CH R1/R13-D ได้เพียงแบบหยาบ</div>
+  <div class="batch-plan">
+    <article><h3>D · CH Balance</h3><p>G10 · 2,000 g · PBT ×3 · Cooling ด้วย overhead stirrer</p></article>
+    <article><h3>A · MKDL05</h3><p>Fat 4.98% · RSW 15.05 · น้ำ margin +7 g · MTD 25 g</p></article>
+    <article><h3>B · MKDB05</h3><p>Fat 5.01% · RSW 16.99 · น้ำ margin +6 g · MTD 16 g</p></article>
+    <article><h3>C · MKDL14</h3><p>Fat 14.00% · RSW 15.07 · DEX 3.50% · MTD 33 g</p></article>
+  </div>
+  <div class="note"><b>ลำดับ D → A → B → C</b> · D ทำก่อนตอนทีมยังสด · A/B/C ใช้ PBT ×2 · D ใช้ PBT ×3 · Cooling ถึง 4°C แล้วบ่ม 30 นาที · <b>ครบแล้วเทได้เลย ไม่ต้องคนให้ถึง 4°C อีก</b></div>
+</section>
+
+<details class="panel" open>
+  <summary>⚡ กติกาใหม่ 4 ข้อ — อ่านก่อนเริ่ม</summary>
+  <ol class="protocol">
+    <li><b>หลังบ่มไม่ต้องคนให้ถึง 4°C อีก</b> — ครบ 30 นาทีเทได้เลย แล้ววัดอุณหภูมิในโถตามจริง</li>
+    <li><b>D ใช้ overhead stirrer ครั้งแรก</b> — ต้องจดความเร็ว อุณหภูมิเริ่ม ความลึกใบพัด ฟอง และสิ่งที่ปรับ</li>
+    <li><b>เติมถ้วยด้วยช้อนได้</b> — เติมให้เต็มถ้วยแล้วปาดเรียบตามปกติ ไม่ใช้กฎ “ห้ามตัก”</li>
+    <li><b>probe วัด 2 จังหวะ</b> — จุ่มจุดที่ 1 ไว้ 10 วินาทีโดยยังไม่อ่าน แล้วย้ายไปจุดที่ 2 ซึ่งห่างจากรูเดิม รอเลขนิ่งแล้วจึงอ่านค่าจริง</li>
+  </ol>
+  <div class="warnbox"><b>ถ้า entry temp ของ A/B/C ต่างกันเกิน 2°C:</b> ห้ามเทียบเนื้อหรือ %OR ข้ามถัง แต่ยังเทียบความหวาน A vs B หลังเก็บและ temper เท่ากันได้</div>
+</details>
+
+<details class="panel">
+  <summary>🔎 Research Questions และขอบเขตการแปลผล</summary>
+  <h3>H1 · น้ำตามสูตรพอไหม</h3><p>บันทึกว่า SER ละลายง่าย ปานกลาง หรือยาก โดย A/B มีน้ำเหนือเส้น SER×17 เพียง 6–7 g และใช้ SUC 30 g ในสาย SER</p>
+  <h3>H2 · RSW 15 หวานพอไหม</h3><p>ใช้คะแนน A/B/C และเทียบคู่ A vs B เท่านั้น เพราะ fat 5 เท่ากันและ RSW ห่างประมาณ 2 จุด · <b>ห้าม lock เป้าจาก R16 รอบเดียว</b> เพราะการสลับ INL → MTD อาจเปลี่ยนการรับรู้ความหวาน ต้องรอ R17 แยกตัวแปร INL</p>
+  <h3>H3 · MTD ระดับใหม่ทำให้เนื้อแป้งหรือคืนตัวไหม</h3><p>ต้องชิม 3 ครั้ง: วันปั่น · 2 สัปดาห์ · 4 สัปดาห์ จึงตัดสินเรื่องที่เกิดช้าได้</p>
+  <h3>H4 · MKDL05 มีรสนมผง / cooked note / สากไหม</h3><p>ติดตาม s_milkpowder, s_cooked และ s_sandy</p>
+  <h3>H5 · MKDL14 ตึงหลายด้านแล้วมีปัญหาไหม</h3><p>ติดตามความเย็นลิ้น ความข้น body และ scoopability; ผลรอบนี้เป็นสัญญาณ ไม่ใช่หลักฐานปลดเพดาน DEX</p>
+  <h3>H6 · CH Balance บน G10 2 kg ใช้เป็นเงื่อนไขคลาสได้ไหม</h3><p>ดูว่าปั่นจบหรือ overload เนื้อแห้งหรือไม่ และรสช็อกโกแลตยอมรับได้ไหม โดยห้ามชี้สาเหตุเพราะเปลี่ยนเครื่อง โหลด และสูตรพร้อมกัน</p>
+</details>
+
+<section>
+  <h2>🌡️ §1 วิธีเตรียมและวัดด้วย probe — 2 จังหวะ</h2>
+  <div class="note"><b>ไม่ต้องสอบเทียบก่อนเริ่มและไม่ต้องแช่ probe ในโคลนน้ำแข็ง</b> — probe ชุดนี้เคยอ่านโคลนน้ำแข็งได้ −0.2°C ทั้ง 2 อันใน R15 จึงใช้ค่าดิบและยังไม่หัก offset</div>
+  <ol class="protocol">
+    <li><b>จุดที่ 1:</b> จุ่ม probe ลงในมิกซ์หรือไอศกรีม ทิ้งไว้ <b>10 วินาที</b> เพื่อให้เข็มคายความร้อน — ยังไม่อ่านค่า</li>
+    <li><b>จุดที่ 2 = จุดวัดจริง:</b> ย้ายไปจุดใหม่ซึ่งห่างจากรูเดิม แล้วรอจนตัวเลขนิ่ง</li>
+    <li><b>อ่านและจดค่าจากจุดที่ 2 เท่านั้น</b> · 10 วินาทีของจุดแรกเป็นจังหวะพัก ไม่ใช่เวลารอค่าจนนิ่ง</li>
+  </ol>
+  <div class="warnbox">ถ้า probe ตกพื้นหรือสงสัยว่าค่าเพี้ยน ให้จุ่มโคลนน้ำแข็งตรวจซ้ำและบันทึกไว้ในช่อง “ทุกอย่างที่ไม่ตรงแผน”</div>
+</section>
+
+<section>
+  <h2>🍶 §2 สูตร <span class="sub">(อ่านอย่างเดียว)</span></h2>
+  <div class="scroll"><table><thead><tr><th>ส่วนผสม</th><th class="cA">A · MKDL05</th><th class="cB">B · MKDB05</th><th class="cC">C · MKDL14</th></tr></thead><tbody>
+    <tr><td>นมผงพร่องมันเนย (PMP)</td><td>70</td><td>67</td><td>45</td></tr>
+    <tr><td>เดกซ์โทรส (DEX)</td><td>33</td><td>20</td><td>35</td></tr>
+    <tr><td>อินูลิน (INL)</td><td>30</td><td>30</td><td>30</td></tr>
+    <tr><td>มอลโทเดกซ์ทริน (MTD)</td><td>25</td><td>16</td><td>33</td></tr>
+    <tr><td>น้ำนมโคเต็มมันเนย (MLK)</td><td>590</td><td>592</td><td>347</td></tr>
+    <tr><td>สารคงตัว (SER)</td><td>6</td><td>6</td><td>5</td></tr>
+    <tr><td>น้ำตาลทราย (SUC)</td><td>62</td><td>85</td><td>54</td></tr>
+    <tr><td>น้ำ (WTR)</td><td>109</td><td>108</td><td>101</td></tr>
+    <tr><td>ครีม 36% (CRM)</td><td>75</td><td>76</td><td>350</td></tr>
+    <tr><th>รวม</th><th>1,000</th><th>1,000</th><th>1,000</th></tr>
+  </tbody></table></div>
+  <div class="warnbox"><b>แบ่งน้ำตาล 2 สาย:</b> สาย SER ใช้ SUC 30 g เท่านั้นทุกถัง · ที่เหลือละลายพร้อมของแห้ง</div>
+  <details class="panel">
+    <summary>ดูพารามิเตอร์สูตรที่คำนวณไว้แล้ว</summary>
+    <div class="scroll"><table><thead><tr><th>Parameter</th><th>Target</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody>
+      <tr><td>Fat%</td><td>5 / 5 / 14</td><td>4.98</td><td>5.01</td><td>14.00</td></tr>
+      <tr><td>MSNF%</td><td>graded</td><td>12.26</td><td>12.00</td><td>9.10</td></tr>
+      <tr><td>Lactose มิกซ์%</td><td>&lt;7</td><td>6.70</td><td>6.55</td><td>5.06</td></tr>
+      <tr><td>Lactose serum%</td><td>&lt;11</td><td>8.97</td><td>8.80</td><td>7.54</td></tr>
+      <tr><td>Protein%</td><td>info</td><td>4.46</td><td>4.37</td><td>3.52</td></tr>
+      <tr><td>TS%</td><td>≥32</td><td>32.06</td><td>32.09</td><td>38.03</td></tr>
+      <tr><td>RSW%</td><td>L15 / B17</td><td>15.05</td><td>16.99</td><td>15.07</td></tr>
+      <tr><td>RST%</td><td>info</td><td>10.22</td><td>11.54</td><td>9.34</td></tr>
+      <tr><td>S&amp;B%</td><td>13–17</td><td>15.0</td><td>15.1</td><td>15.2</td></tr>
+      <tr><td>DEX%</td><td>0.89–3.5</td><td>3.30</td><td>2.00</td><td>3.50</td></tr>
+      <tr><td>AFPW%</td><td>~28.9</td><td>29.08</td><td>28.72</td><td>28.66</td></tr>
+      <tr><td>AFPT%</td><td>18–21</td><td>19.75</td><td>19.50</td><td>17.76</td></tr>
+      <tr><td>FP (°C)</td><td>info</td><td>−2.23</td><td>−2.20</td><td>−2.12</td></tr>
+      <tr><td>FWW%</td><td>interm.</td><td>81.15</td><td>81.40</td><td>81.89</td></tr>
+      <tr><td>FWT%</td><td>info</td><td>55.13</td><td>55.28</td><td>50.75</td></tr>
+      <tr><td>kcal/100g</td><td>info</td><td>142</td><td>143</td><td>214</td></tr>
+      <tr><td>Total sugar%</td><td>info</td><td>16.11</td><td>17.08</td><td>13.83</td></tr>
+      <tr><td>Added sugar%</td><td>info</td><td>9.41</td><td>10.53</td><td>8.77</td></tr>
+      <tr><td>ต้นทุน บาท/kg</td><td>info</td><td>75.28</td><td>74.21</td><td>116.82</td></tr>
+      <tr><td>น้ำแข็ง g/kg</td><td>info</td><td>551</td><td>553</td><td>508</td></tr>
+      <tr><td>INL + MTD (g)</td><td>≤80</td><td>55</td><td>46</td><td>63</td></tr>
+      <tr><td>WTR / ต้องการ (g)</td><td>≥SER×17</td><td>109 / 102</td><td>108 / 102</td><td>101 / 85</td></tr>
+      <tr><td>margin น้ำ (g)</td><td>info</td><td>+7</td><td>+6</td><td>+16</td></tr>
+      <tr><td>น้ำตาลสาย SER / สายของแห้ง (g)</td><td>30 g</td><td>30 / 32</td><td>30 / 55</td><td>30 / 24</td></tr>
+    </tbody></table></div>
+  </details>
+  <h3>D · CH Balance — 2,000 g บน G10</h3>
+  <div class="scroll"><table><thead><tr><th>ส่วนผสม</th><th>CODE</th><th class="cD">D · 2,000 g</th></tr></thead><tbody>
+    <tr><td>นมผงพร่องมันเนย</td><td>PMP</td><td>124</td></tr>
+    <tr><td>ผงโกโก้ Plein Arôme</td><td>CCP</td><td>70</td></tr>
+    <tr><td>ผงโกโก้ Extra Brute</td><td>CCE</td><td>20</td></tr>
+    <tr><td>เดกซ์โทรส</td><td>DEX</td><td>54</td></tr>
+    <tr><td>อินูลิน</td><td>INL</td><td>40</td></tr>
+    <tr><td>น้ำนมโคเต็มมันเนย</td><td>MLK</td><td>728</td></tr>
+    <tr><td>ช็อกโกแลต Guayaquil 64%</td><td>CHC</td><td>50</td></tr>
+    <tr><td>สารคงตัว</td><td>SER</td><td>12</td></tr>
+    <tr><td>น้ำตาลทราย</td><td>SUC</td><td>136</td></tr>
+    <tr><td>น้ำ</td><td>WTR</td><td>410</td></tr>
+    <tr><td>ครีม 36%</td><td>CRM</td><td>356</td></tr>
+    <tr><th>รวม</th><th></th><th>2,000</th></tr>
+  </tbody></table></div>
+  <div class="warnbox"><b>D แบ่งน้ำตาล:</b> สาย SER ใช้ SUC 60 g · สายของแห้ง 76 g · SER 12 g ต้องการน้ำ 204 g มี 410 g</div>
+  <details class="panel">
+    <summary>ดูพารามิเตอร์ CH Balance</summary>
+    <div class="scroll"><table><thead><tr><th>Parameter</th><th>Target</th><th>D</th><th>Parameter</th><th>Target</th><th>D</th></tr></thead><tbody>
+      <tr><td>Fat%</td><td>10 ±0.15</td><td>10.00</td><td>AFPW%</td><td>~28.9</td><td>28.90</td></tr>
+      <tr><td>MSNF%</td><td>~10</td><td>9.99</td><td>AFPT%</td><td>18–21</td><td>18.41</td></tr>
+      <tr><td>Lactose มิกซ์%</td><td>&lt;7</td><td>5.51</td><td>FP (°C)</td><td>info</td><td>−2.16</td></tr>
+      <tr><td>Lactose serum%</td><td>&lt;11</td><td>7.95</td><td>FWW%</td><td>interm.</td><td>81.61</td></tr>
+      <tr><td>Protein%</td><td>info</td><td>4.75</td><td>FWT%</td><td>info</td><td>51.99</td></tr>
+      <tr><td>TS%</td><td>≥32</td><td>36.30</td><td>น้ำแข็ง g/kg</td><td>info</td><td>520</td></tr>
+      <tr><td>RSW%</td><td>17.0 ±0.25</td><td>16.94</td><td>kcal/100g</td><td>info</td><td>181</td></tr>
+      <tr><td>RST%</td><td>info</td><td>10.79</td><td>Total sugar%</td><td>info</td><td>15.83</td></tr>
+      <tr><td>S&amp;B%</td><td>13–17</td><td>11.50 ⚠</td><td>Added sugar%</td><td>info</td><td>10.31</td></tr>
+      <tr><td>DEX%</td><td>0.89–3.5</td><td>2.70</td><td>ต้นทุน บาท/kg</td><td>info</td><td>155.73</td></tr>
+      <tr><td>เนยโกโก้%</td><td>≤2.43</td><td>2.06</td><td>NFCS%</td><td>info</td><td>3.89</td></tr>
+      <tr><td>INL (g/kg)</td><td>≤40</td><td>20</td><td>WTR/ต้องการ</td><td>≥SER×17</td><td>205/102</td></tr>
+    </tbody></table></div>
+    <p class="sub">S&amp;B ต่ำกว่ากรอบเป็น known flag ของเบสช็อกโกแลต — NFCS จากโกโก้ทำหน้าที่ structural แทน</p>
+  </details>
+</section>
+
+<details class="panel" open>
+  <summary>🧭 ขั้นตอนรอบ R16 · เปิดไว้ระหว่างทำ</summary>
+  <h3>A · B · C — G5 · 1 kg</h3>
+  <ol class="protocol">
+    <li>สาย ①: คลุก <b>SER + SUC 30 g</b> → เติมน้ำทั้งหมด → ต้ม 85°C · เลือกระดับการละลาย <b>ง่าย / ปานกลาง / ยาก</b> โดยไม่ต้องจับเวลา</li>
+    <li>สาย ②: คลุก PMP + DEX + INL + MTD + SUC ที่เหลือ → เติมนม</li>
+    <li>รวม 2 สาย → ต้มถึง <b>68–70°C ห้ามเกิน</b> → <b>PBT ×2</b> รอบละ 30 วิ / พัก 10 วิ</li>
+    <li>Cooling กวนมือ → เติมครีมเมื่อ ≤10°C → ลงถึง 4°C → กดหยุด Cooling</li>
+    <li>บ่มสั้น 30 นาทีที่ 4°C → <b>ครบแล้วเทได้เลย ไม่ต้องคนให้ถึง 4°C อีก</b></li>
+  </ol>
+  <h3>D · CH Balance — G10 · 2 kg</h3>
+  <ol class="protocol">
+    <li>สาย ①: SER 12 g + SUC 60 g + น้ำ 410 g → ต้ม 85°C → คืนน้ำที่ระเหยให้ครบ · เลือกระดับการละลาย <b>ง่าย / ปานกลาง / ยาก</b> โดยไม่ต้องจับเวลา</li>
+    <li>สาย ②: ร่อน PMP + CCP + CCE → คลุก DEX + INL + SUC 76 g → เติมนมเย็น 728 g → ลดไฟ 55°C → 60°C ยกลง → ใส่ CHC 50 g ทีละ 1/3</li>
+    <li>รวม 2 สาย → ต้มถึง 68–70°C → <b>PBT ×3</b> รอบละ 30 วิ / พัก 10 วิ</li>
+    <li>Cooling ด้วย overhead stirrer → จดความเร็ว อุณหภูมิเริ่ม ความลึกใบพัด และฟอง → เติมครีม 356 g เมื่อ ≤10°C → ลงถึง 4°C</li>
+    <li>บ่มสั้น 30 นาทีที่ 4°C → <b>เทได้เลย ไม่ต้องทำเย็นซ้ำ</b> → ปั่นบน G10</li>
+  </ol>
+  <div class="note"><b>ลำดับชั่งทุกถัง:</b> ชั่งถ้วยเปล่า → ก่อนปั่นเติมมิกซ์ให้เต็มถ้วย ปาดเรียบ และชั่ง → เทมิกซ์กลับลงโถ → วัดอุณหภูมิในโถตามจริง → ปั่น → วัดเนื้อด้วย probe แบบ 2 จังหวะ โดยอ่านค่าจากจุดที่ 2 → หลังปั่นชั่งถ้วย + ไอศกรีม <b>2 รอบ</b></div>
+</details>
+
+<section><h2>🔴 §3 การละลาย SER</h2><div class="note"><b>บันทึกเพียงระดับเดียว:</b> ง่าย = กระจายทันที คนปกติก็เข้า · ปานกลาง = มีแพหรือก้อนบ้าง ต้องคนแรง/นานขึ้น แต่สุดท้ายเข้าหมด · ยาก = ก้อนไม่แตก ติดหม้อ ให้ความร้อนยาก หรือถึง 85°C แล้วยังมีก้อน · <b>ไม่ต้องจับเวลาและไม่ต้องบันทึกลักษณะอื่น</b></div><div id="t_ser" class="scroll"></div></section>
+<section><h2>🔥 §4 ผลิต · PBT · Cooling</h2><div class="note"><b>Cooling timer เป็นข้อมูลหลัก:</b> เริ่มทันทีหลังจบ PBT และหยุดเมื่อมิกซ์ครบส่วนถึง 4°C ระบบบันทึกเวลาเริ่ม–จบและคำนวณระยะเวลาให้อัตโนมัติ</div><div id="t_process" class="scroll"></div></section>
+<section><h2>⚙️ §4.1 Overhead stirrer <span class="sub">(ถัง D เท่านั้น)</span></h2><div id="t_stir"></div></section>
+<section><h2>⏱ §5 บ่ม</h2><div id="t_aging" class="scroll"></div></section>
+<section><h2>⚖️ §5.1 %OR ก่อนปั่น</h2><div class="note"><b>ใช้ถ้วยใบเดียวกันทั้งรอบ:</b> ชั่งถ้วยเปล่า → เติมมิกซ์ให้เต็มถ้วย ปาดเรียบ และชั่ง → ระบบหักน้ำหนักถ้วยให้ → <b>เทมิกซ์ทั้งหมดกลับลงโถก่อนปั่น</b> · ใช้ช้อนช่วยตอนใกล้เต็มได้</div><div id="t_or_before" class="scroll"></div></section>
+<section><h2>🍨 §5.2 การปั่น</h2><div class="note"><b>entry temp เป็นค่าบันทึก ไม่ใช่เป้าบังคับ:</b> ระบบเตือนเมื่อ A/B/C ต่างกันเกิน 2°C เพื่อกันการเทียบเนื้อหรือ %OR ข้ามถัง · D ไม่ร่วมการเทียบนี้อยู่แล้ว</div><div id="t_churn" class="scroll"></div></section>
+<section><h2>⚖️ §5.3 %OR หลังปั่น · เนื้อตอนดึงออก</h2><div class="note">ทันทีที่เครื่องหยุด: อ่านเลขบนจอ → วัด probe 2 จังหวะ → วัด IR → ใช้ถ้วยเดิมชั่งถ้วย + ไอศกรีม <b>2 รอบ</b> โดยเติมเต็มและปาดเรียบทุกครั้ง · ต่างไม่เกิน 5% ใช้ค่าเฉลี่ย; ต่างเกิน 5% ใช้ค่าน้ำหนักสุทธิที่มากกว่า</div><div id="t_or_after" class="scroll"></div></section>
+
+<section>
+  <h2>😋 §6 ชิม 3 ครั้ง</h2>
+  <div class="note">bipolar −3…+3 · presence 0–3 · liking 0–10 · <b>ชิม A/B/C พร้อมกันปิดฉลาก · D ชิมแยก</b><br><b>H3 ยังตัดสินไม่ได้จนกว่าจะครบ 4 สัปดาห์</b></div>
+  <details class="panel" open><summary>วันปั่น</summary><label>วันที่ชิม <input type="date" id="taste_date_day"></label><div id="taste_day" class="scroll"></div><div id="pair_day" class="scroll"></div></details>
+  <details class="panel"><summary>2 สัปดาห์</summary><label>วันที่ชิม <input type="date" id="taste_date_w2"></label><div id="taste_w2" class="scroll"></div><div id="pair_w2" class="scroll"></div></details>
+  <details class="panel"><summary>4 สัปดาห์</summary><label>วันที่ชิม <input type="date" id="taste_date_w4"></label><div id="taste_w4" class="scroll"></div><div id="pair_w4" class="scroll"></div></details>
+</section>
+
+<section>
+  <h2>📊 §7 สรุปการผลิต</h2>
+  <div class="summary-grid">
+    <div class="card"><h3>D · CH Balance · G10</h3><div id="sumD"></div></div>
+    <div class="card"><h3>A · MKDL05</h3><div id="sumA"></div></div>
+    <div class="card"><h3>B · MKDB05</h3><div id="sumB"></div></div>
+    <div class="card"><h3>C · MKDL14</h3><div id="sumC"></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>✅ §8 Verdict</h2>
+  <div class="warnbox"><b>ข้อจำกัด:</b> feasibility single-arm · n=1 ต่อถัง · D เทียบ A/B/C ไม่ได้ · entry temp ไม่ได้คุม · overhead stirrer ไม่มี baseline · H2 ห้าม lock จนได้ผล R17 · H3 ต้องรอครบ 4 สัปดาห์</div>
+  <div id="t_verdict"></div>
+</section>
+
+<details class="panel">
+  <summary>🛟 แผนสำรอง H1</summary>
+  <p><b>ถ้า SER ไม่ละลายที่ margin 6–7 g:</b> ยกพื้นน้ำเป็น ratio 1:19 (SER 6 g → 114 g) แล้วหั่น MTD ชดเชย</p>
+  <p><b>ถ้าไม่เนียนทุกถังรวม D:</b> ทดสอบซ้ำโดยเทน้ำตาลทั้งหมดลงสาย SER แบบเดิม เพราะปัญหาอาจอยู่ที่กฎแบ่งน้ำตาล 30 g ไม่ใช่ปริมาณน้ำ</p>
+</details>
+
+<details class="panel">
+  <summary>🚫 สิ่งที่รอบนี้ไม่ตอบ</summary>
+  <ul>
+    <li>INL 40 vs INL 30 + MTD 10 ต่างกันแค่ไหน — รอ R17</li>
+    <li>อีก 9 สูตรในชุด — ต้องรอผลรอบนี้ก่อน</li>
+    <li>การปลดเพดาน DEX ในเบสนม — H5 ให้ได้เพียงสัญญาณ</li>
+    <li>ถ้า D ผ่าน อะไรทำให้ผ่าน — เปลี่ยนเครื่อง โหลด และสูตรพร้อมกัน</li>
+    <li>overhead stirrer ดีกว่ากวนมือไหม — ไม่มีถังคู่เทียบ</li>
+    <li>สาเหตุที่ R13 เปียก</li>
+  </ul>
+</details>
+
+<div class="toolbar" aria-label="จัดการไฟล์และแบบฟอร์ม">
+  <button type="button" onclick="expJSON()">💾 เซฟไฟล์ .json</button>
+  <button type="button" class="ghost" onclick="document.getElementById('imp').click()">📂 เปิดไฟล์ .json</button>
+  <input type="file" id="imp" accept=".json,application/json" style="display:none" onchange="impJSON(event)">
+  <button type="button" class="ghost" onclick="window.print()">🖨 พิมพ์</button>
+  <button type="button" class="danger" id="btnReset" onclick="resetAll()">🗑 ล้างข้อมูล</button>
+</div>
+<footer>Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html">เงื่อนไขการใช้งาน</a><br>01MK LabRecord R16 · MR v8.4.4 · ปรับ 3 ส.ค. 2026</footer>
+</main>
+<div class="savebar"><span id="saveState">พร้อมบันทึก</span><span>MKR16 · MR v8.4.4</span></div>
+
+<script>
+"use strict";
+const KEY="MKR16_v1";
+const BATCHES=[
+  {id:"A",name:"MKDL05",cls:"cA"},
+  {id:"B",name:"MKDB05",cls:"cB"},
+  {id:"C",name:"MKDL14",cls:"cC"},
+  {id:"D",name:"CH Balance · G10",cls:"cD"}
+];
+const N=(id,lab,sub,min=null,max=null,step="any")=>({t:"num",id,lab,sub,min,max,step});
+const T=(id,lab,sub)=>({t:"txt",id,lab,sub});
+const S=(id,lab,sub,opts)=>({t:"sel",id,lab,sub,opts});
+const A=(id,lab,sub)=>({t:"area",id,lab,sub});
+const C=(id,lab,sub)=>({t:"calc",id,lab,sub});
+const R=(id,lab,sub,startLabel,stopLabel)=>({t:"timer",id,lab,sub,startLabel,stopLabel});
+const I=(id,lab,sub,values)=>({t:"instr",id,lab,sub,values});
+
+const SER=[
+  S("ser_ease","SER ละลายง่ายหรือยาก","เลือกเพียงระดับเดียว · ไม่ต้องจับเวลา",["","ง่าย","ปานกลาง","ยาก"])
+];
+const PROCESS=[
+  I("batch_process","เครื่อง · โหลด · PBT · วิธี Cooling","คำสั่งประจำถัง",{
+    A:"G5 · 1,000 g · PBT ×2 · Cooling กวนมือ",
+    B:"G5 · 1,000 g · PBT ×2 · Cooling กวนมือ",
+    C:"G5 · 1,000 g · PBT ×2 · Cooling กวนมือ",
+    D:"G10 · 2,000 g · PBT ×3 · Cooling ด้วย overhead stirrer"
+  }),
+  N("mix_weight","น้ำหนักมิกซ์รวมทั้งถัง","A/B/C ~1,000 g · D ~2,000 g"),
+  N("temp_pbt_start","อุณหภูมิเริ่ม PBT","เกณฑ์ 60–65°C"),
+  N("temp_pbt_end","อุณหภูมิ end-PBT","เกณฑ์ ≥50°C"),
+  N("cream_add_temp","เติมครีมตอนกี่องศา","เป้า ≤10°C"),
+  R("cooling","⏱ Cooling ถึง 4°C","เริ่มทันทีหลัง PBT · หยุดเมื่อมิกซ์ครบส่วนถึง 4°C","เริ่ม Cooling","ถึง 4°C"),
+  C("cool_minutes","เวลา Cooling จริง","คำนวณจากนาฬิกา")
+];
+const AGING=[
+  R("age","⏱ เวลาบ่มจริง","เป้า 30 นาที · เริ่มเมื่อมิกซ์ครบส่วนถึง 4°C","เริ่มบ่ม","จบบ่ม"),
+  C("age_minutes","เวลาบ่มจริง","คำนวณจากนาฬิกา")
+];
+const OR_BEFORE=[
+  N("cup_tare","[ก่อนปั่น] ① น้ำหนักถ้วยเปล่า","ใช้ถ้วยใบเดียวกันทั้งรอบ · g"),
+  N("cup_mix_gross","[ก่อนปั่น] ② ถ้วย + มิกซ์","เติมเต็มถ้วย ปาดเรียบ ใช้ช้อนช่วยตอนใกล้เต็มได้ · g"),
+  C("mix_net","น้ำหนักมิกซ์สุทธิ","= ② − ① · แล้วเทมิกซ์กลับลงโถ")
+];
+const CHURN=[
+  N("entry_temp","③ อุณหภูมิในโถก่อนปั่น","บันทึกค่าจริง · ไม่บังคับ 4°C"),
+  I("churn_instruction","เครื่อง · โหลด","คำสั่งประจำถัง",{
+    A:"G5 · 1,000 g · ห้ามเปิดฝา",
+    B:"G5 · 1,000 g · ห้ามเปิดฝา",
+    C:"G5 · 1,000 g · ห้ามเปิดฝา",
+    D:"G10 · 2,000 g · ห้ามเปิดฝา"
+  }),
+  R("churn","⏱ ระยะเวลาปั่น","กดเริ่มพร้อมเดินเครื่อง · กดหยุดเมื่อเครื่องหยุด","เริ่มปั่น","หยุดปั่น"),
+  C("stop_minute","เวลาปั่นทั้งหมด","คำนวณจากนาฬิกา"),
+  S("machine_stop_type","เครื่องหยุดแบบใด","",["","เครื่องหยุดเอง","overload ใบพัดหยุดหมุน","เรากดหยุด"])
+];
+const OR_AFTER=[
+  N("display_temp","④ เลขบนจอเครื่อง","°C"),
+  N("probe_temp","⑤ อุณหภูมิเนื้อ (probe)","จุดที่ 1 พักเข็ม 10 วินาที (ไม่อ่าน) → ย้ายไปจุดที่ 2 ห่างจากรูเดิม → รอเลขนิ่งแล้วอ่านค่าจริง"),
+  N("ir_temp","อุณหภูมิเนื้อ (IR)","ยิง 3 จุด ใช้ค่ากลาง · สำรอง"),
+  N("cup_ic_gross","[หลังปั่น] ⑥a ถ้วย + ไอศกรีม ครั้งที่ 1","ใช้ถ้วยเดิม เติมเต็มถ้วยแล้วปาดเรียบ · g"),
+  N("cup_ic_gross_2","[หลังปั่น] ⑥b ถ้วย + ไอศกรีม ครั้งที่ 2","เติมใหม่ให้เต็มถ้วยแล้วปาดเรียบ · g"),
+  C("ic_net","น้ำหนักไอศกรีมสุทธิที่ใช้คำนวณ","ต่าง ≤5% ใช้ค่าเฉลี่ย · >5% ใช้ค่าที่มากกว่า"),
+  C("ic_repeat_check","ตรวจการชั่ง 2 รอบ","แสดงน้ำหนักสุทธิ ความต่าง และค่าที่เลือกใช้"),
+  C("overrun","%OR","= (มิกซ์สุทธิ − ไอศกรีมสุทธิ) ÷ ไอศกรีมสุทธิ × 100"),
+  S("texture_after","⑦ เนื้อตอนดึงออก","",["","แห้งปกติ","มีน้ำซึม","เหลวไม่แห้ง"]),
+  S("butter_granule","เม็ดเนย","",["","ไม่มี","มีเล็กน้อย","มีชัดเจน"]),
+  S("scrape_noise","เสียงขูดผิดปกติ","",["","ไม่มี","มีช่วงท้าย","มีตลอด"]),
+  A("deviation","ทุกอย่างที่ไม่ตรงแผน","ถ้าไม่มีให้พิมพ์ ไม่มี")
+];
+const STIR=[
+  T("stir_speed","ความเร็วที่ตั้ง","ระดับ / rpm"),
+  N("stir_start_temp","เริ่มใช้ที่กี่องศา","°C"),
+  T("stir_depth","ความลึกใบพัด","ระบุตำแหน่งให้ทำซ้ำได้"),
+  S("stir_foam","ฟองอากาศ","",["","ไม่มี","เล็กน้อย","มากผิดปกติ"]),
+  A("stir_adjust","ปรับอะไรระหว่างทางไหม","เช่น ลดความเร็ว / จุ่มใบพัดลึกขึ้น"),
+  C("stir_cool_total","เวลา Cooling รวมถึง 4°C","ดึงจาก Cooling timer ถัง D"),
+  S("stir_verdict","ใช้ได้ไหม","",["","ใช้ได้","ใช้ได้แต่ต้องปรับ","ใช้ไม่ได้"])
+];
+const TASTE=[
+  N("s_sweet","ความหวานโดยรวม","bipolar −3…+3 · H2/H6",-3,3,1),
+  N("s_starchy","เนื้อแป้ง / คืนตัว","presence 0–3 · H3",0,3,1),
+  N("s_milkpowder","รสนมผง","presence 0–3 · H4",0,3,1),
+  N("s_cooked","cooked note","presence 0–3 · H4",0,3,1),
+  N("s_sandy","สาก / เม็ดทราย","presence 0–3 · H1/H4",0,3,1),
+  N("s_gummy","หนืดยืด / gummy","presence 0–3 · H1",0,3,1),
+  N("s_cold","อุ่น–เย็นลิ้น","bipolar −3…+3 · H5",-3,3,1),
+  N("s_thick","ความข้น","bipolar −3…+3 · H5",-3,3,1),
+  N("s_body","เนื้อแน่น (body)","bipolar −3…+3 · H5",-3,3,1),
+  N("s_scoop","Scoopability","bipolar −3…+3 · H5",-3,3,1),
+  N("s_creamy","Creamy หอม","presence 0–3",0,3,1),
+  Object.assign(N("s_choc","รสช็อกโกแลต","presence 0–3 · H6 · D เท่านั้น",0,3,1),{only:["D"]}),
+  Object.assign(N("s_bitter","ขม","bipolar −3…+3 · H6 · D เท่านั้น",-3,3,1),{only:["D"]}),
+  N("s_melt","อัตราการละลาย","bipolar −3…+3",-3,3,1),
+  N("s_like","ชอบโดยรวม","0–10",0,10,1),
+  A("s_note","บันทึกเพิ่ม","")
+];
+
+function fieldId(f,col,prefix){return (prefix||"")+f.id+"_"+col}
+function cell(f,col,prefix){
+  const id=fieldId(f,col,prefix);
+  if(f.only&&!f.only.includes(col))return '<span class="sub">—</span>';
+  if(f.t==="num")return '<input type="number" inputmode="decimal" step="'+f.step+'"'+(f.min!=null?' min="'+f.min+'"':"")+(f.max!=null?' max="'+f.max+'"':"")+' id="'+id+'">';
+  if(f.t==="txt")return '<input type="text" id="'+id+'">';
+  if(f.t==="area")return '<textarea id="'+id+'"></textarea>';
+  if(f.t==="sel")return '<select id="'+id+'">'+f.opts.map(o=>'<option value="'+o+'">'+(o||"— เลือก —")+'</option>').join("")+'</select>';
+  if(f.t==="calc")return '<div class="calc" id="'+id+'">—</div>';
+  if(f.t==="instr")return '<div class="okbox" style="margin:0">'+f.values[col]+'</div>';
+  if(f.t==="timer"){
+    const startId=f.id+"_start_"+col,stopId=f.id+"_stop_"+col,aging=f.id==="age";
+    return '<div class="timer-control"><div class="timer-clock" id="'+f.id+'Clock_'+col+'">00:00:00</div>'+
+      '<div class="timer-actions"><button class="mini start" type="button" onclick="timerAction(\''+f.id+'\',\'start\',\''+col+'\')">'+f.startLabel+'</button>'+
+      '<button class="mini stop" type="button" onclick="timerAction(\''+f.id+'\',\'stop\',\''+col+'\')">'+f.stopLabel+'</button></div>'+
+      '<div class="timer-note" id="'+f.id+'Note_'+col+'">ยังไม่เริ่ม</div>'+
+      (aging?'<div class="timer-target" id="ageTarget_'+col+'">เริ่มเมื่อมิกซ์ครบส่วนถึง 4°C</div><div class="timer-countdown" id="ageCountdown_'+col+'"></div>':"")+
+      '<details class="timer-manual"><summary>แก้เวลาเริ่ม–จบ</summary><div class="timer-manual-grid">'+
+      '<label>เริ่ม<input type="text" id="'+startId+'" placeholder="--:--:--"></label><label>จบ<input type="text" id="'+stopId+'" placeholder="--:--:--"></label>'+
+      '</div></details></div>';
+  }
+  return "";
+}
+function build(list,target,prefix){
+  let h='<table><thead><tr><th>รายการ</th>';
+  BATCHES.forEach(b=>h+='<th class="'+b.cls+'">'+b.id+' · '+b.name+'</th>');
+  h+='</tr></thead><tbody>';
+  list.forEach(f=>{
+    if(f.t==="hr"){h+='<tr><th colspan="'+(BATCHES.length+1)+'" style="background:#e9e0cd">'+f.lab+'</th></tr>';return}
+    h+='<tr><td class="lab">'+f.lab+(f.sub?'<small>'+f.sub+'</small>':"")+'</td>';
+    BATCHES.forEach(b=>{
+      h+='<td>'+cell(f,b.id,prefix);
+      if(f.id==="mix_weight")h+='<div class="warn" id="w_mw_'+b.id+'"></div>';
+      if(f.id==="temp_pbt_start")h+='<div class="warn" id="w_pbt_start_'+b.id+'"></div>';
+      if(f.id==="temp_pbt_end")h+='<div class="warn" id="w_pbt_end_'+b.id+'"></div>';
+      if(f.id==="cream_add_temp")h+='<div class="warn" id="w_cream_'+b.id+'"></div>';
+      if(f.id==="cup_tare")h+='<div class="warn" id="w_cup_tare_'+b.id+'"></div>';
+      if(f.id==="cup_mix_gross")h+='<div class="warn" id="w_cup_mix_'+b.id+'"></div>';
+      if(f.id==="cup_ic_gross")h+='<div class="warn" id="w_cup_ic_1_'+b.id+'"></div>';
+      if(f.id==="cup_ic_gross_2")h+='<div class="warn" id="w_cup_ic_2_'+b.id+'"></div>';
+      if(f.id==="ic_repeat_check")h+='<div class="warn" id="w_ic_repeat_'+b.id+'"></div>';
+      if(f.id==="entry_temp")h+='<div class="warn hard" id="w_entry_'+b.id+'"></div>';
+      if(f.id==="probe_temp")h+='<div class="warn hard" id="w_probe_'+b.id+'"></div>';
+      h+='</td>';
+    });
+    h+='</tr>';
+  });
+  document.getElementById(target).innerHTML=h+'</tbody></table>';
+}
+function buildPair(session,target){
+  const sid=s=>"pair_"+session+"_"+s;
+  document.getElementById(target).innerHTML='<h3>เทียบคู่ A vs B · fat 5 เท่ากัน · RSW 15 vs 17</h3><table><thead><tr><th>ประเด็น</th><th>คำตอบ</th></tr></thead><tbody>'+
+    '<tr><td>ความหวานพอดีกว่า</td><td><select id="'+sid("sweet")+'"><option value="">— เลือก —</option><option>A หวานพอดีกว่า</option><option>B หวานพอดีกว่า</option><option>ใกล้กัน</option></select></td></tr>'+
+    '<tr><td>แยกความหวานสองถังออกไหม</td><td><select id="'+sid("detect")+'"><option value="">— เลือก —</option><option>แยกออกชัด</option><option>แยกออกแบบเฉียด</option><option>แยกไม่ออก</option></select></td></tr>'+
+    '<tr><td>ชอบโดยรวม</td><td><select id="'+sid("like")+'"><option value="">— เลือก —</option><option>ชอบ A มากกว่า</option><option>ชอบ B มากกว่า</option><option>ใกล้กัน</option></select></td></tr>'+
+    '</tbody></table>';
+}
+build(SER,"t_ser","");
+build(PROCESS,"t_process","");
+build(AGING,"t_aging","");
+build(OR_BEFORE,"t_or_before","");
+build(CHURN,"t_churn","");
+build(OR_AFTER,"t_or_after","");
+["day","w2","w4"].forEach(s=>{build(TASTE,"taste_"+s,s+"_");buildPair(s,"pair_"+s)});
+
+const V=[
+  S("h1_verdict","H1 · น้ำพอไหม / SER ละลายง่ายหรือยาก","",["","ง่ายหรือปานกลางทุกถัง","ยากเฉพาะ A/B","ยากทุกถัง — สงสัยกฎน้ำตาล","ตัดสินไม่ได้"]),
+  A("h1_note","H1 · หลักฐาน","อ้าง ser_ease ของ A/B/C/D และอาการ gummy/sandy หลังเก็บ"),
+  S("h2_verdict","H2 · RSW 15 หวานพอไหม · ห้าม lock จนได้ R17","",["","พอดี — แต่ยังห้าม lock","จืดไป","B ยังหวานไป","แยก A/B ไม่ออก","ตัดสินไม่ได้"]),
+  A("h2_note","H2 · หลักฐาน","อ้าง s_sweet และ paired A vs B"),
+  S("h3_verdict","H3 · MTD เนื้อแป้งไหม","",["","ไม่มีทั้ง 3 ครั้ง","โผล่ที่ 2–4 สัปดาห์","มีตั้งแต่วันปั่น","ยังไม่ครบ 4 สัปดาห์","ตัดสินไม่ได้"]),
+  S("h4_verdict","H4 · MKDL05 รสนมผงไหม","",["","ไม่เด่น","เด่น — ทบทวน TS 32 ที่ fat 5","สาก — ลด PMP","ตัดสินไม่ได้"]),
+  S("h5_verdict","H5 · MKDL14 ตึงเกินไหม","",["","ไม่มีปัญหา — เป็นสัญญาณให้ศึกษาต่อ","เย็นลิ้น","แน่น/ตักยาก","ตัดสินไม่ได้"]),
+  S("h6_verdict","H6 · CH Balance บน G10 2 kg","",["","ปั่นจบ เนื้อแห้ง รสโอเค — lock เงื่อนไขคลาส","ปั่นจบแต่เนื้อ/รสไม่ผ่าน","overload อีก","ตัดสินไม่ได้"]),
+  S("verdict","Verdict รวม","",["","ผ่าน","ผ่านบางส่วน","ไม่ผ่าน","ตัดสินไม่ได้"]),
+  A("conclusion","สรุป",""),
+  A("next_action","Action ถัดไป",""),
+  A("limits","ข้อจำกัดการตีความ","")
+];
+function buildSingle(list,target){
+  let h="<table><tbody>";
+  list.forEach(f=>h+='<tr><td class="lab">'+f.lab+(f.sub?'<small>'+f.sub+'</small>':"")+'</td><td>'+cell(f,"S","")+'</td></tr>');
+  document.getElementById(target).innerHTML=h+"</tbody></table>";
+}
+buildSingle(V,"t_verdict");
+buildSingle(STIR,"t_stir");
+
+const g=id=>document.getElementById(id);
+const val=id=>{const e=g(id);return e?(e.value||"").trim():""};
+const num=id=>{const v=parseFloat(val(id));return Number.isFinite(v)?v:null};
+function pad(n){return String(n).padStart(2,"0")}
+function currentTime(){const d=new Date();return pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds())}
+function toSec(s){const m=(s||"").match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);return m?(+m[1])*3600+(+m[2])*60+(+(m[3]||0)):null}
+function diffMin(a,b){const x=toSec(val(a)),y=toSec(val(b));if(x==null||y==null)return null;let d=y-x;if(d<0)d+=86400;return d/60}
+function fmtMin(m){if(m==null)return null;const s=Math.round(m*60);return Math.floor(s/60)+":"+pad(s%60)}
+function setCalc(id,text){const e=g(id);if(e)e.textContent=text==null||text===""?"—":text}
+function warn(id,show,text){const e=g(id);if(!e)return;if(show){e.textContent=text;e.classList.add("show")}else e.classList.remove("show")}
+function timerAction(kind,action,col){
+  const startId=kind+"_start_"+col,stopId=kind+"_stop_"+col;
+  const label=kind==="cooling"?" Cooling":kind==="age"?"บ่ม":"ปั่น";
+  if(action==="start"){
+    if((val(startId)||val(stopId))&&!confirm("เริ่มจับเวลา"+label+"ใหม่?"))return;
+    g(startId).value=currentTime();g(stopId).value="";delete beeped[kind+col];
+  }else{
+    if(!val(startId)){alert("กดเริ่มจับเวลาก่อนค่ะ");return}
+    if(val(stopId)&&!confirm("บันทึกเวลาจบ"+label+"ใหม่?"))return;
+    g(stopId).value=currentTime();
+  }
+  calcAll();save();tick();
+}
+function calcAll(){
+  BATCHES.forEach(b=>{
+    const c=b.id,cd=diffMin("cooling_start_"+c,"cooling_stop_"+c),am=diffMin("age_start_"+c,"age_stop_"+c),cm=diffMin("churn_start_"+c,"churn_stop_"+c);
+    setCalc("cool_minutes_"+c,cd==null?null:fmtMin(cd)+" นาที");
+    setCalc("age_minutes_"+c,am==null?null:fmtMin(am)+" นาที");
+    setCalc("stop_minute_"+c,cm==null?null:fmtMin(cm)+" นาที");
+    const tare=num("cup_tare_"+c),mixGross=num("cup_mix_gross_"+c),icGross1=num("cup_ic_gross_"+c),icGross2=num("cup_ic_gross_2_"+c);
+    const tareValid=tare!=null&&tare>0,mixValid=tareValid&&mixGross!=null&&mixGross>tare,ic1Valid=tareValid&&icGross1!=null&&icGross1>tare,ic2Valid=tareValid&&icGross2!=null&&icGross2>tare;
+    const mixNet=mixValid?mixGross-tare:null,icNet1=ic1Valid?icGross1-tare:null,icNet2=ic2Valid?icGross2-tare:null;
+    const icAvg=icNet1!=null&&icNet2!=null?(icNet1+icNet2)/2:null,diffPct=icAvg!=null&&icAvg>0?Math.abs(icNet1-icNet2)/icAvg*100:null,useAverage=diffPct!=null&&diffPct<=5;
+    const icNet=diffPct==null?null:(useAverage?icAvg:Math.max(icNet1,icNet2));
+    const or=mixNet!=null&&icNet!=null&&icNet>0?(mixNet-icNet)/icNet*100:null;
+    setCalc("mix_net_"+c,mixNet==null?null:mixNet.toFixed(1)+" g");
+    setCalc("ic_net_"+c,icNet==null?null:icNet.toFixed(1)+" g");
+    setCalc("ic_repeat_check_"+c,diffPct==null?null:"ครั้งที่ 1 "+icNet1.toFixed(1)+" g · ครั้งที่ 2 "+icNet2.toFixed(1)+" g · ต่าง "+diffPct.toFixed(1)+"% → "+(useAverage?"ใช้ค่าเฉลี่ย":"ใช้ค่าที่มากกว่า"));
+    setCalc("overrun_"+c,or==null?null:or.toFixed(1)+" %");
+    const mw=num("mix_weight_"+c),ps=num("temp_pbt_start_"+c),pe=num("temp_pbt_end_"+c),cr=num("cream_add_temp_"+c),pt=num("probe_temp_"+c),target=c==="D"?2000:1000;
+    warn("w_mw_"+c,mw!=null&&Math.abs(mw-target)>target*.02,"น้ำหนักมิกซ์ต่างจาก "+target.toLocaleString()+" g เกิน 2%");
+    warn("w_pbt_start_"+c,ps!=null&&(ps<60||ps>65),"อุณหภูมิเริ่ม PBT อยู่นอก 60–65°C");
+    warn("w_pbt_end_"+c,pe!=null&&pe<50,"end-PBT ต่ำกว่า 50°C");
+    warn("w_cream_"+c,cr!=null&&cr>10,"เติมครีมสูงกว่า 10°C");
+    warn("w_cup_tare_"+c,tare!=null&&!tareValid,"น้ำหนักถ้วยต้องมากกว่า 0");
+    warn("w_cup_mix_"+c,mixGross!=null&&!mixValid,tareValid?"ถ้วย + มิกซ์ ต้องหนักกว่าถ้วยเปล่า":"กรอกน้ำหนักถ้วยเปล่าก่อน");
+    warn("w_cup_ic_1_"+c,icGross1!=null&&!ic1Valid,tareValid?"ถ้วย + ไอศกรีม ครั้งที่ 1 ต้องหนักกว่าถ้วยเปล่า":"กรอกน้ำหนักถ้วยเปล่าก่อน");
+    warn("w_cup_ic_2_"+c,icGross2!=null&&!ic2Valid,tareValid?"ถ้วย + ไอศกรีม ครั้งที่ 2 ต้องหนักกว่าถ้วยเปล่า":"กรอกน้ำหนักถ้วยเปล่าก่อน");
+    warn("w_ic_repeat_"+c,diffPct!=null&&diffPct>5,"น้ำหนักสุทธิ 2 รอบต่างกันเกิน 5% — ระบบใช้ค่าที่มากกว่าในการคำนวณ %OR");
+    warn("w_probe_"+c,toSec(val("churn_stop_"+c))!=null&&pt==null,"ยังไม่ได้บันทึกอุณหภูมิเนื้อด้วย probe");
+    let h="";
+    h+=row("SER ละลาย",val("ser_ease_"+c)||"—");
+    h+=row("Cooling ถึง 4°C",cd==null?"—":fmtMin(cd)+" นาที");
+    h+=row("บ่มจริง",am==null?"—":fmtMin(am)+" นาที");
+    h+=row("เวลาปั่น",cm==null?"—":fmtMin(cm)+" นาที");
+    h+=row("เครื่องหยุด",val("machine_stop_type_"+c)||"—");
+    h+=row("เลขบนจอ",num("display_temp_"+c)==null?"—":num("display_temp_"+c).toFixed(1)+" °C");
+    h+=row("อุณหภูมิ probe",pt==null?"—":pt.toFixed(1)+" °C");
+    h+=row("มิกซ์สุทธิ",mixNet==null?"—":mixNet.toFixed(1)+" g");
+    h+=row("ไอศกรีมสุทธิ",icNet==null?"—":icNet.toFixed(1)+" g");
+    h+=row("%OR",or==null?"—":or.toFixed(1)+" %");
+    h+=row("เนื้อตอนดึง",val("texture_after_"+c)||"—");
+    g("sum"+c).innerHTML=h;
+  });
+  const entries=["A","B","C"].map(c=>num("entry_temp_"+c)).filter(v=>v!=null);
+  const entrySpread=entries.length>=2?Math.max(...entries)-Math.min(...entries):null;
+  ["A","B","C"].forEach(c=>warn("w_entry_"+c,entrySpread!=null&&entrySpread>2,"entry temp A/B/C ต่างกันเกิน 2°C — ห้ามเทียบเนื้อหรือ %OR ข้ามถัง"));
+  warn("w_entry_D",false,"");
+  const dCooling=diffMin("cooling_start_D","cooling_stop_D");
+  setCalc("stir_cool_total_S",dCooling==null?null:fmtMin(dCooling)+" นาที");
+}
+function row(k,v){return '<div class="kv"><span>'+k+'</span><b>'+v+'</b></div>'}
+
+const AGE_TARGET=30*60;
+function nowSec(){const d=new Date();return d.getHours()*3600+d.getMinutes()*60+d.getSeconds()}
+function clockText(s){const n=Math.max(0,Math.round(s));return pad(Math.floor(n/3600))+":"+pad(Math.floor(n%3600/60))+":"+pad(n%60)}
+function hmsFromSec(s){const n=((Math.round(s)%86400)+86400)%86400;return pad(Math.floor(n/3600))+":"+pad(Math.floor(n%3600/60))+":"+pad(n%60)}
+let beeped={};
+function beep(k){if(beeped[k])return;beeped[k]=1;try{const c=new (window.AudioContext||window.webkitAudioContext)();[0,300,600].forEach(t=>{const o=c.createOscillator(),gn=c.createGain();o.connect(gn);gn.connect(c.destination);o.frequency.value=880;gn.gain.setValueAtTime(.18,c.currentTime+t/1000);gn.gain.exponentialRampToValueAtTime(.001,c.currentTime+t/1000+.22);o.start(c.currentTime+t/1000);o.stop(c.currentTime+t/1000+.25)})}catch(e){}}
+function tick(){
+  const update=(kind,col)=>{
+    const startId=kind+"_start_"+col,stopId=kind+"_stop_"+col,start=toSec(val(startId)),stop=toSec(val(stopId)),clock=g(kind+"Clock_"+col),note=g(kind+"Note_"+col);
+    if(!clock||!note)return;
+    let elapsed=0;if(start!=null){const end=stop!=null?stop:nowSec();elapsed=end-start;if(elapsed<0)elapsed+=86400}
+    clock.textContent=clockText(elapsed);
+    note.textContent=start==null?"ยังไม่เริ่ม":stop==null?"เริ่ม "+val(startId)+" · กำลังจับเวลา":"เริ่ม "+val(startId)+" · จบ "+val(stopId)+" · "+clockText(elapsed);
+    if(kind==="age"){
+      const target=g("ageTarget_"+col),countdown=g("ageCountdown_"+col);countdown.classList.remove("ready");
+      if(start==null){target.textContent="เริ่มเมื่อมิกซ์ครบส่วนถึง 4°C";countdown.textContent=""}
+      else{
+        target.textContent="กำหนดครบ "+hmsFromSec(start+AGE_TARGET);
+        const at=stop!=null?stop:nowSec();let used=at-start;if(used<0)used+=86400;const remain=AGE_TARGET-used;
+        if(stop==null&&remain>0)countdown.textContent="เหลือ "+clockText(remain);
+        else if(stop==null){countdown.textContent="ครบ 30 นาทีแล้ว · เทได้เลย ไม่ต้องคนให้ถึง 4°C อีก";countdown.classList.add("ready");beep("age"+col)}
+        else if(remain>0)countdown.textContent="จบก่อนกำหนด "+clockText(remain);
+        else{countdown.textContent="จบการบ่มแล้ว";countdown.classList.add("ready")}
+      }
+    }
+  };
+  BATCHES.forEach(b=>["cooling","age","churn"].forEach(k=>update(k,b.id)));
+}
+setInterval(tick,1000);
+
+function allInputs(){return document.querySelectorAll("input,select,textarea")}
+function collect(){const o={};allInputs().forEach(e=>{if(e.id&&e.type!=="file")o[e.id]=e.value});return o}
+function apply(o){allInputs().forEach(e=>{if(e.id&&o[e.id]!==undefined)e.value=o[e.id]});calcAll();tick()}
+let saveTmr=null;
+function save(){clearTimeout(saveTmr);saveTmr=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(collect()));g("saveState").textContent="บันทึกแล้ว "+new Date().toLocaleTimeString("th-TH")}catch(e){g("saveState").textContent="⚠ บันทึกอัตโนมัติไม่ได้ — เซฟไฟล์ .json ไว้"}},250)}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){apply(JSON.parse(raw));return true}}catch(e){}return false}
+function localDate(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function setDefaults(){
+  g("meta_date").value=localDate();g("taste_date_day").value=localDate();
+  g("limits_S").value="feasibility single-arm · n=1 ต่อถัง · D เทียบกับ A/B/C ไม่ได้ (คนละเครื่อง โหลด เบส และวิธี Cooling) · entry temp ไม่ได้คุม ถ้า A/B/C ต่างเกิน 2°C ห้ามเทียบเนื้อ/%OR ข้ามถัง · overhead stirrer ใช้ครั้งแรก ไม่มี baseline · H2 ห้าม lock จนได้ผล R17 · H3 ต้องรอครบ 4 สัปดาห์ · สรุปได้เฉพาะ 4 สูตรนี้";
+}
+let resetArmed=0,resetTmr=null;
+function resetAll(){
+  const btn=g("btnReset");
+  if(!resetArmed){resetArmed=1;btn.textContent="⚠️ กดอีกครั้งเพื่อล้าง";btn.style.background= "#982d2d";btn.style.color="#fff";g("saveState").textContent="จะล้างข้อมูลทั้งหมด — กดปุ่มแดงอีกครั้งภายใน 5 วินาที";clearTimeout(resetTmr);resetTmr=setTimeout(disarmReset,5000);return}
+  clearTimeout(resetTmr);disarmReset();allInputs().forEach(e=>{if(e.type!=="file")e.value=""});setDefaults();beeped={};try{localStorage.removeItem(KEY)}catch(e){}calcAll();tick();save();
+}
+function disarmReset(){resetArmed=0;const btn=g("btnReset");if(!btn)return;btn.textContent="🗑 ล้างข้อมูล";btn.style.background="";btn.style.color=""}
+function expJSON(){
+  const d=collect();d._form="MKR16";d._exported=new Date().toISOString();
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:"application/json"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="MKR16_"+(val("meta_date")||"result").replace(/[^\wก-๙.-]/g,"_")+".json";document.body.appendChild(a);a.click();const url=a.href;a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function impJSON(ev){
+  const f=ev.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const data=JSON.parse(r.result);if(data._form&&data._form!=="MKR16")throw Error("wrong form");apply(data);save();g("saveState").textContent="โหลดไฟล์เรียบร้อย"}catch(e){g("saveState").textContent="⚠️ ไฟล์ไม่ถูกต้อง — ต้องเป็นไฟล์จาก MKR16"}};r.readAsText(f);ev.target.value="";
+}
+document.addEventListener("input",e=>{if(e.target.type!=="file"){calcAll();save()}});
+document.addEventListener("change",e=>{if(e.target.type!=="file"){calcAll();save()}});
+if(!load()){setDefaults();save()}
+calcAll();tick();
+</script>
+</body>
+</html>
