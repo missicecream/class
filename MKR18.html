@@ -1,0 +1,248 @@
+<!--
+  Copyright © 2026 Miss Icecream Co., Ltd. / พรหล้า ขาวเธียร (Paula Kaothien)
+  All Rights Reserved.
+-->
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MK R18 · G5 พังจริงไหม · เทียบกับ G10</title>
+<style>
+:root{
+  --bg:#f5f1e8;--card:#fffdf8;--line:#cbbda6;--line2:#ddd2bf;--ink:#29231f;--muted:#675d53;
+  --accent:#664a34;--green:#2e6846;--green-bg:#e8f3ec;--red:#962e2e;--red-bg:#fbeaea;
+  --amber:#805b10;--amber-bg:#fbf1d8;--blue:#2c5778;--blue-bg:#e8f0f7;--g10:#76503a;--g5:#315e78
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai","Sarabun",sans-serif;font-size:17px;line-height:1.55;padding-bottom:28px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{background:var(--card);border-bottom:2px solid var(--line);padding:14px 0 12px}
+h1{font-size:1.42rem;margin:0 0 2px}h2{font-size:1.16rem;margin:0 0 8px;color:var(--accent)}h3{font-size:1rem;margin:14px 0 7px}.sub{color:var(--muted);font-size:.9rem}
+.back{display:inline-flex;color:var(--accent);font-weight:750;text-decoration:none;margin-bottom:5px}
+section,details.panel,.experiment{background:var(--card);border:1.5px solid var(--line);border-radius:14px;margin:16px 0;padding:15px}
+details.panel>summary{cursor:pointer;color:var(--accent);font-weight:800;font-size:1.03rem}
+.note,.warnbox,.okbox{padding:10px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:.94rem}
+.note{background:var(--blue-bg);border-left:5px solid var(--blue)}.warnbox{background:var(--red-bg);border-left:5px solid var(--red)}.okbox{background:var(--green-bg);border-left:5px solid var(--green)}
+.form-stack{display:grid;grid-template-columns:1fr;gap:11px}.field{display:grid;grid-template-columns:1fr;gap:5px;padding:10px 0;border-bottom:1px solid var(--line2)}.field:last-child{border-bottom:0}
+.field>label,.field>.field-label{font-weight:760}.helper{display:block;color:var(--muted);font-size:.82rem;font-weight:450;line-height:1.4;margin-top:2px}
+input[type=number],input[type=text],input[type=date],select,textarea{width:100%;font:inherit;font-size:1rem;padding:10px 9px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+textarea{min-height:78px;resize:vertical}input:focus,select:focus,textarea:focus{outline:3px solid #cbbfa6;outline-offset:0}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:7px 0}.checkline input{margin-top:5px;transform:scale(1.3);flex:0 0 auto}.checkline span{flex:1}
+.experiment{padding:0;overflow:hidden;border-width:2px}.experiment-head{padding:15px 17px;color:#fff}.experiment-head h2{color:#fff;margin:0}.experiment-head p{margin:2px 0 0;font-size:.9rem;opacity:.94}.experiment[data-batch="A"] .experiment-head{background:var(--g10)}.experiment[data-batch="B"] .experiment-head{background:var(--g5)}
+.experiment-body{padding:16px}.step{border:1.5px solid var(--line2);border-radius:12px;padding:13px;margin:13px 0;background:#fff}.step h3{margin:0 0 8px;color:var(--accent)}
+.batch-scroll{overflow-x:auto;padding:2px}.batch-columns{display:grid;grid-template-columns:minmax(440px,1fr) minmax(440px,1fr);gap:14px;min-width:900px;align-items:start}.batch-columns.single{grid-template-columns:minmax(440px,760px);min-width:0;justify-content:center}.batch-columns .experiment{margin:0}
+.step-number{display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;background:var(--accent);color:#fff;margin-right:7px;font-size:.84rem}
+.fixed{background:#f2ece1;border:1px dashed var(--line);border-radius:9px;padding:10px;font-weight:760}.calc{background:#f2ece1;border:1.5px dashed var(--line);border-radius:9px;padding:10px 9px;font-weight:780;font-variant-numeric:tabular-nums;min-height:44px}
+.warn{display:none;background:var(--amber-bg);border-left:4px solid var(--amber);color:#594009;padding:7px 9px;border-radius:0 6px 6px 0;font-size:.82rem;margin-top:6px;font-weight:650}.warn.show{display:block}.warn.hard{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.timer-control{display:grid;grid-template-columns:1fr;gap:7px;text-align:center}.timer-clock{font-size:1.8rem;font-weight:880;font-variant-numeric:tabular-nums;color:var(--green)}
+.timer-actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}.mini{border:1px solid var(--line);border-radius:8px;padding:8px 12px;font:inherit;font-size:.85rem;font-weight:800;cursor:pointer}.mini.start{background:var(--green);border-color:var(--green);color:#fff}.mini.stop{background:var(--amber);border-color:var(--amber);color:#fff}
+.timer-note,.timer-target,.timer-countdown{font-size:.8rem;color:var(--muted)}.timer-target{color:var(--green);font-weight:750}.timer-countdown{font-size:1rem;color:var(--amber);font-weight:850}.timer-countdown.ready{color:var(--green);font-size:.84rem}
+.timer-manual{margin-top:2px;padding:6px 8px;border:1px dashed var(--line);border-radius:8px;background:#fff}.timer-manual summary{font-size:.78rem;color:var(--muted);font-weight:700;cursor:pointer}.timer-manual .form-stack{margin-top:7px}
+button{font:inherit;font-size:.88rem;padding:9px 13px;border-radius:9px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;font-weight:680}button.primary{background:var(--green);border-color:var(--green);color:#fff}button.danger{border-color:#dfb9b9;color:var(--red)}
+.start-both{width:100%;padding:12px;font-size:1rem;margin:8px 0;background:var(--green);border-color:var(--green);color:#fff}
+.result-card{padding:13px;border:2px solid var(--line);border-radius:12px;background:#fff;margin:10px 0}.result-card.good{border-color:var(--green);background:var(--green-bg)}.result-card.bad{border-color:var(--red);background:var(--red-bg)}.result-card.caution{border-color:var(--amber);background:var(--amber-bg)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dotted var(--line2)}.kv:last-child{border-bottom:0}.kv b{text-align:right;font-variant-numeric:tabular-nums}
+.toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:20px 0 10px}.savebar{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:.86rem;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;margin:8px 0}th,td{border:1px solid var(--line2);padding:7px 8px;text-align:left;vertical-align:top}th{background:#f2ece1;font-size:.9rem}.scroll{overflow-x:auto}.scroll table{min-width:650px}
+ol.protocol{margin:8px 0;padding-left:24px}ol.protocol li{margin:6px 0}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:.8rem;margin:16px 0 4px}
+@media(max-width:700px){.wrap{padding:0 10px}body{font-size:16px}.kv{display:grid;gap:2px}.kv b{text-align:left}.batch-scroll{margin-right:-10px;padding-right:10px}}
+@media print{.back,.toolbar,.timer-actions,.start-both,.savebar{display:none!important}body{background:#fff;padding:0}.wrap{max-width:none}section,details.panel,.experiment,.step{break-inside:avoid;border-color:#999}details.panel{display:block}details.panel>summary{list-style:none}.timer-manual{display:none}.hidden{display:none!important}input,select,textarea{border-color:#aaa!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <a class="back" href="index.html">← กลับหน้าหลัก</a>
+  <h1>MK R18 · G5 พังจริงไหม · เทียบกับ G10</h1>
+  <div class="sub"><b>สูตรเดียว MKDL05 · แผน A: G10 2 kg + G5 1 kg พร้อมกัน · แผน B: G10 2 kg อย่างเดียว</b></div>
+</div></header>
+
+<main class="wrap">
+<section>
+  <h2>📋 ข้อมูลรอบและแผนที่ใช้</h2>
+  <div class="warnbox"><b>คำถามเดียวของรอบ:</b> สูตร MKDL05 ปั่นแห้งบน G10 แต่ไม่แห้งบน G5 หรือไม่ · ไม่ทดสอบรสชาติ และไม่วัดอุณหภูมิห้อง/เครื่อง</div>
+  <div class="form-stack">
+    <div class="field"><label for="meta_date">วันที่ทดลอง</label><input type="date" id="meta_date"></div>
+    <div class="field"><label for="meta_who">ผู้ทำ</label><input type="text" id="meta_who" placeholder="ผู้ทำรอบนี้"></div>
+    <div class="field"><label for="plan">แผนที่ใช้<span class="helper">แผน A แนะนำเมื่อทำมิกซ์ 3 kg หม้อเดียวได้</span></label><select id="plan"><option value="A">แผน A · G10 2 kg + G5 1 kg พร้อมกัน</option><option value="B">แผน B · G10 2 kg อย่างเดียว</option></select></div>
+    <div class="field"><label for="air_state">สภาพแอร์วันนี้<span class="helper">จะเป่าหรือไม่ก็ได้ แต่แผน A ต้องเหมือนกันทั้งสองเครื่องและห้ามเปลี่ยนกลางรอบ</span></label><select id="air_state"><option value="">— เลือก —</option><option>เป่าแอร์ลงเครื่อง</option><option>ไม่เป่าแอร์ลงเครื่อง</option></select></div>
+    <label class="checkline"><input type="checkbox" id="same_air"><span>ตรวจแล้ว — สภาพแอร์เหมือนกันทั้งสองเครื่องตลอดรอบ</span></label>
+    <label class="checkline"><input type="checkbox" id="same_mix"><span>แผน A: ทำมิกซ์หม้อเดียวแล้วแบ่ง 2,000 g / 1,000 g</span></label>
+    <label class="checkline"><input type="checkbox" id="same_day"><span>ทำทั้งสองเครื่องวันเดียวกัน</span></label>
+  </div>
+</section>
+
+<details class="panel">
+  <summary>🔎 ที่มาและการอ่านผล</summary>
+  <div class="warnbox"><b>สมมติฐานแอร์ตกแล้ว:</b> R17 ถัง 1 ใช้ MKDL05 บน G5 พร้อมเป่าแอร์ แต่ยังเปียกมาก รอบนี้จึงทดสอบเครื่องโดยตรง</div>
+  <table><tbody>
+    <tr><th>G10</th><th>G5</th><th>แปลว่า</th></tr>
+    <tr><td>แห้ง</td><td>ไม่แห้ง</td><td><b>G5 มีปัญหา</b> — เรียกช่าง ย้ายงานไป G10 และทำ R16 ใหม่</td></tr>
+    <tr><td>แห้ง</td><td>แห้ง</td><td>G5 ไม่ได้พังแบบถาวร — ไล่ deviation ของ R16/R17</td></tr>
+    <tr><td>ไม่แห้ง</td><td>ไม่แห้ง</td><td>ไม่ใช่เครื่อง — ตรวจวัตถุดิบและกระบวนการ</td></tr>
+    <tr><td>ไม่แห้ง</td><td>แห้ง</td><td>ผิดคาด — หยุดตีความและตรวจการสลับ</td></tr>
+  </tbody></table>
+  <div class="note">แผน B ใช้ R17 ถัง 1 เป็นตัวเทียบข้ามวัน ข้อสรุปจึงอ่อนกว่าแผน A</div>
+</details>
+
+<details class="panel">
+  <summary>🍶 สูตร MKDL05 — เลือกแผนแล้วระบบจะแสดงสูตรที่ใช้</summary>
+  <div id="formula_A">
+    <h3>แผน A · ทำ 3,000 g หม้อเดียว</h3>
+    <div class="scroll"><table><thead><tr><th>กลุ่ม</th><th>ส่วนผสม</th><th>CODE</th><th>3,000 g</th></tr></thead><tbody>
+      <tr><td>①</td><td>S/E ชนิด SER</td><td>SER</td><td><b>18</b></td></tr><tr><td>①</td><td>น้ำตาลทราย — สาย ①</td><td>SUC</td><td>90</td></tr><tr><td>①</td><td>น้ำ</td><td>WTR</td><td>327</td></tr>
+      <tr><td>②</td><td>นมผงพร่องมันเนย</td><td>PMP</td><td>210</td></tr><tr><td>②</td><td>เดกซ์โทรส</td><td>DEX</td><td>99</td></tr><tr><td>②</td><td>อินูลิน</td><td>INL</td><td>90</td></tr><tr><td>②</td><td>มอลโทเดกซ์ทริน</td><td>MTD</td><td>75</td></tr><tr><td>②</td><td>น้ำตาลทราย — ที่เหลือ</td><td>SUC</td><td>96</td></tr><tr><td>②</td><td>น้ำนมโคเต็มมันเนย</td><td>MLK</td><td>1,770</td></tr>
+      <tr><td>③</td><td>วิปปิงครีม 36%</td><td>CRM</td><td>225</td></tr><tr><th></th><th>รวม</th><th></th><th>3,000 g</th></tr>
+    </tbody></table></div>
+    <div class="note">เผื่อของติดหม้อ 5–10%: นมสดประมาณ 1,860–1,950 g · ครีมประมาณ 235–250 g</div>
+  </div>
+  <div id="formula_B" class="hidden">
+    <h3>แผน B · ทำ 2,000 g เข้า G10 อย่างเดียว</h3>
+    <div class="scroll"><table><thead><tr><th>กลุ่ม</th><th>ส่วนผสม</th><th>CODE</th><th>2,000 g</th></tr></thead><tbody>
+      <tr><td>①</td><td>S/E ชนิด SER</td><td>SER</td><td><b>12</b></td></tr><tr><td>①</td><td>น้ำตาลทราย — สาย ①</td><td>SUC</td><td>60</td></tr><tr><td>①</td><td>น้ำ</td><td>WTR</td><td>218</td></tr>
+      <tr><td>②</td><td>นมผงพร่องมันเนย</td><td>PMP</td><td>140</td></tr><tr><td>②</td><td>เดกซ์โทรส</td><td>DEX</td><td>66</td></tr><tr><td>②</td><td>อินูลิน</td><td>INL</td><td>60</td></tr><tr><td>②</td><td>มอลโทเดกซ์ทริน</td><td>MTD</td><td>50</td></tr><tr><td>②</td><td>น้ำตาลทราย — ที่เหลือ</td><td>SUC</td><td>64</td></tr><tr><td>②</td><td>น้ำนมโคเต็มมันเนย</td><td>MLK</td><td>1,180</td></tr>
+      <tr><td>③</td><td>วิปปิงครีม 36%</td><td>CRM</td><td>150</td></tr><tr><th></th><th>รวม</th><th></th><th>2,000 g</th></tr>
+    </tbody></table></div>
+  </div>
+  <p class="sub">พารามิเตอร์ต่อ 1 kg: fat 4.98 · TS 32.06 · RSW 15.05 · AFPT 19.75 · FWT 55.13 · น้ำแข็ง 551 g/kg</p>
+</details>
+
+<details class="panel" open>
+  <summary>🧭 ขั้นตอนร่วม · PBT → Cooling → บ่ม 30 นาที</summary>
+  <div class="okbox"><b>ลำดับบังคับ:</b> ทำ PBT ให้จบ → Cooling ถึง 4°C → บ่ม 30 นาที → จึงเริ่มชั่งถ้วยและมิกซ์ก่อนปั่นในขั้น 1 ของแต่ละ batch</div>
+  <ol class="protocol">
+    <li>ทำ MKDL05 หม้อเดียวตามแผนที่เลือก · PBT ×2 รอบ: ปั่น 30 วินาที / พัก 10 วินาที</li>
+    <li>หลัง PBT จึง Cooling จนมิกซ์ครบส่วนถึง 4°C</li>
+    <li>เมื่อถึง 4°C จึงเริ่มบ่ม 30 นาที</li>
+    <li>หลังบ่มครบจึงแบ่ง 2,000 g เข้า G10 และ 1,000 g เข้า G5 แล้วชั่งมิกซ์ก่อนปั่นสำหรับ %OR</li>
+    <li>ตั้งสภาพแอร์ให้เหมือนกันและห้ามเปลี่ยนระหว่างปั่น</li>
+  </ol>
+  <label class="checkline"><input type="checkbox" id="pbt_done"><span>ทำ PBT ×2 รอบเสร็จแล้ว</span></label>
+  <label class="checkline"><input type="checkbox" id="cooling_done"><span>Cooling จนมิกซ์ครบส่วนถึง 4°C แล้ว</span></label>
+  <h3>นาฬิกาบ่มร่วม 30 นาที</h3>
+  <div id="aging_timer"></div>
+  <div class="calc" id="age_minutes">—</div>
+  <label class="checkline"><input type="checkbox" id="aging_done"><span>บ่มครบแล้ว — เริ่มวัดน้ำหนักมิกซ์ก่อนปั่นได้</span></label>
+</details>
+
+<section>
+  <h2>📝 บันทึกผล 2 batch ขนานกัน</h2>
+  <div class="note"><b>อ่านแต่ละคอลัมน์จากบนลงล่าง:</b> ซ้ายคือ G10 · ขวาคือ G5 · ขั้นและช่องเดียวกันของสองเครื่องวางอยู่ในตำแหน่งขนานกัน ห้ามกรอกไล่ข้ามแถวภายใน batch</div>
+  <div class="batch-scroll">
+    <div class="batch-columns" id="batch_columns">
+      <div id="batch_A" class="experiment" data-batch="A"></div>
+      <div id="batch_B" class="experiment" data-batch="B"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>✅ สรุป H1</h2>
+  <div id="auto_verdict" class="result-card">กรอก “เนื้อตอนดึงออก” ของเครื่องที่ใช้ก่อน ระบบจึงจะสรุปได้</div>
+  <div class="form-stack">
+    <div class="field"><label for="h1_verdict">ผลที่ทีมยืนยัน<span class="helper">เลือกหลังดูเนื้อจริงและตรวจว่าไม่มีการสลับเครื่อง/โหลด</span></label><select id="h1_verdict">
+      <option value="">— ยังไม่สรุป —</option><option>G10 แห้ง · G5 ไม่แห้ง — G5 มีปัญหา</option><option>แห้งทั้งคู่ — G5 ไม่ได้พังแบบถาวร</option><option>ไม่แห้งทั้งคู่ — ไม่ใช่เครื่อง</option><option>G10 ไม่แห้ง · G5 แห้ง — ผิดคาด หยุดตีความ</option><option>แผน B · G10 แห้ง — ชี้ไปที่ G5 แต่ข้อสรุปอ่อนลง</option><option>แผน B · G10 ไม่แห้ง — ไม่สนับสนุนว่า G5 เป็นสาเหตุเดียว</option>
+    </select></div>
+    <div class="field"><label for="conclusion">สรุป</label><textarea id="conclusion"></textarea></div>
+    <div class="field"><label for="next_action">Action ถัดไป</label><textarea id="next_action"></textarea></div>
+    <div class="field"><label for="limits">ข้อจำกัดการตีความ</label><textarea id="limits"></textarea></div>
+  </div>
+</section>
+
+<details class="panel">
+  <summary>📦 คำถามวัตถุดิบ — ถามทีมไว้ก่อน ไม่ต้องทดลองเพิ่ม</summary>
+  <label class="checkline"><input type="checkbox" id="q_new_lot"><span>ถามแล้ว — เปิดถุง/ล็อตใหม่ของ SER, นมผง, อินูลิน, มอลโทเดกซ์ทริน หรือครีม ระหว่าง 1–3 ส.ค. หรือไม่</span></label>
+  <label class="checkline"><input type="checkbox" id="q_brand"><span>ถามแล้ว — เปลี่ยนยี่ห้อหรือรุ่นของครีม/นมสดหรือไม่</span></label>
+  <label class="checkline"><input type="checkbox" id="q_ice"><span>ถามแล้ว — น้ำแข็ง Cooling มาจากแหล่งเดิมหรือไม่</span></label>
+  <label class="checkline"><input type="checkbox" id="q_setting"><span>ถามแล้ว — มีใครเปลี่ยน set point ของ G5 หรือไม่</span></label>
+  <div class="field"><label for="material_notes">คำตอบและล็อตที่พบ</label><textarea id="material_notes"></textarea></div>
+</details>
+
+<div class="toolbar" aria-label="จัดการไฟล์และแบบฟอร์ม">
+  <button type="button" onclick="expJSON()">💾 เซฟไฟล์ .json</button>
+  <button type="button" onclick="document.getElementById('imp').click()">📂 เปิดไฟล์ .json</button>
+  <input type="file" id="imp" accept=".json,application/json" class="hidden" onchange="impJSON(event)">
+  <button type="button" onclick="window.print()">🖨 พิมพ์</button>
+  <button type="button" class="danger" id="btnReset" onclick="resetAll()">🗑 ล้างข้อมูล</button>
+</div>
+<div class="savebar"><span id="saveState">พร้อมบันทึก</span><span>MKR18 · MR v8.4.2</span></div>
+<footer>Copyright © 2026 Miss Icecream Co., Ltd. All Rights Reserved. · <a href="/class/license.html">เงื่อนไขการใช้งาน</a><br>01MK LabRecord R18 · MR v8.4.2 · จัดทำ 6 ส.ค. 2026</footer>
+</main>
+
+<script>
+"use strict";
+const KEY="MKR18_v1";
+const BATCHES={A:{machine:"G10",load:2000,title:"ถัง A · G10 2 kg",sub:"เครื่องเปรียบเทียบหลัก · MKDL05"},B:{machine:"G5",load:1000,title:"ถัง B · G5 1 kg",sub:"เครื่องที่กำลังตรวจ · MKDL05"}};
+const g=id=>document.getElementById(id);
+function options(list){return list.map(x=>'<option value="'+x+'">'+(x||"— เลือก —")+'</option>').join("")}
+function field(label,id,type="number",helper="",extra=""){
+  const control=type==="select"?'<select id="'+id+'">'+extra+'</select>':type==="area"?'<textarea id="'+id+'" '+extra+'></textarea>':'<input type="'+type+'" id="'+id+'" '+extra+'>';
+  return '<div class="field"><label for="'+id+'">'+label+(helper?'<span class="helper">'+helper+'</span>':"")+'</label>'+control+'<div class="warn" id="w_'+id+'"></div></div>';
+}
+function timer(kind,col,target=0){
+  const start=kind+'_start_'+col,stop=kind+'_stop_'+col;
+  return '<div class="timer-control"><div class="timer-clock" id="'+kind+'Clock_'+col+'">00:00:00</div><div class="timer-actions"><button class="mini start" type="button" onclick="timerAction(\''+kind+'\',\'start\',\''+col+'\')">เริ่ม</button><button class="mini stop" type="button" onclick="timerAction(\''+kind+'\',\'stop\',\''+col+'\')">หยุด</button></div><div class="timer-note" id="'+kind+'Note_'+col+'">ยังไม่เริ่ม</div><div class="timer-target" id="'+kind+'Target_'+col+'">'+(target?'เป้า '+clockText(target):"")+'</div><div class="timer-countdown" id="'+kind+'Countdown_'+col+'"></div><details class="timer-manual"><summary>แก้เวลาเริ่ม–จบ</summary><div class="form-stack">'+field('เวลาเริ่ม',start,'text','รูปแบบ HH:MM:SS','placeholder="--:--:--"')+field('เวลาจบ',stop,'text','รูปแบบ HH:MM:SS','placeholder="--:--:--"')+'</div></details></div>';
+}
+function buildBatch(c){
+  const b=BATCHES[c];let h='<div class="experiment-head"><h2>'+b.title+'</h2><p>'+b.sub+' · กรอกจากบนลงล่างตามลำดับการผลิตจริง</p></div><div class="experiment-body">';
+  h+='<div class="step"><h3><span class="step-number">1</span>หลังบ่มครบ · วัด %OR ช่วงก่อนปั่น</h3><div class="warnbox"><b>อย่าเริ่มส่วนนี้ก่อนบ่มครบ 30 นาที</b></div><div class="form-stack"><div class="field"><span class="field-label">เครื่องและโหลด</span><div class="fixed">'+b.machine+' · เป้า '+b.load.toLocaleString('en-US')+' g</div></div>'+field('น้ำหนักมิกซ์ทั้ง batch','mix_weight_'+c,'number','แบ่งและบันทึกน้ำหนักจริงหลังบ่มครบ','step="0.1" placeholder="g"')+field('น้ำหนักถ้วยเปล่า','cup_tare_'+c,'number','ใช้ถ้วยเดิมกับมิกซ์และไอศกรีม','step="0.1" placeholder="g"')+field('ถ้วย + มิกซ์ก่อนปั่น','cup_mix_gross_'+c,'number','เติมเต็ม ปาดเรียบ แล้วชั่งหลังบ่มและก่อนปั่น','step="0.1" placeholder="g"')+'<div class="field"><span class="field-label">น้ำหนักมิกซ์ก่อนปั่นสุทธิ</span><div class="calc" id="mix_net_'+c+'">—</div></div></div></div>';
+  h+='<div class="step"><h3><span class="step-number">2</span>เทเข้าเครื่องและเริ่มปั่น</h3><div class="form-stack">'+field('อุณหภูมิในโถก่อนปั่น','entry_temp_'+c,'number','วัดหลังเทมิกซ์เข้าเครื่องและก่อนกดเดิน','step="0.1" placeholder="°C"')+'</div><div class="note">ปุ่มเขียวเริ่มเวลา G10 และ G5 พร้อมกันในครั้งเดียว · จากนั้นหยุดนาฬิกาของแต่ละเครื่องแยกกัน</div><button type="button" class="start-both" onclick="startTogether()" id="btnStartTogether_'+c+'">เริ่มปั่น G10 + G5 พร้อมกัน</button>'+timer('churn',c,0)+'<div class="calc" id="churn_minutes_'+c+'">—</div></div>';
+  h+='<div class="step"><h3><span class="step-number">3</span>ทันทีเมื่อเครื่องหยุด</h3><div class="form-stack">'+field('เครื่องหยุดแบบใด','machine_stop_type_'+c,'select','',options(['','เครื่องหยุดเอง','overload ใบพัดหยุดหมุน','เรากดหยุด']))+field('เลขอุณหภูมิบนจอ','display_temp_'+c,'number','อ่านทันทีเมื่อเครื่องหยุด','step="0.1" placeholder="°C"')+field('อุณหภูมิเนื้อด้วย probe','probe_temp_'+c,'number','จุ่มจุด 1 พักเข็ม 10 วิ ไม่อ่าน → ย้ายจุด 2 → รอนิ่งแล้วอ่าน','step="0.1" placeholder="°C"')+field('อุณหภูมิ IR สำรอง','ir_temp_'+c,'number','บันทึกถ้าทำได้','step="0.1" placeholder="°C"')+'</div></div>';
+  h+='<div class="step"><h3><span class="step-number">4</span>ดึงออก · ดูเนื้อ · ชั่งไอศกรีมหลังปั่น</h3><div class="note">ใช้ถ้วยเดิม เติมเต็มและปาดเรียบทุกครั้ง · ทิ้งตัวอย่างครั้งแรกแล้วเติมใหม่เพื่อชั่งครั้งที่ 2</div><div class="form-stack">'+field('เนื้อตอนดึงออก — คำตอบหลัก','texture_after_'+c,'select','',options(['','แห้ง-ตั้งตัว','มันเงา','ซึม','เปียก']))+field('เม็ดเนย','butter_granule_'+c,'select','',options(['','ไม่มี','มีเล็กน้อย','มีชัดเจน']))+field('เสียงขูดผิดปกติ','scrape_noise_'+c,'select','',options(['','ไม่มี','มีช่วงท้าย','มีตลอด']))+field('ถ้วย + ไอศกรีมหลังปั่น ครั้งที่ 1','cup_ic_gross_1_'+c,'number','เติมเต็ม ปาดเรียบ แล้วชั่ง','step="0.1" placeholder="g"')+field('ถ้วย + ไอศกรีมหลังปั่น ครั้งที่ 2','cup_ic_gross_2_'+c,'number','เติมใหม่ ปาดเรียบ แล้วชั่งซ้ำ','step="0.1" placeholder="g"')+'<div class="field"><span class="field-label">ตรวจการชั่งไอศกรีม 2 รอบ</span><div class="calc" id="ic_repeat_'+c+'">—</div><div class="warn" id="w_ic_repeat_'+c+'"></div></div><div class="field"><span class="field-label">น้ำหนักไอศกรีมหลังปั่นสุทธิที่ใช้</span><div class="calc" id="ic_net_'+c+'">—</div></div><div class="field"><span class="field-label">%OR</span><div class="calc" id="overrun_'+c+'">—</div></div></div></div>';
+  h+='<div class="step"><h3><span class="step-number">5</span>จบการทดลองของเครื่องนี้</h3><div class="form-stack">'+field('ทุกอย่างที่ไม่ตรงแผน','deviation_'+c,'area','ถ้าไม่มีให้พิมพ์ “ไม่มี”','placeholder="บันทึกก่อนจบรอบ"')+'</div><div class="result-card" id="summary_'+c+'">ยังกรอกข้อมูลไม่ครบ</div></div></div>';
+  g('batch_'+c).innerHTML=h;
+}
+
+buildBatch('A');buildBatch('B');g('aging_timer').innerHTML=timer('age','S',1800);
+
+function pad(n){return String(n).padStart(2,'0')}
+function currentTime(){const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
+function toSec(s){const m=(s||'').match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);return m?(+m[1])*3600+(+m[2])*60+(+(m[3]||0)):null}
+function val(id){const e=g(id);return e?(e.value||'').trim():''}
+function num(id){const v=parseFloat(val(id));return Number.isFinite(v)?v:null}
+function diffSec(a,b){const x=toSec(val(a)),y=toSec(val(b));if(x==null||y==null)return null;let d=y-x;if(d<0)d+=86400;return d}
+function clockText(s){const n=Math.max(0,Math.round(s));return pad(Math.floor(n/3600))+':'+pad(Math.floor(n%3600/60))+':'+pad(n%60)}
+function fmtMin(s){return Math.floor(s/60)+':'+pad(Math.round(s%60))}
+function setText(id,text){const e=g(id);if(e)e.textContent=text==null||text===''?'—':text}
+function setWarn(id,show,text){const e=g(id);if(!e)return;if(show){e.textContent=text;e.classList.add('show')}else e.classList.remove('show')}
+function nowSec(){const d=new Date();return d.getHours()*3600+d.getMinutes()*60+d.getSeconds()}
+let beeped={};
+function beep(key){if(beeped[key])return;beeped[key]=1;try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),gn=c.createGain();o.connect(gn);gn.connect(c.destination);o.frequency.value=880;gn.gain.setValueAtTime(.18,c.currentTime);gn.gain.exponentialRampToValueAtTime(.001,c.currentTime+.28);o.start();o.stop(c.currentTime+.3)}catch(e){}}
+function timerAction(kind,action,col){const start=kind+'_start_'+col,stop=kind+'_stop_'+col;if(action==='start'){if((val(start)||val(stop))&&!confirm('เริ่มจับเวลาใหม่?'))return;g(start).value=currentTime();g(stop).value='';delete beeped[kind+col]}else{if(!val(start)){alert('กดเริ่มจับเวลาก่อนค่ะ');return}if(val(stop)&&!confirm('บันทึกเวลาหยุดใหม่?'))return;g(stop).value=currentTime()}calcAll();save();tick()}
+function startTogether(){const cols=val('plan')==='A'?['A','B']:['A'],t=currentTime();if(cols.some(c=>val('churn_start_'+c)||val('churn_stop_'+c))&&!confirm('เริ่มจับเวลาปั่นใหม่?'))return;cols.forEach(c=>{g('churn_start_'+c).value=t;g('churn_stop_'+c).value='';delete beeped['churn'+c]});calcAll();save();tick()}
+function tickOne(kind,col,target){const start=toSec(val(kind+'_start_'+col)),stop=toSec(val(kind+'_stop_'+col)),clock=g(kind+'Clock_'+col),note=g(kind+'Note_'+col),count=g(kind+'Countdown_'+col);if(!clock)return;let elapsed=0;if(start!=null){const end=stop!=null?stop:nowSec();elapsed=end-start;if(elapsed<0)elapsed+=86400}clock.textContent=clockText(elapsed);note.textContent=start==null?'ยังไม่เริ่ม':stop==null?'เริ่ม '+val(kind+'_start_'+col)+' · กำลังจับเวลา':'เริ่ม '+val(kind+'_start_'+col)+' · จบ '+val(kind+'_stop_'+col);count.classList.remove('ready');if(target&&start!=null&&stop==null){const remain=target-elapsed;if(remain>0)count.textContent='เหลือ '+clockText(remain);else{count.textContent='ครบ 30 นาทีแล้ว';count.classList.add('ready');beep(kind+col)}}else count.textContent=''}
+function tick(){tickOne('age','S',1800);tickOne('churn','A',0);if(val('plan')==='A')tickOne('churn','B',0)}
+setInterval(tick,1000);
+
+function calcBatch(c){
+  const target=BATCHES[c].load,mw=num('mix_weight_'+c),ch=diffSec('churn_start_'+c,'churn_stop_'+c),tare=num('cup_tare_'+c),mixGross=num('cup_mix_gross_'+c),i1=num('cup_ic_gross_1_'+c),i2=num('cup_ic_gross_2_'+c);
+  setText('churn_minutes_'+c,ch==null?null:fmtMin(ch)+' นาที');setWarn('w_mix_weight_'+c,mw!=null&&Math.abs(mw-target)>target*.02,'น้ำหนักต่างจากเป้าเกิน 2%');
+  const mixNet=tare!=null&&mixGross!=null&&mixGross>tare?mixGross-tare:null,n1=tare!=null&&i1!=null&&i1>tare?i1-tare:null,n2=tare!=null&&i2!=null&&i2>tare?i2-tare:null,avg=n1!=null&&n2!=null?(n1+n2)/2:null,diff=avg!=null&&avg>0?Math.abs(n1-n2)/avg*100:null,useAvg=diff!=null&&diff<=5,icNet=diff==null?null:(useAvg?avg:Math.max(n1,n2)),or=mixNet!=null&&icNet!=null&&icNet>0?(mixNet-icNet)/icNet*100:null;
+  setText('mix_net_'+c,mixNet==null?null:mixNet.toFixed(1)+' g');setText('ic_repeat_'+c,diff==null?null:'สุทธิ '+n1.toFixed(1)+' / '+n2.toFixed(1)+' g · ต่าง '+diff.toFixed(1)+'% → '+(useAvg?'ใช้ค่าเฉลี่ย':'ใช้ค่าที่มากกว่า'));setWarn('w_ic_repeat_'+c,diff!=null&&diff>5,'สองรอบต่างเกิน 5% — ใช้ค่าที่มากกว่า');setText('ic_net_'+c,icNet==null?null:icNet.toFixed(1)+' g');setText('overrun_'+c,or==null?null:or.toFixed(1)+' %');
+  setWarn('w_cup_tare_'+c,tare!=null&&tare<=0,'น้ำหนักถ้วยต้องมากกว่า 0');
+  setWarn('w_cup_mix_gross_'+c,mixGross!=null&&(tare==null||mixGross<=tare),tare==null?'กรอกน้ำหนักถ้วยเปล่าก่อน':'ถ้วย + มิกซ์ต้องหนักกว่าถ้วยเปล่า');
+  setWarn('w_cup_ic_gross_1_'+c,i1!=null&&(tare==null||i1<=tare),tare==null?'กรอกน้ำหนักถ้วยเปล่าก่อน':'ถ้วย + ไอศกรีมต้องหนักกว่าถ้วยเปล่า');
+  setWarn('w_cup_ic_gross_2_'+c,i2!=null&&(tare==null||i2<=tare),tare==null?'กรอกน้ำหนักถ้วยเปล่าก่อน':'ถ้วย + ไอศกรีมต้องหนักกว่าถ้วยเปล่า');
+  const texture=val('texture_after_'+c),stop=val('machine_stop_type_'+c),probe=num('probe_temp_'+c);let h='<div class="kv"><span>เนื้อ</span><b>'+(texture||'—')+'</b></div><div class="kv"><span>เวลาปั่น</span><b>'+(ch==null?'—':fmtMin(ch)+' นาที')+'</b></div><div class="kv"><span>เครื่องหยุด</span><b>'+(stop||'—')+'</b></div><div class="kv"><span>probe</span><b>'+(probe==null?'—':probe.toFixed(1)+' °C')+'</b></div><div class="kv"><span>%OR</span><b>'+(or==null?'—':or.toFixed(1)+' %')+'</b></div>';g('summary_'+c).innerHTML=h;
+}
+function dryState(texture){return texture==='แห้ง-ตั้งตัว'?'dry':texture?'notdry':''}
+function calcVerdict(){const plan=val('plan'),a=dryState(val('texture_after_A')),b=dryState(val('texture_after_B')),box=g('auto_verdict');box.className='result-card';if(!a||(plan==='A'&&!b)){box.textContent='กรอก “เนื้อตอนดึงออก” ของเครื่องที่ใช้ก่อน ระบบจึงจะสรุปได้';return}let text='',cls='caution';if(plan==='B'){if(a==='dry'){text='แผน B: G10 ปั่นแห้ง — สนับสนุนว่าสูตรทำแห้งได้ และชี้กลับไปที่ G5 แต่ข้อสรุปอ่อนลงเพราะเทียบข้ามวัน';cls='good'}else{text='แผน B: G10 ก็ไม่แห้ง — ไม่สนับสนุนว่า G5 เป็นสาเหตุเดียว';cls='bad'}}else if(a==='dry'&&b==='notdry'){text='G10 แห้ง · G5 ไม่แห้ง — ผลชี้ว่า G5 มีปัญหา';cls='good'}else if(a==='dry'&&b==='dry'){text='แห้งทั้งคู่ — G5 ไม่ได้พังแบบถาวร ต้องย้อนดู deviation ของ R16/R17'}else if(a==='notdry'&&b==='notdry'){text='ไม่แห้งทั้งคู่ — ผลไม่ชี้ว่าเครื่องเป็นสาเหตุ ให้ตรวจวัตถุดิบและกระบวนการ';cls='bad'}else{text='G10 ไม่แห้ง · G5 แห้ง — ผิดคาด หยุดตีความและตรวจว่ามีอะไรสลับกันไหม';cls='bad'}box.textContent=text;box.classList.add(cls)}
+function calcAll(){const age=diffSec('age_start_S','age_stop_S');setText('age_minutes',age==null?null:fmtMin(age)+' นาที'+(Math.abs(age-1800)<=15?' · ตรงเป้า':' · ต่างจาก 30 นาที'));calcBatch('A');if(val('plan')==='A')calcBatch('B');calcVerdict()}
+function updatePlanUI(){const isA=val('plan')==='A';g('batch_B').classList.toggle('hidden',!isA);g('batch_columns').classList.toggle('single',!isA);g('formula_A').classList.toggle('hidden',!isA);g('formula_B').classList.toggle('hidden',isA);['A','B'].forEach(c=>{const e=g('btnStartTogether_'+c);if(e)e.textContent=isA?'เริ่มปั่น G10 + G5 พร้อมกัน':'เริ่มปั่น G10'});g('same_air').closest('.checkline').classList.toggle('hidden',!isA);g('same_mix').closest('.checkline').classList.toggle('hidden',!isA);g('same_day').closest('.checkline').classList.toggle('hidden',!isA);calcAll();tick()}
+
+function allInputs(){return document.querySelectorAll('input,select,textarea')}
+function collect(){const o={};allInputs().forEach(e=>{if(e.id&&e.type!=='file')o[e.id]=e.type==='checkbox'?e.checked:e.value});return o}
+function apply(o){allInputs().forEach(e=>{if(!e.id||o[e.id]===undefined)return;if(e.type==='checkbox')e.checked=!!o[e.id];else e.value=o[e.id]});updatePlanUI();calcAll();tick()}
+let saveTmr=null;function save(){clearTimeout(saveTmr);saveTmr=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(collect()));g('saveState').textContent='บันทึกแล้ว '+new Date().toLocaleTimeString('th-TH')}catch(e){g('saveState').textContent='⚠ บันทึกอัตโนมัติไม่ได้ — เซฟไฟล์ .json ไว้'}},250)}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){apply(JSON.parse(raw));return true}}catch(e){}return false}
+function localDate(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function setDefaults(){g('meta_date').value=localDate();g('plan').value='A';g('limits').value='เปลี่ยนพร้อมกัน 2 อย่าง: เครื่องและโหลด · n=1 ต่อเครื่อง · ไม่วัดอุณหภูมิห้อง/เครื่องโดยตั้งใจ · แผน B เทียบข้ามวัน · ตอบเฉพาะ MKDL05'}
+let resetArmed=0,resetTmr=null;function resetAll(){const btn=g('btnReset');if(!resetArmed){resetArmed=1;btn.textContent='⚠️ กดอีกครั้งเพื่อล้าง';btn.style.background='#962e2e';btn.style.color='#fff';g('saveState').textContent='จะล้างข้อมูลทั้งหมด — กดปุ่มแดงอีกครั้งภายใน 5 วินาที';resetTmr=setTimeout(disarmReset,5000);return}clearTimeout(resetTmr);disarmReset();allInputs().forEach(e=>{if(e.type==='checkbox')e.checked=false;else if(e.type!=='file')e.value=''});setDefaults();beeped={};try{localStorage.removeItem(KEY)}catch(e){}updatePlanUI();calcAll();save()}
+function disarmReset(){resetArmed=0;const btn=g('btnReset');if(!btn)return;btn.textContent='🗑 ล้างข้อมูล';btn.style.background='';btn.style.color=''}
+function expJSON(){const d=collect();d._form='MKR18';d._exported=new Date().toISOString();const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='MKR18_'+(val('meta_date')||'result').replace(/[^\wก-๙.-]/g,'_')+'.json';document.body.appendChild(a);a.click();const url=a.href;a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function impJSON(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(data._form&&data._form!=='MKR18')throw Error('wrong form');apply(data);save();g('saveState').textContent='โหลดไฟล์เรียบร้อย'}catch(e){g('saveState').textContent='⚠️ ไฟล์ไม่ถูกต้อง — ต้องเป็นไฟล์จาก MKR18'}};r.readAsText(f);ev.target.value=''}
+document.addEventListener('input',e=>{if(e.target.type!=='file'){calcAll();save()}});document.addEventListener('change',e=>{if(e.target.id==='plan')updatePlanUI();if(e.target.type!=='file'){calcAll();save()}});
+if(!load()){setDefaults();updatePlanUI();calcAll()}tick();
+</script>
+</body>
+</html>
