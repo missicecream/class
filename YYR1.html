@@ -1,0 +1,23 @@
+<!--
+  Copyright © 2026 Miss Icecream Co., Ltd. / พรหล้า ขาวเธียร (Paula Kaothien)
+  All Rights Reserved.
+-->
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>YY R1 · Yolida · INL30 + MTD10</title><link rel="stylesheet" href="yd-lab.css"></head><body>
+<header><div class="wrap"><a class="back" href="index.html">← กลับหน้าหลัก</a><h1>YY R1 · Yolida · INL30 + MTD10</h1><p>2 ถัง · YYDL05 → YYDL09 · ถังละ 2,000 g · Frigomat G10</p><div class="statusline"><div class="progress"><i id="progress"></i></div><span class="save-state" id="saveState">บันทึกอัตโนมัติ</span></div></div></header>
+<main class="wrap"><div id="app"></div><div class="toolbar no-print"><button class="btn" id="calendarBtn" type="button">📅 เพิ่มนัดชิมลงปฏิทิน</button><button class="btn" type="button" onclick="document.getElementById('importFile').click()">📂 นำเข้า JSON</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="btn danger" id="resetBtn" type="button">ล้างข้อมูล</button></div></main>
+<footer>YY R1 · MR v8.4.3 · วางแผน 7 สิงหาคม 2026 · ข้อมูลเก็บในเครื่องนี้</footer>
+<script>
+window.LAB_CONFIG={
+ file:'YYR1',title:'YY R1 · สาย L สูตรใหม่ (INL 30 + MTD 10)',subtitle:'Yolida · 2 kg บน G10 · PBT ×2 · บ่มสั้น 30 นาที',yogurt:'โยเกิร์ต Yolida (YPY)',blend:true,h4:true,
+ purpose:'ทดสอบครั้งแรกว่าเบส Yolida สาย L สูตรใหม่ยังปั่นได้ เนื้อดี รสไม่เพี้ยน และไม่เกิดเนื้อคืนตัวหลังเก็บ',
+ critical:'โยเกิร์ตต้องเป็น Yolida รสธรรมชาติไม่เติมน้ำตาล — ไม่ใช่ Dutchie · ใส่ต่ำกว่า 20 °C โดยค่อยๆ รินพร้อมคน · ครีมใส่ที่ ≤10 °C',
+ batches:{
+  A:{code:'YYDL05',summary:'fat 4.9 · เสี่ยง body บางที่สุด',formula:['① SER 12 + SUC 60 + WTR 202','② PMP 36 + DEX 124 + INL 60 + MTD 20 + SUC 30 + MLK 378','③ YPY 900 ที่ <20 °C','④ CRM 178 ที่ ≤10 °C']},
+  B:{code:'YYDL09',summary:'fat 8.9 · TS สูงและไหม้ก้นง่าย',formula:['① SER 12 + SUC 60 + WTR 202','② PMP 46 + DEX 114 + INL 60 + MTD 20 + SUC 26 + MLK 138','③ YPY 900 ที่ <20 °C','④ CRM 422 ที่ ≤10 °C']}
+ },
+ lineOne:{A:'<div class="callout"><b>สาย ① ถัง A:</b> SER 12 + SUC 60 + WTR 202 → 85 °C จนเนียน ไม่มีเม็ดสาคู</div>',B:'<div class="callout warn"><b>สาย ① ถัง B:</b> SER 12 + SUC 60 + WTR 202 → 85 °C จนเนียน · ถังนี้นมน้อย ใช้ไฟอ่อนและคนตลอดในช่วงอุ่นมิกซ์</div>'},
+ protocol:['ชั่งของครบและติดป้าย · แยกน้ำตาลทราย 2 ถ้วย','สาย ① ไปถึง 85 °C จนเนียนไม่มีเม็ดสาคู','รวม ① + ② แล้วอุ่นถึง 68°C ยกลงทันที','PBT 2 รอบ รอบละ 30 วินาที พัก 10 วินาที','ลดความร้อนด้วยอ่างน้ำแข็ง + overhead stirrer','ต่ำกว่า 20 °C ค่อยๆ ริน YPY พร้อมคน · ≤10 °C ใส่ครีม','บ่ม 30 นาทีที่ 4 °C แล้วชั่งมิกซ์ ปั่น และชั่งไอศกรีม','แบ่งตัวอย่าง 3 ชุดต่อถัง · −25 °C ถึงแกน −14 °C แล้วเก็บ −18 °C'],
+ weeks:[{id:'wk0',label:'ครั้งที่ 1 · wk0',date:'2026-08-07'},{id:'wk4',label:'ครั้งที่ 2 · wk4',date:'2026-09-04'},{id:'wk12',label:'ครั้งที่ 3 · wk12',date:'2026-10-30'}],
+ limits:['n = 1 ต่อสูตร · ผู้ชิมคนเดียว (เล็ก)','ไม่มีถัง control INL 40 — ถ้าผลไม่ดี สรุปไม่ได้ว่าเป็นเพราะ MTD','ตอบเฉพาะ YYDL05 และ YYDL09 บน G10 ที่ 2 kg — fat 7 เป็นการอนุมาน','H1 ยังไม่ปิดจนกว่าจะชิมครบสัปดาห์ 12','ห้ามเทียบคะแนนกับ YD ตรงๆ — เทียบได้เฉพาะมีหรือไม่มีเม็ดที่ละลายเร็ว']
+};
+</script><script src="yd-lab-core.js"></script></body></html>

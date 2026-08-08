@@ -1,0 +1,23 @@
+<!--
+  Copyright © 2026 Miss Icecream Co., Ltd. / พรหล้า ขาวเธียร (Paula Kaothien)
+  All Rights Reserved.
+-->
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>YD R2 · Dutchie · INL30 + MTD10</title><link rel="stylesheet" href="yd-lab.css"></head><body>
+<header><div class="wrap"><a class="back" href="index.html">← กลับหน้าหลัก</a><h1>YD R2 · Dutchie · INL30 + MTD10</h1><p>2 ถัง · YDDL05 → YDDL09 · ถังละ 2,000 g · Frigomat G10</p><div class="statusline"><div class="progress"><i id="progress"></i></div><span class="save-state" id="saveState">บันทึกอัตโนมัติ</span></div></div></header>
+<main class="wrap"><div id="app"></div><div class="toolbar no-print"><button class="btn" id="calendarBtn" type="button">📅 เพิ่มนัดชิมลงปฏิทิน</button><button class="btn" type="button" onclick="document.getElementById('importFile').click()">📂 นำเข้า JSON</button><input id="importFile" type="file" accept=".json,application/json" hidden><button class="btn danger" id="resetBtn" type="button">ล้างข้อมูล</button></div></main>
+<footer>YD R2 · MR v8.4.3 · วางแผน 7 สิงหาคม 2026 · ข้อมูลเก็บในเครื่องนี้</footer>
+<script>
+window.LAB_CONFIG={
+ file:'YDR2',title:'YD R2 · สาย L สูตรใหม่ (INL 30 + MTD 10)',subtitle:'Dutchie Probiotic · 2 kg บน G10 · PBT ×2 · บ่มสั้น 30 นาที',yogurt:'โยเกิร์ต Dutchie Probiotic (YPD)',blend:false,h4:false,
+ purpose:'ยืนยันว่าสูตรสาย L ที่เปลี่ยน INL 40 → INL 30 + MTD 10 ยังปั่นได้ เนื้อดี รสไม่เพี้ยน และไม่เกิดเนื้อคืนตัวหลังเก็บ',
+ critical:'สายละลายต้องยืมเดกซ์โทรสให้ได้น้ำตาลรวม 60 g และชั่ง DEX แยก 2 ถ้วย · YPD ใส่ต่ำกว่า 20 °C โดยค่อยๆ รินพร้อมคน · ครีมใส่ที่ ≤10 °C',
+ batches:{
+  A:{code:'YDDL05',summary:'fat 4.9 · เสี่ยง body บางที่สุด',formula:['① SER 12 + SUC 28 + DEX 32 + WTR 200','② PMP 18 + DEX 104 + INL 60 + MTD 20 + MLK 468','③ YPD 900 ที่ <20 °C','④ CRM 158 ที่ ≤10 °C']},
+  B:{code:'YDDL09',summary:'fat 8.9 · TS สูงและไหม้ก้นง่าย',formula:['① SER 12 + SUC 26 + DEX 34 + WTR 200','② PMP 28 + DEX 92 + INL 60 + MTD 20 + MLK 228','③ YPD 900 ที่ <20 °C','④ CRM 400 ที่ ≤10 °C']}
+ },
+ lineOne:{A:'<div class="callout danger"><b>ชั่ง DEX แยก 2 ถ้วย:</b> สาย ① ใช้ SUC 28 + DEX 32 = น้ำตาลรวม 60 g · DEX ที่เหลือ 104 g ไปสาย ②</div>',B:'<div class="callout danger"><b>ชั่ง DEX แยก 2 ถ้วย:</b> สาย ① ใช้ SUC 26 + DEX 34 = น้ำตาลรวม 60 g · DEX ที่เหลือ 92 g ไปสาย ②</div>'},
+ protocol:['ชั่งของครบและติดป้าย · แยก DEX 2 ถ้วยตามสูตร','สาย ①: SER + SUC + DEX ที่ยืม + WTR ไปถึง 85 °C จนเนียน','สาย ②: คลุกของแห้ง แล้วละลายในนม','รวม ① + ② แล้วอุ่นถึง 68°C ยกลงทันที','PBT 2 รอบ รอบละ 30 วินาที พัก 10 วินาที','ลดความร้อนด้วยอ่างน้ำแข็ง + overhead stirrer','ต่ำกว่า 20 °C ค่อยๆ ริน YPD พร้อมคน · ≤10 °C ใส่ครีม','บ่ม 30 นาทีที่ 4 °C แล้วชั่งมิกซ์ ปั่น และชั่งไอศกรีม','แบ่งตัวอย่าง 3 ชุดต่อถัง · −25 °C จนแกน −14 °C แล้วเก็บ −18 °C'],
+ weeks:[{id:'wk0',label:'ครั้งที่ 1 · wk0',date:'2026-08-07'},{id:'wk4',label:'ครั้งที่ 2 · wk4',date:'2026-09-04'},{id:'wk12',label:'ครั้งที่ 3 · wk12',date:'2026-10-30'}],
+ limits:['n = 1 ต่อสูตร · ผู้ชิมคนเดียว (เล็ก)','ไม่มีถัง control INL 40 — ถ้าผลไม่ดี สรุปไม่ได้ว่าเป็นเพราะ MTD','ตอบเฉพาะ YDDL05 และ YDDL09 บน G10 ที่ 2 kg — fat 7 เป็นการอนุมาน','H1 ยังไม่ปิดจนกว่าจะชิมครบสัปดาห์ 12','YPD มีมอลโทเดกซ์ทรินอยู่แล้ว — หากเกิดเนื้อคืนตัว แยกไม่ได้ว่ามาจากส่วนที่เติมหรือของเดิมในโยเกิร์ต']
+};
+</script><script src="yd-lab-core.js"></script></body></html>
