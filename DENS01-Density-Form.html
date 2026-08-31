@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บันทึกความหนาแน่นนมพืช</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --ground:#f2f6f7; --surface:#ffffff; --surface-2:#e9eff1; --surface-3:#dde6e9;
+  --ink:#0f171b; --ink-2:#4a5a61; --ink-3:#7b8b92;
+  --line:#d3dee1; --line-2:#b6c6cb;
+  --accent:#0b6f6a; --accent-2:#0a5a56; --accent-soft:#d8ecea; --on-accent:#ffffff;
+  --ok:#136b4f; --ok-bg:#dbf0e5; --ok-line:#8ed4b6;
+  --warn:#8a5800; --warn-bg:#fbeed1; --warn-line:#e2bf6e;
+  --bad:#a81f1c; --bad-bg:#fadedc; --bad-line:#eda6a2;
+  --shadow:0 1px 2px rgba(15,23,27,.06), 0 6px 20px -12px rgba(15,23,27,.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0b1114; --surface:#141d21; --surface-2:#1b262b; --surface-3:#223036;
+    --ink:#e4edf0; --ink-2:#a4b5bc; --ink-3:#7b8d95;
+    --line:#26343a; --line-2:#3a4c55;
+    --accent:#3ec9bd; --accent-2:#5fd8ce; --accent-soft:#0f3936; --on-accent:#06201f;
+    --ok:#5fd6a4; --ok-bg:#0e3327; --ok-line:#1f6349;
+    --warn:#e9ba69; --warn-bg:#382b10; --warn-line:#6d5320;
+    --bad:#f28d88; --bad-bg:#3c1917; --bad-line:#75302c;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0b1114; --surface:#141d21; --surface-2:#1b262b; --surface-3:#223036;
+  --ink:#e4edf0; --ink-2:#a4b5bc; --ink-3:#7b8d95;
+  --line:#26343a; --line-2:#3a4c55;
+  --accent:#3ec9bd; --accent-2:#5fd8ce; --accent-soft:#0f3936; --on-accent:#06201f;
+  --ok:#5fd6a4; --ok-bg:#0e3327; --ok-line:#1f6349;
+  --warn:#e9ba69; --warn-bg:#382b10; --warn-line:#6d5320;
+  --bad:#f28d88; --bad-bg:#3c1917; --bad-line:#75302c;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;
+  font-size:15px; line-height:1.65; -webkit-text-size-adjust:100%;
+}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+
+header{
+  position:sticky; top:0; z-index:30;
+  background:var(--surface); border-bottom:1px solid var(--line);
+}
+.hwrap{max-width:980px; margin:0 auto; padding:12px 20px}
+.htop{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+h1{margin:0; font-size:19px; font-weight:700; letter-spacing:-.01em; text-wrap:balance}
+.formid{
+  font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600;
+  letter-spacing:.09em; color:var(--accent);
+  border:1px solid var(--accent); border-radius:3px; padding:1px 6px;
+}
+.hsub{font-size:12.5px; color:var(--ink-3); margin-left:auto}
+.chips{display:flex; gap:6px; margin-top:10px; overflow-x:auto; padding-bottom:2px}
+.chip{
+  flex:0 0 auto; display:flex; align-items:center; gap:6px;
+  border:1px solid var(--line-2); border-radius:999px; background:var(--surface-2);
+  color:var(--ink-2); padding:4px 11px; font:inherit; font-size:12px;
+  white-space:nowrap; cursor:pointer; transition:border-color .15s, background .15s;
+}
+.chip:hover{border-color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.chip b{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-weight:600}
+.chip.s-ok{background:var(--ok-bg); border-color:var(--ok-line); color:var(--ok)}
+.chip.s-warn{background:var(--warn-bg); border-color:var(--warn-line); color:var(--warn)}
+.chip.s-bad{background:var(--bad-bg); border-color:var(--bad-line); color:var(--bad)}
+.dot{width:7px; height:7px; border-radius:50%; background:var(--line-2); flex:0 0 auto}
+.chip.s-ok .dot{background:var(--ok)} .chip.s-warn .dot{background:var(--warn)} .chip.s-bad .dot{background:var(--bad)}
+
+main{max-width:980px; margin:0 auto; padding:24px 20px 80px; display:flex; flex-direction:column; gap:20px}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow); overflow:hidden}
+.card-h{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:14px 18px; border-bottom:1px solid var(--line); background:var(--surface-2)}
+.card-b{padding:18px}
+h2{margin:0; font-size:16px; font-weight:600; letter-spacing:-.005em}
+.code{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; letter-spacing:.06em; background:var(--surface-3); color:var(--ink-2); border-radius:3px; padding:2px 7px}
+.rank{
+  font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:600;
+  width:26px; height:26px; flex:0 0 auto; display:grid; place-items:center;
+  background:var(--accent); color:var(--on-accent); border-radius:5px;
+}
+.mrref{margin-left:auto; font-size:12px; color:var(--ink-3)}
+.mrref b{font-family:"IBM Plex Mono",monospace; color:var(--ink-2)}
+
+.alert{border:1px solid var(--warn-line); background:var(--warn-bg); border-radius:10px; padding:16px 18px}
+.alert h3{margin:0 0 6px; font-size:15.5px; font-weight:700; color:var(--warn)}
+.alert p{margin:0; font-size:14px; color:var(--ink-2)}
+.alert p + p{margin-top:6px}
+
+.fields{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end}
+.f{display:flex; flex-direction:column; gap:4px}
+.f label{font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3)}
+.f .fid{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-3); text-transform:none; letter-spacing:0; opacity:.75}
+input[type=text], input[type=number]{
+  font:inherit; color:var(--ink); background:var(--surface);
+  border:1px solid var(--line-2); border-radius:6px; padding:8px 10px; width:100%;
+}
+input[type=number]{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; text-align:right; -moz-appearance:textfield}
+input:focus-visible{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent)}
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+.w-sm{width:110px} .w-md{width:180px}
+.readout{
+  font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+  background:var(--accent-soft); border:1px solid var(--accent); color:var(--accent);
+  border-radius:6px; padding:8px 12px; font-weight:600; font-size:15px; min-width:110px; text-align:right;
+}
+.storebox{padding:8px 0; font-size:14px; color:var(--ink-2)}
+input.tare{border-color:var(--accent); background:var(--accent-soft); color:var(--accent); font-weight:600}
+.tarehint{margin:12px 0 0; font-size:12.5px; color:var(--ink-2); background:var(--surface-2); border-left:3px solid var(--accent); border-radius:0 5px 5px 0; padding:8px 12px}
+
+.gridwrap{overflow-x:auto; margin:16px -18px 0; padding:0 18px}
+table.grid{border-collapse:collapse; width:100%; min-width:320px}
+table.grid th{
+  font-size:10.5px; font-weight:600; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-3); text-align:right; padding:0 8px 7px; border-bottom:1px solid var(--line-2);
+}
+table.grid th:first-child{text-align:center; width:44px}
+table.grid td{padding:3px 4px; border-bottom:1px solid var(--line)}
+table.grid td:first-child{text-align:center; font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+tr.extra{background:var(--surface-2)}
+td.mass{text-align:right; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-weight:600; font-size:14px; padding-right:10px; white-space:nowrap}
+td.mass.empty{color:var(--ink-3); font-weight:400}
+
+.result{margin-top:16px; border:1px solid var(--line-2); border-radius:8px; overflow:hidden; background:var(--surface-2)}
+.rrow{display:flex; flex-wrap:wrap; gap:1px; background:var(--line)}
+.rcell{flex:1 1 130px; background:var(--surface); padding:11px 14px}
+.rcell .k{font-size:10.5px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3)}
+.rcell .v{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:19px; font-weight:600; margin-top:2px}
+.rcell .v small{font-size:12px; font-weight:400; color:var(--ink-3)}
+.verdict{padding:11px 14px; font-size:13.5px; font-weight:500; border-top:1px solid var(--line)}
+.verdict.v-idle{background:var(--surface-2); color:var(--ink-3)}
+.verdict.v-ok{background:var(--ok-bg); color:var(--ok)}
+.verdict.v-warn{background:var(--warn-bg); color:var(--warn)}
+.verdict.v-bad{background:var(--bad-bg); color:var(--bad)}
+.verdict b{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+
+ul.check{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+ul.check li{display:flex; gap:10px; align-items:flex-start; padding:5px 0; font-size:14px}
+ul.check input{margin:4px 0 0; width:17px; height:17px; accent-color:var(--accent); flex:0 0 auto}
+ul.check label{cursor:pointer}
+ul.check input:checked + label{color:var(--ink-3); text-decoration:line-through}
+.sub{font-size:12px; color:var(--ink-3); margin:16px 0 6px; font-weight:600; letter-spacing:.06em; text-transform:uppercase}
+
+.actions{display:flex; gap:10px; flex-wrap:wrap}
+button.btn{
+  font:inherit; font-weight:600; font-size:14px; cursor:pointer;
+  border:1px solid var(--line-2); background:var(--surface); color:var(--ink);
+  border-radius:7px; padding:9px 16px; transition:border-color .15s, background .15s, color .15s;
+}
+button.btn:hover{border-color:var(--accent); color:var(--accent)}
+button.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+button.btn.primary{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+button.btn.primary:hover{background:var(--accent-2); border-color:var(--accent-2); color:var(--on-accent)}
+button.btn.danger:hover{border-color:var(--bad); color:var(--bad)}
+
+details{border:1px solid var(--line); border-radius:10px; background:var(--surface); overflow:hidden}
+summary{padding:13px 18px; cursor:pointer; font-weight:600; font-size:14.5px; list-style:none; display:flex; align-items:center; gap:8px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+"; font-family:"IBM Plex Mono",monospace; color:var(--accent); font-weight:600}
+details[open] summary::before{content:"\2013"}
+details[open] summary{border-bottom:1px solid var(--line)}
+summary:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.dbody{padding:16px 18px}
+table.ref{border-collapse:collapse; width:100%; font-size:13px}
+table.ref th, table.ref td{padding:6px 10px; border-bottom:1px solid var(--line); text-align:right}
+table.ref th{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); font-weight:600}
+table.ref th:first-child, table.ref td:first-child{text-align:left}
+table.ref td.n{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+.hint{font-size:13px; color:var(--ink-2); margin:0 0 12px}
+.hint:last-child{margin-bottom:0}
+mark{background:var(--accent-soft); color:var(--accent); padding:1px 4px; border-radius:3px; font-weight:600}
+.saved{font-size:12px; color:var(--ink-3); font-family:"IBM Plex Mono",monospace}
+
+@media (max-width:640px){
+  .hsub{display:none}
+  main{padding:16px 12px 60px; gap:14px}
+  .card-b{padding:14px}
+  .gridwrap{margin:14px -14px 0; padding:0 14px}
+  h1{font-size:17px}
+}
+@media print{
+  header{position:static}
+  .actions, .chips{display:none}
+  .card{break-inside:avoid; box-shadow:none}
+  tr.extra{background:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+
+<header>
+  <div class="hwrap">
+    <div class="htop">
+      <span class="formid">DENS01</span>
+      <h1>วัดความหนาแน่นนมพืช 4 ยี่ห้อ</h1>
+      <span class="hsub">ถ้วยตวง 100 ml · ชั่ง 0.01 g · MR v8.8.3 §1.5</span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+
+<main>
+
+  <div class="alert">
+    <h3>⏰ ข้อแรกสุด — เอาโอฮาโยออกจากตู้เย็นตั้งไว้เดี๋ยวนี้</h3>
+    <p><b>โอฮาโยเป็นยี่ห้อเดียวที่แช่เย็น</b> อีก 3 ยี่ห้อเป็น UHT วางอุณหภูมิห้องอยู่แล้ว — เอาออกมาตั้งแต่เริ่มงาน พอวัดถึงคิวสุดท้ายจะถึงอุณหภูมิห้องพอดี</p>
+    <p>⛔ <b>ห้ามวัดนมที่ยังเย็น</b> — 5 °C กับ 30 °C ความหนาแน่นต่างกัน ~0.4% และเราต้องการค่าที่อุณหภูมิเดียวกับตอนชั่งส่วนผสมจริง</p>
+  </div>
+
+  <section class="card">
+    <div class="card-h"><h2>เตรียมงาน</h2></div>
+    <div class="card-b">
+      <div class="fields">
+        <div class="f"><label>วันที่ทดลอง</label><input type="text" id="meta_date" class="w-md" placeholder="25 ส.ค. 2569"></div>
+        <div class="f"><label>ผู้วัด</label><input type="text" id="meta_by" class="w-md" placeholder="ชื่อ"></div>
+      </div>
+      <p class="sub">ก่อนเริ่ม</p>
+      <ul class="check" id="prep"></ul>
+      <p class="sub">ทุกรอบ — ไม่ต้องชั่งถ้วยซ้ำ</p>
+      <ul class="check" id="each"></ul>
+      <p class="sub">ตอนเปลี่ยนตัวอย่าง</p>
+      <ul class="check" id="switch"></ul>
+    </div>
+  </section>
+
+  <div id="samples"></div>
+
+  <details>
+    <summary>ตารางความหนาแน่นของน้ำ และสูตรคำนวณ</summary>
+    <div class="dbody">
+      <p class="hint">ฟอร์มคำนวณ <mark>ความหนาแน่นของน้ำ</mark> ให้อัตโนมัติจากอุณหภูมิที่กรอก โดยเทียบบัญญัติไตรยางศ์จากตารางมาตรฐานนี้</p>
+      <div class="gridwrap" style="margin:0; padding:0">
+        <table class="ref">
+          <thead><tr><th>°C</th><th>ρ</th><th>°C</th><th>ρ</th><th>°C</th><th>ρ</th></tr></thead>
+          <tbody>
+            <tr><td class="n">20</td><td class="n">0.9982</td><td class="n">26</td><td class="n">0.9968</td><td class="n">32</td><td class="n">0.9950</td></tr>
+            <tr><td class="n">22</td><td class="n">0.9978</td><td class="n">28</td><td class="n">0.9962</td><td class="n">34</td><td class="n">0.9944</td></tr>
+            <tr><td class="n">24</td><td class="n">0.9973</td><td class="n">30</td><td class="n">0.9957</td><td class="n">36</td><td class="n">0.9937</td></tr>
+            <tr><td class="n">25</td><td class="n">0.9970</td><td class="n">31</td><td class="n">0.9954</td><td class="n">37</td><td class="n">0.9933</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" style="margin-top:14px">
+        <b>มวลแต่ละรอบ</b> = ถ้วย+ตัวอย่าง − ถ้วยเปล่า <i>(ค่าเดียว ชั่งครั้งเดียวตอนแห้ง)</i><br>
+        <b>กระจาย %</b> = (สูงสุด − ต่ำสุด) ÷ เฉลี่ย × 100<br>
+        <b>ความหนาแน่น</b> = (มวลตัวอย่างเฉลี่ย ÷ มวลน้ำเฉลี่ย) × ความหนาแน่นของน้ำ
+      </p>
+    </div>
+  </details>
+
+  <details>
+    <summary>ทำไมชั่งถ้วยเปล่าครั้งเดียว และสิ่งที่ต้องคุม</summary>
+    <div class="dbody">
+      <p class="hint">เพราะเรา<b>เติมถึงขีดเดิมเสมอ</b> เนื้อของเหลวที่อยู่ในถ้วยถึงระดับขีดจึงมีมวลเท่าเดิมทุกรอบ ไม่ว่าจะมีฟิล์มค้างมาก่อนหรือไม่ — ฟิล์มที่อยู่<b>ใต้ขีด</b>ละลายรวมเป็นเนื้อเดียวกับของเหลวใหม่ไปแล้ว</p>
+      <div class="gridwrap" style="margin:0 0 14px; padding:0">
+        <table class="ref">
+          <thead><tr><th>วิธี</th><th>ค่าที่ได้</th><th>ความคลาด</th></tr></thead>
+          <tbody>
+            <tr><td><b>ชั่งถ้วยแห้งครั้งเดียว</b> ✅</td><td>ρV + ฟิล์มเหนือขีด</td><td class="n">~+0.2%</td></tr>
+            <tr><td>ชั่งถ้วยที่เทแล้วทุกรอบ</td><td>ρV − ฟิล์มใต้ขีด</td><td class="n">~−0.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">การชั่งถ้วยที่เทแล้วทุกรอบไปหักฟิล์ม<b>ใต้ขีด</b>ออก ทั้งที่มันกลายเป็นเนื้อของเหลวไปแล้ว = หักซ้ำซ้อน · ส่วนความคลาด +0.2% ที่เหลือของวิธีชั่งครั้งเดียว <b>เกือบหักล้างกันเองในสูตร</b> เพราะทั้งน้ำและนมต่างก็มีฟิล์มเหนือขีดคล้ายกัน</p>
+      <p class="hint">⛔ <b>เงื่อนไขเดียวที่ต้องคุม</b> — ตอนชั่งถ้วยเปล่า ถ้วยต้องแห้งสนิทจริงๆ และต้อง<b>ชั่งใหม่ทุกครั้งที่เปลี่ยนตัวอย่าง</b> เพราะฟิล์มของเหลวเดิมจะติดไปกับค่าศูนย์</p>
+      <div class="gridwrap" style="margin:0; padding:0">
+        <table class="ref">
+          <thead><tr><th>เรื่อง</th><th>ถ้าพลาด</th><th>ทิศทาง</th></tr></thead>
+          <tbody>
+            <tr><td>🔴 ไม่เขย่าให้เข้ากัน — ตะกอนนอนก้น</td><td class="n">2–5%</td><td>ทั้งสองทาง</td></tr>
+            <tr><td>🔴 ฟองอากาศบนผิว</td><td class="n">2%</td><td>ค่าต่ำกว่าจริง</td></tr>
+            <tr><td>🔴 ถ้วยเปียกตอนเปลี่ยนของเหลว</td><td class="n">2%</td><td>ค่าต่ำกว่าจริง</td></tr>
+            <tr><td>⚠️ เติมไม่ถึงระดับเดิม</td><td class="n">1–2.4%</td><td>สุ่ม · เฉลี่ยช่วยได้</td></tr>
+            <tr><td>⚠️ ลมพัด / โต๊ะสั่น</td><td class="n">0.1–0.5%</td><td>สุ่ม</td></tr>
+            <tr><td>✅ อุณหภูมิ</td><td class="n">0.03–0.15%</td><td>แทบไม่มีผล</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" style="margin-top:14px">สามข้อแรกที่ทำให้ค่าต่ำกว่าจริง <b>เพิ่มรอบเท่าไหร่ก็ไม่หาย</b> เพราะเอียงไปทางเดียวเสมอ — และ <b>ความหนาแน่นต่ำกว่าจริง = TS ในสูตรดูดีเกินจริง</b> ซึ่งเป็นทิศที่อันตรายที่สุด เพราะสายเจของถั่วเหลืองปริ่ม TS 28 อยู่แล้ว</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>ผลกระทบต่อสูตร และขั้นตอนต่อไป</summary>
+    <div class="dbody">
+      <p class="hint">ตัวอย่าง <b>SLNC05</b> — เบสแลคตาซอยสายเจ</p>
+      <div class="gridwrap" style="margin:0; padding:0">
+        <table class="ref">
+          <thead><tr><th>ต่างจากค่าเดิม</th><th>TS%</th><th>Fat%</th><th>RSW%</th></tr></thead>
+          <tbody>
+            <tr><td class="n">−3%</td><td class="n">28.78</td><td class="n">5.14</td><td class="n">17.14</td></tr>
+            <tr><td class="n">−1%</td><td class="n">28.60</td><td class="n">5.11</td><td class="n">16.99</td></tr>
+            <tr><td class="n"><b>0 · ค่าที่ใช้อยู่</b></td><td class="n"><b>28.51</b></td><td class="n"><b>5.09</b></td><td class="n"><b>16.92</b></td></tr>
+            <tr><td class="n">+1%</td><td class="n">28.42</td><td class="n">5.07</td><td class="n">16.85</td></tr>
+            <tr><td class="n">+3%</td><td class="n">28.25</td><td class="n">5.03 ⚠️</td><td class="n">16.72</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint" style="margin-top:14px">
+        <b>เสร็จแล้ว</b> — กด <b>บันทึกไฟล์ JSON</b> แล้วส่งกลับมา จากนั้นจะคำนวณสูตรที่กระทบใหม่ทั้งชุด:
+        OOS·OOG → สูตรโอ๊ตทั้งหมด · SYL → 12 สูตรใน <span class="num">05SL-Aug25-v883</span> · SYA → 12 สูตรใน <span class="num">05SY-Aug25-v883</span>
+        → ตรวจ Fat ≥5.00 · TS 28–32 · RSW ±0.25 → อัปเดต MR §1.5 ถอดธง ⚠️ ออก
+      </p>
+    </div>
+  </details>
+
+  <section class="card">
+    <div class="card-b">
+      <div class="actions">
+        <button type="button" class="btn primary" id="btn-export">บันทึกไฟล์ JSON</button>
+        <button type="button" class="btn" id="btn-import">เปิดไฟล์ JSON</button>
+        <button type="button" class="btn" id="btn-print">พิมพ์</button>
+        <button type="button" class="btn danger" id="btn-reset">ล้างทั้งหมด</button>
+        <input type="file" id="file" accept=".json,application/json" hidden>
+      </div>
+      <p class="saved" id="saved" style="margin:12px 0 0">บันทึกอัตโนมัติในเครื่องนี้</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+"use strict";
+
+var WD = [[15,0.99910],[16,0.99895],[17,0.99878],[18,0.99860],[19,0.99841],[20,0.99821],
+[21,0.99800],[22,0.99777],[23,0.99754],[24,0.99730],[25,0.99705],[26,0.99678],[27,0.99652],
+[28,0.99624],[29,0.99595],[30,0.99565],[31,0.99534],[32,0.99503],[33,0.99471],[34,0.99437],
+[35,0.99403],[36,0.99369],[37,0.99333],[38,0.99297],[39,0.99260],[40,0.99222]];
+
+function waterDensity(t){
+  if(t === null || !isFinite(t)) return null;
+  if(t <= WD[0][0]) return WD[0][1];
+  if(t >= WD[WD.length-1][0]) return WD[WD.length-1][1];
+  for(var i=0;i<WD.length-1;i++){
+    var a=WD[i][0], fa=WD[i][1], b=WD[i+1][0], fb=WD[i+1][1];
+    if(t>=a && t<=b) return fa + (fb-fa)*(t-a)/(b-a);
+  }
+  return null;
+}
+
+var SAMPLES = [
+  {key:"w",  rank:"A", name:"น้ำดื่มบริสุทธิ์", code:"สอบเทียบ", ref:null, water:true, lot:false,
+   store:"อุณหภูมิห้อง · ใช้น้ำ RO หรือน้ำดื่มบริสุทธิ์ ⛔ อย่าใช้น้ำแร่",
+   note:"ชุดนี้แม่นสำคัญที่สุด เพราะเป็นตัวหารของทั้ง 4 ยี่ห้อ — ถ้าเพี้ยน ทุกค่าเพี้ยนตามหมด กระจายเกิน 1% ให้ทำครบ 10 รอบไปเลย"},
+  {key:"oo", rank:"B", name:"Oatside รสจืด", code:"OOS", ref:1.04, lot:true, store:"UHT · อุณหภูมิห้อง"},
+  {key:"og", rank:"C", name:"Good Mate Original", code:"OOG", ref:1.03, lot:true, store:"UHT · อุณหภูมิห้อง"},
+  {key:"sl", rank:"D", name:"แลคตาซอย Hi-Calcium", code:"SYL", ref:1.03, lot:true, store:"UHT · อุณหภูมิห้อง"},
+  {key:"sy", rank:"E", name:"โอฮาโย รสจืด", code:"SYA", ref:null, lot:true, chilled:true, store:"🧊 ตู้เย็น — ต้องถึงอุณหภูมิห้องก่อนวัด",
+   note:"ไม่มีค่าใน MR — ตัวนี้ใช้ตรวจสอบวิธี ถ้ากระจายน้อยและค่าสมเหตุสมผล (~1.01–1.03) แปลว่าโปรโตคอลเชื่อถือได้ แล้วอีก 3 ตัวก็เชื่อถือได้ตาม"}
+];
+
+var ROWS = 10;
+var PREP = [
+  "🧊 เอาโอฮาโยออกจากตู้เย็นตั้งไว้",
+  "ขีดเส้นอ้างอิงบนถ้วยด้วยปากกาเคมี — ขีดโรงงานหนาเกินจะเล็งให้ตรงทุกรอบ",
+  "วางเครื่องชั่งบนโต๊ะมั่นคง ปิดพัดลมหรือแอร์ที่เป่าตรง",
+  "จดเลข lot และวันหมดอายุของทุกกล่อง",
+  "⚖️ ชั่งถ้วยเปล่าตอนแห้งสนิท กรอกช่อง “ถ้วยเปล่า” ของตัวอย่างแรก"
+];
+var EACH = [
+  "เขย่าขวดกลับหัว 10 ครั้ง แล้วพัก 30 วินาทีให้ฟองสลาย",
+  "เทตามผนังช้าๆ แล้วหยอดทีละหยดจนแตะเส้น — ก้มมองระดับสายตา",
+  "มีฟองบนผิว ใช้ปลายช้อนแตะออกก่อนชั่ง",
+  "ชั่งถ้วยพร้อมตัวอย่าง รอเลขนิ่งก่อนอ่าน",
+  "เททิ้ง ไม่ต้องล้างไม่ต้องเช็ด แล้วเติมรอบใหม่ได้เลย"
+];
+var SWITCH = [
+  "ล้างถ้วย แล้วเช็ดหรือเป่าให้ <b>แห้งสนิท</b> — ฟิล์มของเหลวเดิมจะติดไปกับค่าศูนย์",
+  "ชั่งถ้วยแห้งใหม่ กรอกในช่อง “ถ้วยเปล่า” ของตัวอย่างถัดไป",
+  "ไม่แน่ใจว่าแห้ง — ล้างด้วยตัวอย่างใหม่แล้วทิ้ง 1 รอบ จากนั้นเช็ดแห้งแล้วค่อยชั่ง"
+];
+
+var KEY = "dens01-v1";
+var state = {};
+
+function esc(s){
+  return String(s).replace(/[&<>"]/g, function(c){
+    return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c];
+  });
+}
+
+function buildChecklist(el, items, prefix){
+  el.innerHTML = items.map(function(t,i){
+    var id = prefix+"_"+i;
+    return '<li><input type="checkbox" id="'+id+'" data-chk="'+id+'"><label for="'+id+'">'+t+'</label></li>';
+  }).join("");
+}
+
+function buildSamples(){
+  document.getElementById("samples").innerHTML = SAMPLES.map(function(s){
+    var rows = "";
+    for(var n=1;n<=ROWS;n++){
+      rows += '<tr'+(n>5?' class="extra"':'')+'>'+
+        '<td>'+n+'</td>'+
+        '<td><input type="number" step="0.01" inputmode="decimal" data-f="'+s.key+'_b'+n+'" aria-label="ถ้วยและตัวอย่าง รอบ '+n+'"></td>'+
+        '<td class="mass empty" id="m_'+s.key+'_'+n+'">—</td></tr>';
+    }
+    var lotField = s.lot
+      ? '<div class="f"><label>Lot / วันหมดอายุ <span class="fid">lot_'+s.key+'</span></label><input type="text" class="w-md" data-f="lot_'+s.key+'" placeholder="L2508 · EXP 12/69"></div>'
+      : '';
+    var refBadge = s.ref
+      ? '<span class="mrref">MR ใช้อยู่ <b>'+s.ref.toFixed(2)+'</b></span>'
+      : '<span class="mrref">MR ไม่ระบุค่า</span>';
+    var waterOut = s.water
+      ? '<div class="f"><label>ความหนาแน่นน้ำ <span class="fid">dw · คำนวณให้</span></label><div class="readout" id="dw_out">—</div></div>'
+      : '';
+    var noteHtml = s.note ? '<p class="hint" style="margin-top:14px">⭐ '+s.note+'</p>' : '';
+
+    return '<section class="card" id="card_'+s.key+'">'+
+      '<div class="card-h"><span class="rank">'+s.rank+'</span><h2>'+esc(s.name)+'</h2>'+
+      '<span class="code">'+esc(s.code)+'</span>'+refBadge+'</div>'+
+      '<div class="card-b">'+
+        '<div class="fields">'+
+          '<div class="f"><label>น้ำหนักถ้วยเปล่า (g) · ต้องกรอก <span class="fid">tare_'+s.key+'</span></label>'+
+          '<input type="number" step="0.01" inputmode="decimal" class="w-sm tare" data-f="tare_'+s.key+'" placeholder="142.18" required aria-required="true"></div>'+
+          '<div class="f"><label>อุณหภูมิ °C <span class="fid">temp_'+s.key+'</span></label>'+
+          '<input type="number" step="0.1" inputmode="decimal" class="w-sm" data-f="temp_'+s.key+'" placeholder="30"></div>'+
+          waterOut + lotField +
+          '<div class="f"><label>เก็บที่</label><div class="storebox">'+s.store+'</div></div>'+
+        '</div>'+
+        '<p class="tarehint">⚖️ ชั่งถ้วยเปล่า<b>ครั้งเดียวตอนแห้งสนิท</b> ก่อนเริ่มยี่ห้อนี้ — รอบถัดไปเทออกแล้วเติมใหม่ได้เลย ไม่ต้องชั่งถ้วยซ้ำ</p>'+
+        '<div class="gridwrap"><table class="grid">'+
+          '<thead><tr><th>รอบ</th><th>ถ้วย+ตัวอย่าง (g)</th><th>มวล (g)</th></tr></thead>'+
+          '<tbody>'+rows+'</tbody></table></div>'+
+        '<div class="result"><div class="rrow">'+
+          '<div class="rcell"><div class="k">รอบที่กรอก</div><div class="v" id="n_'+s.key+'">0</div></div>'+
+          '<div class="rcell"><div class="k">มวลเฉลี่ย</div><div class="v" id="mean_'+s.key+'">— <small>g</small></div></div>'+
+          '<div class="rcell"><div class="k">กระจาย</div><div class="v" id="cv_'+s.key+'">—</div></div>'+
+          '<div class="rcell"><div class="k">ความหนาแน่น</div><div class="v" id="d_'+s.key+'">—</div></div>'+
+        '</div>'+
+        '<div class="verdict v-idle" id="v_'+s.key+'">ยังไม่มีข้อมูล</div>'+
+        '<div class="verdict v-idle" id="vd_'+s.key+'" style="display:none"></div>'+
+        '</div>'+ noteHtml +
+      '</div></section>';
+  }).join("");
+}
+
+function val(f){
+  var v = state[f];
+  if(v === undefined || v === null || v === "") return null;
+  var n = parseFloat(v);
+  return isFinite(n) ? n : null;
+}
+
+function stats(key){
+  var masses = [];
+  var tare = val("tare_"+key);
+  for(var n=1;n<=ROWS;n++){
+    var b = val(key+"_b"+n);
+    var cell = document.getElementById("m_"+key+"_"+n);
+    if(tare !== null && b !== null){
+      var m = b - tare;
+      masses.push(m);
+      if(cell){ cell.textContent = m.toFixed(2); cell.className = "mass"; }
+    } else if(cell){ cell.textContent = "—"; cell.className = "mass empty"; }
+  }
+  if(!masses.length) return {n:0, mean:null, cv:null};
+  var sum = 0;
+  for(var i=0;i<masses.length;i++) sum += masses[i];
+  var mean = sum/masses.length;
+  var cv = masses.length>1 ? (Math.max.apply(null,masses)-Math.min.apply(null,masses))/mean*100 : 0;
+  return {n:masses.length, mean:mean, cv:cv};
+}
+
+function setVerdict(el, cls, html){
+  el.className = "verdict v-"+cls;
+  el.innerHTML = html;
+}
+
+function recompute(){
+  var dw = waterDensity(val("temp_w"));
+  var dwOut = document.getElementById("dw_out");
+  if(dwOut) dwOut.textContent = dw ? dw.toFixed(4) : "—";
+
+  var wStat = stats("w");
+  var chips = [];
+
+  SAMPLES.forEach(function(s){
+    var st = s.water ? wStat : stats(s.key);
+    document.getElementById("n_"+s.key).textContent = st.n;
+    document.getElementById("mean_"+s.key).innerHTML = st.n ? st.mean.toFixed(2)+' <small>g</small>' : '— <small>g</small>';
+    document.getElementById("cv_"+s.key).textContent = st.n>1 ? st.cv.toFixed(2)+"%" : "—";
+
+    var vEl = document.getElementById("v_"+s.key);
+    var cls = "idle", msg = "ยังไม่มีข้อมูล";
+    if(st.n === 0){ cls="idle"; msg="ยังไม่มีข้อมูล"; }
+    else if(st.n < 5){ cls="idle"; msg='กรอกแล้ว <b>'+st.n+'</b> รอบ — ทำให้ครบ 5 รอบก่อน แล้วค่อยดูการกระจาย'; }
+    else if(st.cv < 1){ cls="ok"; msg='กระจาย <b>'+st.cv.toFixed(2)+'%</b> — เทคนิคนิ่งมาก ✅ <b>หยุดที่ '+st.n+' รอบได้เลย</b>'; }
+    else if(st.cv < 2){
+      cls="warn";
+      msg = st.n>=10
+        ? 'กระจาย <b>'+st.cv.toFixed(2)+'%</b> — ครบ 10 รอบแล้ว ใช้ได้ ค่าเฉลี่ยแม่นราว ±0.4%'
+        : 'กระจาย <b>'+st.cv.toFixed(2)+'%</b> — ⚠️ ทำต่อให้ครบ <b>10 รอบ</b> เหลืออีก '+(10-st.n);
+    }
+    else { cls="bad"; msg='กระจาย <b>'+st.cv.toFixed(2)+'%</b> — 🔴 กว้างเกินไป <b>ทำใหม่ทั้งชุด อย่าเอาไปเฉลี่ย</b> · เช็กฟองอากาศ ถ้วยเปียก และการเขย่า'; }
+    setVerdict(vEl, cls, msg);
+
+    var dEl = document.getElementById("d_"+s.key);
+    var vdEl = document.getElementById("vd_"+s.key);
+    var dens = null;
+
+    if(s.water){
+      dEl.textContent = dw ? dw.toFixed(4) : "—";
+      vdEl.style.display = "none";
+    } else if(wStat.n && st.n && dw){
+      dens = (st.mean / wStat.mean) * dw;
+      dEl.textContent = dens.toFixed(4);
+      vdEl.style.display = "";
+
+      var tSelf = val("temp_"+s.key), tW = val("temp_w"), tempWarn = "";
+      if(tSelf !== null && tW !== null && Math.abs(tSelf-tW) > 2){
+        tempWarn = ' · ⚠️ อุณหภูมิต่างจากตอนวัดน้ำ '+Math.abs(tSelf-tW).toFixed(1)+' °C'+
+          (s.chilled ? ' — ยังเย็นอยู่หรือเปล่า รอให้ถึงอุณหภูมิห้องก่อน' : '');
+      }
+
+      if(s.ref){
+        var diff = (dens - s.ref)/s.ref*100;
+        var sign = diff >= 0 ? "+" : "−";
+        var a = Math.abs(diff);
+        if(a <= 1) setVerdict(vdEl,"ok",'ต่างจากค่าเดิม <b>'+sign+a.toFixed(2)+'%</b> — ✅ อยู่ในเกณฑ์ แก้แค่ตัวเลขในตาราง ไม่ต้อง re-solve'+tempWarn);
+        else if(a <= 2) setVerdict(vdEl,"warn",'ต่างจากค่าเดิม <b>'+sign+a.toFixed(2)+'%</b> — ⚠️ ต้องคำนวณสูตรใหม่ ตรวจว่ามีสูตรไหนหลุดกรอบไหม'+tempWarn);
+        else setVerdict(vdEl,"bad",'ต่างจากค่าเดิม <b>'+sign+a.toFixed(2)+'%</b> — 🔴 <b>ต้อง re-solve</b>'+(diff>0?' · ค่าสูงขึ้นแปลว่าไขมันจะเข้าใกล้เส้น 5.00% ตามกฎหมาย':'')+tempWarn);
+      } else {
+        var ok = dens >= 1.00 && dens <= 1.05;
+        setVerdict(vdEl, ok ? "ok" : "warn",
+          ok ? 'ค่าอยู่ในช่วงที่สมเหตุสมผล — ✅ โปรโตคอลเชื่อถือได้'+tempWarn
+             : 'ค่าอยู่นอกช่วงที่คาดไว้ 1.00–1.05 — ⚠️ ตรวจวิธีก่อนเชื่อผลของยี่ห้ออื่น'+tempWarn);
+      }
+    } else {
+      dEl.textContent = "—";
+      vdEl.style.display = "none";
+    }
+
+    var chipCls = "";
+    if(st.n >= 5 && st.cv < 1) chipCls = "s-ok";
+    else if(st.n >= 5 && st.cv < 2) chipCls = "s-warn";
+    else if(st.n >= 5) chipCls = "s-bad";
+    var shown = s.water ? (dw ? dw.toFixed(4) : "—") : (dens ? dens.toFixed(4) : "—");
+    chips.push('<button type="button" class="chip '+chipCls+'" data-go="card_'+s.key+'"><span class="dot"></span>'+s.rank+' · '+esc(s.code)+' <b>'+shown+'</b></button>');
+  });
+
+  document.getElementById("chips").innerHTML = chips.join("");
+}
+
+function save(){
+  var el = document.getElementById("saved");
+  try{
+    localStorage.setItem(KEY, JSON.stringify(state));
+    el.textContent = "บันทึกแล้ว " + new Date().toLocaleTimeString("th-TH");
+  }catch(e){
+    el.textContent = "บันทึกอัตโนมัติใช้ไม่ได้ในเบราว์เซอร์นี้ — กด “บันทึกไฟล์ JSON” ก่อนปิดหน้า";
+  }
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw) state = JSON.parse(raw) || {};
+  }catch(e){ state = {}; }
+}
+function applyState(){
+  var nodes = document.querySelectorAll("[data-f]");
+  for(var i=0;i<nodes.length;i++){
+    var v = state[nodes[i].dataset.f];
+    nodes[i].value = (v === undefined || v === null) ? "" : v;
+  }
+  ["meta_date","meta_by"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.value = state[id] || "";
+  });
+  var chks = document.querySelectorAll("[data-chk]");
+  for(var j=0;j<chks.length;j++) chks[j].checked = !!state[chks[j].dataset.chk];
+}
+
+function init(){
+  buildChecklist(document.getElementById("prep"), PREP, "prep");
+  buildChecklist(document.getElementById("each"), EACH, "each");
+  buildChecklist(document.getElementById("switch"), SWITCH, "sw");
+  buildSamples();
+  load();
+  applyState();
+  recompute();
+
+  document.addEventListener("input", function(e){
+    var t = e.target;
+    if(t.dataset && t.dataset.f){ state[t.dataset.f] = t.value; recompute(); save(); }
+    else if(t.id === "meta_date" || t.id === "meta_by"){ state[t.id] = t.value; save(); }
+  });
+  document.addEventListener("change", function(e){
+    var t = e.target;
+    if(t.dataset && t.dataset.chk){ state[t.dataset.chk] = t.checked; save(); }
+  });
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-go]");
+    if(b){ var c = document.getElementById(b.dataset.go); if(c) c.scrollIntoView({behavior:"smooth", block:"start"}); }
+  });
+
+  document.getElementById("btn-export").addEventListener("click", function(){
+    var dw = waterDensity(val("temp_w"));
+    var w = stats("w");
+    var out = {form_id:"DENS01", model:"MR v8.8.3 §1.5", exported:new Date().toISOString(), data:state, computed:{}};
+    out.computed.water = {n:w.n, mean:w.mean, cv:w.cv, density:dw};
+    SAMPLES.forEach(function(s){
+      if(s.water) return;
+      var st = stats(s.key);
+      out.computed[s.code] = {
+        n:st.n, mean:st.mean, cv:st.cv,
+        density: (w.n && st.n && dw) ? (st.mean/w.mean)*dw : null,
+        mr_ref: s.ref
+      };
+    });
+    var blob = new Blob([JSON.stringify(out,null,2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "DENS01-" + new Date().toISOString().slice(0,10) + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
+  });
+
+  document.getElementById("btn-import").addEventListener("click", function(){
+    document.getElementById("file").click();
+  });
+  document.getElementById("file").addEventListener("change", function(e){
+    var f = e.target.files[0];
+    if(!f) return;
+    var r = new FileReader();
+    r.onload = function(){
+      try{
+        var j = JSON.parse(r.result);
+        state = j.data || j || {};
+        applyState(); recompute(); save();
+      }catch(err){
+        alert("เปิดไฟล์ไม่ได้ — ไฟล์นี้อาจไม่ใช่ JSON ที่ฟอร์มนี้บันทึกไว้");
+      }
+    };
+    r.readAsText(f);
+    e.target.value = "";
+  });
+
+  document.getElementById("btn-print").addEventListener("click", function(){ window.print(); });
+
+  document.getElementById("btn-reset").addEventListener("click", function(){
+    if(!confirm("ล้างข้อมูลที่กรอกไว้ทั้งหมด กู้คืนไม่ได้")) return;
+    state = {};
+    applyState();
+    recompute();
+    save();
+  });
+}
+
+init();
+</script>
+</body>
+</html>
