@@ -18,7 +18,9 @@ html,body{overflow-x:clip}
 .summary-grid article{background:var(--paper);padding:12px;border:1px solid var(--line);border-radius:12px}
 .tasting-head{background:#f4eade;border:2px solid #cdb397;position:sticky;top:0;z-index:8;padding:10px 13px;border-radius:12px;margin-bottom:10px}
 .tasting-head h3{margin:0;color:var(--accent)}.tasting-head .sub{font-size:.8rem}
+.taste-columns{display:grid;gap:14px;align-items:start}
 .taste-column{min-width:0}.taste-card{margin-bottom:14px}.taste-card .score-field.locked{opacity:.45}
+.taste-card [data-lock].hidden{display:block!important;visibility:hidden}
 .scale label{position:relative}.scale input{position:absolute;inset:0;width:100%;height:100%;margin:0}.scale label:focus-within{outline:3px solid #d9c1a8}.scale label:has(input:disabled){cursor:not-allowed}
 .verdict{border-top:2px solid var(--line);margin-top:16px;padding-top:10px}
 .manual-grid{grid-template-columns:1fr}.timer .help{font-size:.75rem}.timer-clock{font-variant-numeric:tabular-nums}
